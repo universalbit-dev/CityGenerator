@@ -11,7 +11,7 @@
   "dependencies": {
     "@interactjs/types": "^1.9.8",
     "@svgdotjs/svg.js": "^3.0.16",
-    "@types/d3-quadtree": "^2.0.2",
+    "@types/d3-quadtree": "^3.0.2",
     "@types/dat.gui": "^0.7.5",
     "@types/file-saver": "^2.0.1",
     "@types/jsts": "^0.17.2",
@@ -20,7 +20,7 @@
     "chokidar": "^3.5.3",
     "core-js": "^3.32.2",
     "d3": "^7.8.4",
-    "d3-quadtree": "^2.0.0",
+    "d3-quadtree": "^3.0.1",
     "dat.gui": "^0.7.6",
     "file-saver": "^2.0.2",
     "fs-extra": "^11.1.1",
