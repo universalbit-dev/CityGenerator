@@ -24,7 +24,7 @@
     "dat.gui": "^0.7.6",
     "file-saver": "^2.0.2",
     "fs-extra": "^11.1.1",
-    "interactjs": "^1.9.8",
+    "interactjs": "^1.10.19",
     "isect": "^3.0.0",
     "jsts": "^2.7.1",
     "jszip": "^3.4.0",
