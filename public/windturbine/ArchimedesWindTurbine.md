@@ -6,8 +6,8 @@ License CC BY 4.0 DEED (https://creativecommons.org/licenses/by/4.0/)
 Printing this?
 Remember to come back and post what you've printed as a Make. It's good for the designer and the community... you!
 
-[WebSite](https://www.thingiverse.com/thing:6140155)
-[YouTube](https://www.youtube.com/watch?v=nwspLw7QWqY&t=15s)
+* [WebSite](https://www.thingiverse.com/thing:6140155)
+* [YouTube](https://www.youtube.com/watch?v=nwspLw7QWqY&t=15s)
 
 .STL Files:  
 3D Printing Components and Parts
