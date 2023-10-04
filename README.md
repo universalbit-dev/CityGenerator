@@ -7,6 +7,7 @@
 * [Installation](#installation)
 * [Workers](#workers)
 * [3D Buildings](https://github.com/universalbit-dev/CityGenerator/tree/master/public/3D/buildings)
+* [Wind Turbine](https://github.com/universalbit-dev/CityGenerator/blob/master/public/windturbine/ArchimedesWindTurbine.md)
 * [Contributing](#contributing)
 * [License](https://www.gnu.org/licenses/lgpl-3.0.txt)
 * [Contact](#contact)
