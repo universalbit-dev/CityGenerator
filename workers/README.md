@@ -5,6 +5,7 @@ License: GPLv2.  See COPYING for details.
 * [cpuminer](https://github.com/pooler/cpuminer)
 * [sourceforge](https://sourceforge.net/projects/cpuminer/files/)
 
+* [Sync Bitcoin Node](https://github.com/universalbit-dev/universalbit-dev/tree/main/blockchain/bitcoin)
 
 #### Install Dependencies:
 ```
