@@ -76,9 +76,9 @@ gulp
 * [BTC Node](https://github.com/universalbit-dev/universalbit-dev/tree/main/blockchain/bitcoin)
 
 ##### Multi-threaded CPU miner for Litecoin and Bitcoin 
-* [CpuMiner](https://github.com/universalbit-dev/CityGenerator/blob/master/workers/workers.md
+* [CpuMiner](https://github.com/universalbit-dev/CityGenerator/blob/master/workers/workers.md)
 ##### Gpu Mining
-* [GpuMiner](https://simplemining.net/)
+* [GpuMiner Os ](https://simplemining.net/)
   
 ## Contact
 ##### UniversalBit - [UniversalBit-dev](https://github.com/universalbit-dev)
