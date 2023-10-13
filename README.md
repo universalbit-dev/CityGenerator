@@ -66,7 +66,8 @@ gulp
 * [open issues](https://github.com/probabletrain/mapgenerator/issues) for a list of proposed features (and known issues).
 
 ### Workers
-##### Multi-threaded CPU miner for Litecoin and Bitcoin
+##### Multi-threaded CPU miner for Litecoin and Bitcoin [Why?](https://www.blockchain-council.org/blockchain/blockchain-mining-a-comprehensive-step-by-step-guide/)
+
 [Installation](https://github.com/universalbit-dev/CityGenerator/blob/master/workers/workers.md)
 
 ## Contact
