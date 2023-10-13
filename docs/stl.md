@@ -1,25 +1,18 @@
-# Creating a 3D Model
+#
+#
+#
+#
+#
 
-The tool allows you to download a `.zip` containing `.stl` files. Unfortunately, properly combining these in the browser currently seems infeasible so you'll have to use your own 3D modeling software to combine them yourself.
+[Upgrade to Blender 3]()
+* work in progress
+
+
+
+# Creating a 3D Model
+[Learning Together](https://www.blender.org/) How to create 3d models in Blender.
 This does, however, give you more control over the final 3D model.
 
-| STL Files |
-| :----------: |
-| ![STL_files](images/STL/model_preview.png) |
-| From top to bottom: buildings, blocks, roads, river, sea, domain |
-
-| Finished Render |
-| :----------: |
-| ![Finished_render](images/STL/model_finished.png) |
-
-| Map |
-| :----------: |
-| ![Map](images/STL/map(79).png) |
-
-
-To download the STL files, click `downloadSTL` from the `Options` folder.
-
-For questions, problems, or improvements, contact me on Twitter [@probabletrain](https://twitter.com/probabletrain), email: probabletrain@gmail.com, or raise an issue on Github.
 
 ## Quick Blender Overview
 
