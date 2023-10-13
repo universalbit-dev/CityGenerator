@@ -70,11 +70,16 @@ gulp
 
 * #### [CityGenerator usage](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/usageguide.md)
 
-### BlockChain Workers
-##### Multi-threaded CPU miner for Litecoin and Bitcoin [Why?](https://www.blockchain-council.org/blockchain/blockchain-mining-a-comprehensive-step-by-step-guide/)
+### BlockChain Net and No-Profit  [Why?](https://www.blockchain-council.org/blockchain/blockchain-mining-a-comprehensive-step-by-step-guide/)
 
-[Installation](https://github.com/universalbit-dev/CityGenerator/blob/master/workers/workers.md)
+##### Bitcoin Pruned Node:
+* [BTC Node](https://github.com/universalbit-dev/universalbit-dev/tree/main/blockchain/bitcoin)
 
+##### Multi-threaded CPU miner for Litecoin and Bitcoin 
+* [CpuMiner](https://github.com/universalbit-dev/CityGenerator/blob/master/workers/workers.md
+##### Gpu Mining
+* [GpuMiner](https://simplemining.net/)
+  
 ## Contact
 ##### UniversalBit - [UniversalBit-dev](https://github.com/universalbit-dev)
 ##### Keir - [@probabletrain](https://twitter.com/probabletrain) - probabletrain@gmail.com
