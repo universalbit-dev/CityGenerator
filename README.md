@@ -37,10 +37,13 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 ```
-[Node v20.6.0](https://nodejs.org/en/blog/release/v20.6.0)
+[NodeJs Release](https://nodejs.org/en/blog/release)
 ```
 nvm i 20
 ```
+
+* ### Virtual Environment [NodeEnv](https://github.com/universalbit-dev/gekko-m4/tree/master/docs/nodenv)
+
 ### Installation
 
 * Clone the project
