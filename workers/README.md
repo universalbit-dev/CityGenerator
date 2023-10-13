@@ -1,5 +1,6 @@
 This is a multi-threaded CPU miner for Litecoin and Bitcoin,
 fork of Jeff Garzik's reference cpuminer.
+[Why?](https://www.blockchain-council.org/blockchain/blockchain-mining-a-comprehensive-step-by-step-guide/)
 
 License: GPLv2.  See COPYING for details.
 * [cpuminer](https://github.com/pooler/cpuminer)
