@@ -79,7 +79,7 @@ gulp
 ##### Multi-threaded CPU miner for Litecoin and Bitcoin 
 * [CpuMiner](https://github.com/universalbit-dev/CityGenerator/blob/master/workers/workers.md)
 ##### Gpu Mining
-* [GpuMiner Os ](https://simplemining.net
+* [GpuMiner Os ](https://simplemining.net)
 
 ##### Contributing:
 feel free to make something of amazing.
