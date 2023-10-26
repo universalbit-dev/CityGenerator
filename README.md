@@ -7,7 +7,7 @@ Work in Progress
 * [Installation](#installation)
 * [Net](https://github.com/universalbit-dev/universalbit-dev/tree/main/blockchain/bitcoin)
 * [Workers](https://github.com/universalbit-dev/CityGenerator#multi-threaded-cpu-miner-for-litecoin-and-bitcoin)
-* [3D Buildings](https://github.com/universalbit-dev/CityGenerator/tree/master/public/3D/buildings)
+* [3D Buildings](https://github.com/universalbit-dev/CityGenerator/tree/master/public/3d/buildings)
 * [Wind Turbine](https://github.com/universalbit-dev/CityGenerator/blob/master/public/windturbine/ArchimedesWindTurbine.md)
 * [Contributing](#contributing)
 * [License](https://www.gnu.org/licenses/lgpl-3.0.txt)
