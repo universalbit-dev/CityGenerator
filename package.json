@@ -7,56 +7,36 @@
   "bugs": {
     "url": "https://github.com/universalbit-dev/CityGenerator/issues"
   },
-  "homepage": "https://github.com/universalbit-dev/CityGenerator/blob/master/README.md",
+  "homepage": "https://universalbit-dev.github.io/CityGenerator/",
   "dependencies": {
-    "@interactjs/types": "^1.9.8",
-    "@svgdotjs/svg.js": "^3.0.16",
-    "@types/d3-quadtree": "^2.0.2",
-    "@types/dat.gui": "^0.7.5",
-    "@types/file-saver": "^2.0.1",
-    "@types/jsts": "^0.17.2",
-    "@types/three": "^0.156.0",
-    "bootstrap": "^5.3.0",
     "chokidar": "^3.5.3",
     "core-js": "^3.32.2",
     "d3": "^7.8.4",
-    "d3-quadtree": "^2.0.0",
-    "dat.gui": "^0.7.6",
-    "file-saver": "^2.0.2",
     "fs-extra": "^11.1.1",
+    "glob-parent": "^6.0.2",
+    "glob-stream": "^8.0.0",
     "interactjs": "^1.9.8",
-    "isect": "^3.0.0",
-    "jsts": "^2.7.1",
-    "jszip": "^3.4.0",
     "lodash": "^4.17.21",
-    "loglevel": "^1.6.7",
     "pm2": "^5.3.0",
-    "polyk": "^0.24.0",
-    "roughjs": "^4.2.0",
     "semver": "^7.5.2",
-    "simplex-noise": "^2.4.0",
-    "simplify-js": "^1.2.4",
-    "systeminformation": "^5.21.8",
     "three": "^0.156.0",
-    "three-addons": "^1.2.0",
-    "three-csg-ts": "^1.0.4"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.0",
-    "@babel/preset-env": "^7.9.5",
-    "@types/node": "^13.11.0",
-    "@typescript-eslint/eslint-plugin": "^6.7.2",
-    "@typescript-eslint/parser": "^6.7.2",
-    "babelify": "^10.0.0",
-    "browserify": "^16.5.1",
-    "eslint": "^8.49.0",
-    "fancy-log": "^1.3.3",
-    "gulp": "^4.0.0",
-    "gulp-notify": "^4.0.0",
-    "gulp-typescript": "^6.0.0-alpha.1",
-    "tsify": "^4.0.1",
-    "typescript": "^4.5.4",
-    "vinyl-source-stream": "^2.0.0",
-    "watchify": "^3.11.1"
-  }
+    "typescript": "^5.2.2",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4"
+  },
+  "name": "citygenerator00",
+  "description": "citygenerator will generate fab city",
+  "version": "1.1.1",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "keywords": []
 }
