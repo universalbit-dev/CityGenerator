@@ -55,6 +55,8 @@ git clone https://github.com/universalbit-dev/CityGenerator.git citygenerator
 ```
 cd citygenerator
 npm i && npm audit fix
+npm run build
+* Work in Progress
 ```
 
 
