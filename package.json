@@ -7,7 +7,7 @@
   "bugs": {
     "url": "https://github.com/universalbit-dev/CityGenerator/issues"
   },
-  "homepage": "https://universalbit-dev.github.io/CityGenerator/",
+  "homepage": "https://github.com/universalbit-dev/CityGenerator",
   "dependencies": {
     "@svgdotjs/svg.js": "^3.2.0",
     "@types/dat.gui": "^0.7.11",
