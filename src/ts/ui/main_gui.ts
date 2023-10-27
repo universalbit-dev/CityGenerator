@@ -24,9 +24,9 @@ import PolygonUtil from '../impl/polygon_util';
  * Handles Map folder, glues together impl
  */
 export default class MainGUI {
-    numBigParks: number = 2;
-    numSmallParks: number = 0;
-    clusterBigParks: boolean = false;
+    numBigParks: number = 20;
+    numSmallParks: number = 10;
+    clusterBigParks: boolean = true;
 
     domainController = DomainController.getInstance();
     intersections: Vector[] = [];
