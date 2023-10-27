@@ -10,6 +10,9 @@
   "homepage": "https://universalbit-dev.github.io/CityGenerator/",
   "dependencies": {
     "@svgdotjs/svg.js": "^3.2.0",
+    "@types/dat.gui": "^0.7.11",
+    "@types/file-saver": "^2.0.6",
+    "@types/jsts": "^0.17.20",
     "chokidar": "^3.5.3",
     "core-js": "^3.32.2",
     "d3": "^7.8.4",
@@ -18,7 +21,6 @@
     "glob-stream": "^8.0.0",
     "interactjs": "^1.9.8",
     "isect": "^3.0.1",
-    "jsts": "^2.11.0",
     "lodash": "^4.17.21",
     "loglevel": "^1.8.1",
     "pm2": "^5.3.0",
@@ -27,6 +29,7 @@
     "simplex-noise": "^4.0.1",
     "simplify-js": "^1.2.4",
     "three": "^0.156.0",
+    "three-csg-ts": "^3.1.13",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
