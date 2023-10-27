@@ -57,6 +57,7 @@ cd citygenerator
 npm i && npm audit fix
 ```
 ---
+[Typescript WebPack](https://webpack.js.org/guides/typescript/)
 [WebPack Module Federarion](https://webpack.js.org/concepts/module-federation/) 
 ## Work in Progress
 ---
