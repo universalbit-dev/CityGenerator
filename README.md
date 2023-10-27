@@ -59,7 +59,12 @@ npm i && npm audit fix
 ---
 * [Typescript WebPack](https://webpack.js.org/guides/typescript/)
 * [WebPack Module Federarion](https://webpack.js.org/concepts/module-federation/) 
-## Work in Progress
+
+Build:
+```
+npm run build
+```
+# Work in Progress
 ---
 
 * [documentation](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/usageguide.md).
