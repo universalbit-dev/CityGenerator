@@ -1,3 +1,7 @@
+---
+title: CityGenerator
+layout: default
+---
 ##### [Support UniversalBit Project](https://github.com/universalbit-dev/universalbit-dev/tree/main/support)
 Work in Progress 
 ## Table of Contents
