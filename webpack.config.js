@@ -4,11 +4,11 @@ const path = require('path');
     entry: './src/index.ts',
     mode: 'development',
 
-   devtool: 'inline-source-map',
+  devtool: 'inline-source-map',
     module: {
       rules: [
         {
-          test: /\.tsx?$/,
+          test: /\.tsx?$/,use:'raw-loader',
           use: 'ts-loader',
           exclude: /node_modules/,
         },
