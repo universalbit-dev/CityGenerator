@@ -1,8 +1,10 @@
 const path = require('path');
+const { ModuleFederationPlugin } = require('webpack').container;
 
   module.exports = {
     entry: './src/index.ts',
     mode: 'development',
+    plugins: [new ModuleFederationPlugin({runtime: 'my-runtime-name',}),],
 
   devtool: 'inline-source-map',
     module: {
@@ -21,4 +23,5 @@ const path = require('path');
       filename: 'bundle.js',
       path: path.resolve(__dirname, 'dist'),
     },
+
   };
