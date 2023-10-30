@@ -1,12 +1,16 @@
 {
     "compilerOptions": {
-      "target": "es6",
+      "target": "es2022",
+      "lib": ["es2021","dom","esnext"],
       "outDir": "./dist/",
       "sourceMap": true,
       "noImplicitAny": true,
-      "module": "commonjs",
+      "module": "es2022",
       "jsx": "react",
       "allowJs": true,
-      "moduleResolution": "node",
+      "moduleResolution": "nodenext",
+      "esModuleInterop": true,
+      "allowSyntheticDefaultImports": true,
+      "declaration": true
     }
   }
