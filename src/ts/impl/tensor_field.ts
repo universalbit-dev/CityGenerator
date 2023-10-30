@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import * as log from 'loglevel';
-// import * as noise from 'noisejs';
+import noise from 'noisejs';
 import * as SimplexNoise from 'simplex-noise';
 import Tensor from './tensor';
 import Vector from '../vector';
@@ -15,28 +15,21 @@ export interface NoiseParams {
     noiseAngleGlobal: number;
 }
 
-/**
- * Combines basis fields
- * Noise added when sampling a point in a park
- */
-export default class TensorField {
-    private basisFields: BasisField[] = [];
-    private noise: SimplexNoise;
+/* Combines basis fields Noise added when sampling a point in a park */
 
-    public parks: Vector[][] = [];
-    public sea: Vector[] = [];
-    public river: Vector[] = [];
+
+ export default class TensorField {
+    public basisFields: BasisField[]=[];
+    public noise:typeof SimplexNoise;
+    public parks: Vector[][]=[];
+    public sea: Vector[]=[];
+    public river: Vector[]=[];
     public ignoreRiver = false;
-
     public smooth = false;
+    constructor(public noiseParams: NoiseParams){this.noise;}
 
-    constructor(public noiseParams: NoiseParams) {
-        this.noise = new SimplexNoise();
-    }
+    /* Used when integrating coastline and river */
 
-    /**
-     * Used when integrating coastline and river
-     */
     enableGlobalNoise(angle: number, size: number): void {
         this.noiseParams.globalNoise = true;
         this.noiseParams.noiseAngleGlobal = angle;
@@ -49,7 +42,7 @@ export default class TensorField {
 
     addGrid(centre: Vector, size: number, decay: number, theta: number): void {
         const grid = new Grid(centre, size, decay, theta);
-        this.addField(grid);        
+        this.addField(grid);
     }
 
     addRadial(centre: Vector, size: number, decay: number): void {
@@ -110,11 +103,11 @@ export default class TensorField {
         return tensorAcc;
     }
 
-    /**
-     * Noise Angle is in degrees
-     */
+    /* Noise Angle is in degrees */
     getRotationalNoise(point: Vector, noiseSize: number, noiseAngle: number): number {
-        return this.noise.noise2D(point.x / noiseSize, point.y / noiseSize) * noiseAngle * Math.PI / 180;
+    const simplex = new SimplexNoise();
+    const value2d = simplex(point.x, point.y);
+        return value2d(point.x / noiseSize, point.y / noiseSize) * noiseAngle * Math.PI / 180;
     }
 
     onLand(point: Vector): boolean {
