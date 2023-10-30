@@ -4,7 +4,7 @@ const { ModuleFederationPlugin } = require('webpack').container;
   module.exports = {
     entry: './src/index.ts',
     mode: 'development',
-    plugins: [new ModuleFederationPlugin({runtime: 'my-runtime-name',}),],
+    plugins: [new ModuleFederationPlugin({runtime: 'fab-city',}),],
 
   devtool: 'inline-source-map',
     module: {
