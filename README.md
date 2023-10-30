@@ -29,17 +29,17 @@
 
 To get a local copy up and running follow these steps.
 ##### Install [Node v20.6.0](https://nodejs.org/en/blog/release/v20.6.0)
-```
+```bash
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
 ```
-```
+```bash
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 ```
 [NodeJs Release](https://nodejs.org/en/blog/release)
-```
+```bash
 nvm i 20
 ```
 
@@ -48,11 +48,11 @@ nvm i 20
 ### Installation
 
 * Clone the project
-```
+```bash
 git clone https://github.com/universalbit-dev/CityGenerator.git citygenerator
 ```
 * Install packages with npm 
-```
+```bash
 cd citygenerator
 npm i && npm audit fix
 ```
@@ -61,7 +61,7 @@ npm i && npm audit fix
 * [WebPack Module Federarion](https://webpack.js.org/concepts/module-federation/) 
 
 Build:
-```
+```bash
 npm run build
 ```
 # Work in Progress
