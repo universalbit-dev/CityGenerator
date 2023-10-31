@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import * as log from 'loglevel';
 import noise from 'noisejs';
-import * as SimplexNoise from 'simplex-noise';
+import SimplexNoise from 'simplex-noise';
+import { createNoise2D } from 'simplex-noise';
 import Tensor from './tensor';
 import Vector from '../vector';
 import {Grid, Radial, BasisField} from './basis_field';
@@ -16,7 +17,6 @@ export interface NoiseParams {
 }
 
 /* Combines basis fields Noise added when sampling a point in a park */
-
 
  export default class TensorField {
     public basisFields: BasisField[]=[];
@@ -105,9 +105,8 @@ export interface NoiseParams {
 
     /* Noise Angle is in degrees */
     getRotationalNoise(point: Vector, noiseSize: number, noiseAngle: number): number {
-    const simplex = new SimplexNoise();
-    const value2d = simplex(point.x, point.y);
-        return value2d(point.x / noiseSize, point.y / noiseSize) * noiseAngle * Math.PI / 180;
+      const noise2D = createNoise2D();
+      return noise2D(point.x / noiseSize, point.y / noiseSize) * noiseAngle * Math.PI / 180;
     }
 
     onLand(point: Vector): boolean {
