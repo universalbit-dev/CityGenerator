@@ -14,7 +14,7 @@
     "@types/file-saver": "^2.0.6",
     "@types/jsts": "^0.17.20",
     "chokidar": "^3.5.3",
-    "core-js": "^3.32.2",
+    "core-js": "^3.33.2",
     "d3": "^7.8.4",
     "dat.gui": "^0.7.9",
     "file-saver": "^2.0.5",
