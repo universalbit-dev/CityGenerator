@@ -22,7 +22,7 @@
     "fs-extra": "^11.1.1",
     "glob-parent": "^6.0.2",
     "glob-stream": "^8.0.0",
-    "interactjs": "^1.9.8",
+    "interactjs": "^1.10.20",
     "isect": "^3.0.1",
     "json5": "^2.2.3",
     "jsts": "^2.7.1",
