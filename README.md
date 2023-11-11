@@ -28,10 +28,11 @@
 * [ThreeJS](https://threejs.org/manual/#en/fundamentals)
 
 To get a local copy up and running follow these steps.
-##### Install [Node v20.6.0](https://nodejs.org/en/blog/release/v20.6.0)
+##### Install [NodeJs 20](https://nodejs.org/en)
 ```bash
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
 ```
+[?](https://github.com/nvm-sh/nvm#installing-and-updating)
 ```bash
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
