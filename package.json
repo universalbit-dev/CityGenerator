@@ -41,7 +41,7 @@
   },
   "devDependencies": {
     "@types/d3-quadtree": "^3.0.4",
-    "@types/lodash": "^4.14.200",
+    "@types/lodash": "^4.14.201",
     "@types/noisejs": "^0.0.30",
     "@types/three": "^0.157.2",
     "ts-loader": "^9.5.0",
