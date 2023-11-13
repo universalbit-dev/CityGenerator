@@ -10,7 +10,7 @@
   "homepage": "https://github.com/universalbit-dev/CityGenerator",
   "dependencies": {
     "@svgdotjs/svg.js": "^3.2.0",
-    "@types/dat.gui": "^0.7.11",
+    "@types/dat.gui": "^0.7.12",
     "@types/file-saver": "^2.0.6",
     "@types/jsts": "^0.17.20",
     "chokidar": "^3.5.3",
