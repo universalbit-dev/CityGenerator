@@ -164,10 +164,3 @@ Add materials to the different objects. You can select the faces that make up th
 - Shallow depth-of-field gives a convincing miniature effect
 - Watch [Ian Hubert's 'Lazy Tutorial' on making cities](https://www.youtube.com/watch?v=JjnyapZ_P-g)
 
-Some of my renders:
-
-![Render](images/STL/30.jpg)
-
-![Render](images/STL/31.png)
-
-![Render](images/STL/32.png)
