@@ -42,7 +42,7 @@ npm i && npm audit fix
 ```
 sudo chmod 755 -R citygenerator/workers
 ```
-#### Setup PM2 Globally
+#### PM2 Process Manager
 * [pm2](https://pm2.io/docs/runtime/guide/process-management/)
 ```
 npm i pm2 -g
