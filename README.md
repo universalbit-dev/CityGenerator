@@ -58,6 +58,12 @@ cd citygenerator
 npm i && npm audit fix
 ```
 ---
+#### PM2 Process Manager
+* [pm2](https://pm2.io/docs/runtime/guide/process-management/)
+```
+npm i pm2 -g
+```
+
 * [Typescript WebPack](https://webpack.js.org/guides/typescript/)
 * [WebPack Module Federarion](https://webpack.js.org/concepts/module-federation/) 
 
