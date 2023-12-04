@@ -35,7 +35,7 @@
     "semver": "^7.5.2",
     "simplex-noise": "^4.0.1",
     "simplify-js": "^1.2.4",
-    "three": "^0.156.0",
+    "three": "^0.159.0",
     "three-csg-ts": "^3.1.13",
     "uuid": "^9.0.1"
   },
@@ -43,7 +43,7 @@
     "@types/d3-quadtree": "^3.0.4",
     "@types/lodash": "^4.14.200",
     "@types/noisejs": "^0.0.30",
-    "@types/three": "^0.157.2",
+    "@types/three": "^0.159.0",
     "ts-loader": "^9.5.0",
     "typescript": "^5.2.2",
     "webpack": "^5.89.0",
