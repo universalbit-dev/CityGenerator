@@ -4,7 +4,7 @@
 - [View](https://github.com/universalbit-dev/CityGenerator/blob/master/public/3d/buildings/building001.stl)
 ![building001](building0001.png "buildings")
 
-- [Building Tools](https://github.com/universalbit-dev/building_tools)
+- [Building Tools](https://ranjian0.github.io/building_tools/)
 ##### .GLB Files Generated with Blender v.2.82a      [Export scene as glTF2.0 file]
 
 #### Some useful features are present in the ThreeJS editor
