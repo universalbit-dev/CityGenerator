@@ -1,7 +1,7 @@
 ### 3D Buildings
 
 ##### .STL Files Generated with Blender v.2.82a
-- [View](https://github.com/universalbit-dev/CityGenerator/blob/master/public/3D/buildings/building001.stl)
+- [View](https://github.com/universalbit-dev/CityGenerator/blob/master/public/3d/buildings/building001.stl)
 ![building001](building0001.png "buildings")
 
 - [Building Tools](https://github.com/universalbit-dev/building_tools)
@@ -9,8 +9,7 @@
 
 #### Some useful features are present in the ThreeJS editor
 - [Threejs Editor](https://threejs.org/editor/)
-
-- [Import .GLB]  ![alt text](https://github.com/universalbit-dev/CityGenerator/blob/master/public/3D/buildings/building001.png "Title")
+- [Import .GLB]
 
 ##### .JSON Files Generated with ThreeJS editor
 - [Export Geometry]
