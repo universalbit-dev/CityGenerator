@@ -1,8 +1,45 @@
 {
-  "dependencies": {
-    "core-js": "^3.32.2",
-    "ping": "^0.4.4",
-    "pm2": "^5.3.0",
-    "axios":"^1.6.2"
-  }
+   "name": "citygenerator",
+   "version": "1.1.1",
+   "description": "citygenerator fab city",
+   "private": true,
+   "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "build": "webpack"
+   },
+   "keywords": [
+      "citygenerator",
+      "fab city",
+      "maps"
+   ],
+   "contribution": "universalbit",
+   "author": "probabletrain",
+   "license": "LGPL",
+   "devDependencies": {
+      "@types/d3-quadtree": "^3.0.6",
+      "@types/dat.gui": "^0.7.12",
+      "@types/file-saver": "^2.0.7",
+      "@types/noisejs": "^0.0.31",
+      "@types/three": "^0.160.0",
+      "webpack": "^5.4.0",
+      "webpack-cli": "^4.2.0"
+   },
+   "dependencies": {
+      "@svgdotjs/svg.js": "^3.2.0",
+      "d3-quadtree": "^3.0.1",
+      "dat.gui": "^0.7.9",
+      "file-saver": "^2.0.5",
+      "interactjs": "^1.10.26",
+      "isect": "^3.0.2",
+      "jsts": "^2.11.0",
+      "lodash": "^4.17.20",
+      "loglevel": "^1.8.1",
+      "noisejs": "^2.1.0",
+      "polyk": "^0.24.0",
+      "simplex-noise": "^4.0.1",
+      "simplify-js": "^1.2.4",
+      "three": "^0.160.0",
+      "three-csg-ts": "^3.1.13",
+      "ts-loader": "^9.5.1"
+   }
 }
