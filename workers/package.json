@@ -4,8 +4,7 @@
   "description": "citygenerator blockchain workers",
   "main": "workers.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "npm audit fix"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
