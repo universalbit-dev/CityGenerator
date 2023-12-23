@@ -26,6 +26,7 @@
 * [Blender](https://www.blender.org/)
 * [Building Tools](https://ranjian0.github.io/building_tools/)
 * [ThreeJS](https://threejs.org/manual/#en/fundamentals)
+* [Buildify](https://github.com/universalbit-dev/CityGenerator/blob/master/public/3d/buildify/Buildify_1.0.pdf)
 
 To get a local copy up and running follow these steps.
 ##### Install [NodeJs 20](https://nodejs.org/en)
