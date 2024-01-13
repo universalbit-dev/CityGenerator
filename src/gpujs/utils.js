@@ -1005,9 +1005,9 @@ const utils = {
   }
 };
 
-const dollarSign = /\$/;
-const doubleUnderscore = /__/;
-const singleUnderscore = /_/;
+const dollarSign =/\$/g;
+const doubleUnderscore = /__/g;
+const singleUnderscore = /_/g;
 
 const _systemEndianness = utils.getSystemEndianness();
 
