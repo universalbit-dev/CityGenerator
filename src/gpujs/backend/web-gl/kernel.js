@@ -1459,7 +1459,7 @@ float integerCorrectionModulo(float number, float divisor) {
    * @param {Object} map - Variables/Constants associated with shader
    */
   replaceArtifacts(src, map) {
-    return src.replace(/[ ]*__([A-Z]+[0-9]*([_]?[A-Z]*[0-9]?)*)__;\n/g, (match, artifact) => {
+    return src.replace(/^_(__|[^_])+_$;\n/g, (match, artifact) => {
       if (map.hasOwnProperty(artifact)) {
         return map[artifact];
       }
