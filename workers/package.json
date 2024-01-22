@@ -27,7 +27,8 @@
     "crypto-js": "^4.2.0",
     "fs-extra": "^11.1.0",
     "humanize-duration": "^3.20.1",
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.21",
+    "pm2":"^5.3.1"
   },
   "bugs": {
     "url": "https://github.com/universalbit-dev/CityGenerator/issues"
