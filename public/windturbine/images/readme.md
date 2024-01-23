@@ -9,3 +9,4 @@
 ![OMNI_ROTOR_LHS](https://github.com/universalbit-dev/CityGenerator/blob/master/public/windturbine/images/omni_rotor_LHS.png "omni_rotor_lhs")
 ![SPACER](https://github.com/universalbit-dev/CityGenerator/blob/master/public/windturbine/images/spacer.png "spacer")
 ![Turbine_SCREW](https://github.com/universalbit-dev/CityGenerator/blob/master/public/windturbine/images/turbne_screw.png "turbine_screw")
+![UPPER_MAGNET_CARRIER](https://github.com/universalbit-dev/CityGenerator/blob/master/public/windturbine/images/upper_magnet_carrier.png "upper_magnet_carrier")
