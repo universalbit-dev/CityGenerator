@@ -4,9 +4,9 @@ pm2.connect(function(err) {
     console.error(err)
     process.exit(2)
   }
-
+  //
   pm2.start({
-    script    : './minerd -o stratum+tcp://ltc.f2pool.com:3335 --userpass=universalbit.001:21235365876986800',
+    script    : './minerd -a sha256d -o stratum+tcp://btc.f2pool.com:3333 --userpass=universalbit.001:21235365876986800',
     args      : '',
     name      : '|CityGenerator|Workers|'
 },
