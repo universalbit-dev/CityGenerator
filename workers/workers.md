@@ -1,6 +1,11 @@
 ---
 layout: default
 ---
+* [BTC Node](https://github.com/universalbit-dev/universalbit-dev/tree/main/blockchain/bitcoin)
+* [Buy-Sell](https://github.com/universalbit-dev/gekko-m4/edit/master/README.md)
+---
+* [Mining]()
+
 ##### This is a multi-threaded CPU miner for Litecoin and Bitcoin,
 ##### fork of Jeff Garzik's [reference cpuminer]().
 ---
