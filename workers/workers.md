@@ -2,7 +2,7 @@
 layout: default
 ---
 * [BTC Node](https://github.com/universalbit-dev/universalbit-dev/tree/main/blockchain/bitcoin)
-* [Buy-Sell](https://github.com/universalbit-dev/gekko-m4/edit/master/README.md)
+* [Buy-Sell](https://github.com/universalbit-dev/gekko-m4/blob/master/README.md)
 ---
 * [Mining]()
 
