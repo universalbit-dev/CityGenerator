@@ -1,33 +1,29 @@
 ---
 layout: default
 ---
-This is a multi-threaded CPU miner for Litecoin and Bitcoin,
-fork of Jeff Garzik's reference cpuminer.
-
-License: GPLv2.  See COPYING for details.
-
+##### This is a multi-threaded CPU miner for Litecoin and Bitcoin,
+##### fork of Jeff Garzik's [reference cpuminer]().
+---
 #### [Downloads](https://sourceforge.net/projects/cpuminer/files/)
 #### [Git tree](https://github.com/pooler/cpuminer)
-
+---
 #### Dependencies:
-* [libcurl](http://curl.haxx.se/libcurl/)
-* [jansson](http://www.digip.org/jansson/)
-```
+```bash
 sudo apt install libcurl4-openssl-dev libjansson-dev build-essential
 ```
 
-```
-./autogen.sh	# only needed if building from git repo
-./nomacro.pl	# in case the assembler doesn't support macros
+```bash
+./autogen.sh
 ./configure CFLAGS="-O3" # make sure -O3 is an O and not a zero!
 make
 ```
 
 ##### Install [Node v20.6.0](https://nodejs.org/en/blog/release/v20.6.0)
-```
+```bash
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
 ```
-```
+
+```bash
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
@@ -49,16 +45,15 @@ cd CityGenerator
 sudo chmod 755 -R workers
 ```
 
-#### Start process      [Cluster Mode](https://pm2.keymetrics.io/docs/usage/cluster-mode/)
+#### Start process
 ```
 cd workers
-pm2 start workers.js -i 2
+pm2 start workers.js
 ```
+![CityGenerator](https://github.com/universalbit-dev/CityGenerator/blob/master/workers/citygenerator-workers.png "citygenerator")
 
 #### Setup HA Cluster:
 #### [HArmadillium](https://github.com/universalbit-dev/armadillium/blob/main/HArmadillium.md)
-
-
 
 
 [back](./)
