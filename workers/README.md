@@ -12,7 +12,6 @@ layout: default
 #### [Downloads](https://sourceforge.net/projects/cpuminer/files/)
 #### [Git tree](https://github.com/pooler/cpuminer)
 ---
-* [GPU Mining](https://simplemining.net/)
 
 
 #### Dependencies:
@@ -62,7 +61,9 @@ pm2 start workers.js
 
 #### Setup HA Cluster:
 #### [HArmadillium](https://github.com/universalbit-dev/armadillium/blob/main/HArmadillium.md)
-
-
 [back](./)
+
+#### Gpu Mining Os
+* [GPU Mining](https://simplemining.net/)
+
 
