@@ -51,11 +51,10 @@ nvm i 20
 
 * Clone the project
 ```bash
-git clone https://github.com/universalbit-dev/CityGenerator.git citygenerator
+git clone https://github.com/universalbit-dev/CityGenerator.git
 ```
 * Install packages with npm 
 ```bash
-cd citygenerator
 npm i && npm audit fix
 ```
 ---
