@@ -1,61 +1,65 @@
-This is a multi-threaded CPU miner for Litecoin and Bitcoin,
-fork of Jeff Garzik's reference cpuminer.
-[Why?](https://www.blockchain-council.org/blockchain/blockchain-mining-a-comprehensive-step-by-step-guide/)
+---
+layout: default
+---
+* [BTC Node](https://github.com/universalbit-dev/universalbit-dev/tree/main/blockchain/bitcoin)
+* [Buy-Sell](https://github.com/universalbit-dev/gekko-m4/blob/master/README.md)
+---
+* [Mining]()
 
-License: GPLv2.  See COPYING for details.
-* [cpuminer](https://github.com/pooler/cpuminer)
-* [sourceforge](https://sourceforge.net/projects/cpuminer/files/)
-
-* [Sync Bitcoin Node](https://github.com/universalbit-dev/universalbit-dev/tree/main/blockchain/bitcoin)
-
-#### Install Dependencies:
-```
+##### This is a multi-threaded CPU miner for Litecoin and Bitcoin,
+##### fork of Jeff Garzik's [reference cpuminer]().
+---
+#### [Downloads](https://sourceforge.net/projects/cpuminer/files/)
+#### [Git tree](https://github.com/pooler/cpuminer)
+---
+#### Dependencies:
+```bash
 sudo apt install libcurl4-openssl-dev libjansson-dev build-essential
 ```
-#### autogen/configure/make/make install
-```
-./autogen.sh	# only needed if building from git repo
+
+```bash
+./autogen.sh
 ./configure CFLAGS="-O3" # make sure -O3 is an O and not a zero!
 make
-make install
 ```
-##### note: ./nomacro.pl	# in case the assembler doesn't support macros
-
 
 ##### Install [Node v20.6.0](https://nodejs.org/en/blog/release/v20.6.0)
-```
+```bash
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
 ```
-```
+
+```bash
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 ```
-#### Workers: 
-
 ```
 nvm i 20
-npm i && npm audit fix
+npm i --build-from-source
+```
+
+#### Setup [pm2](https://pm2.io/docs/runtime/guide/process-management/) globally
+
+```
+npm i pm2 -g
 ```
 
 ##### Note: Before start process setup permission:
 ```
-sudo chmod 755 -R citygenerator/workers
-```
-#### PM2 Process Manager
-* [pm2](https://pm2.io/docs/runtime/guide/process-management/)
-```
-npm i pm2 -g
-```
-#### Start workers.js as pm2 process 
-* [Cluster Mode](https://pm2.keymetrics.io/docs/usage/cluster-mode/)
-```
-cd workers
-pm2 start workers.js -i 1
+cd CityGenerator
+sudo chmod 755 -R workers
 ```
 
-* [libcurl](http://curl.haxx.se/libcurl/)
-* [jansson](http://www.digip.org/jansson/)
-  
+#### Start process
+```
+cd workers
+pm2 start workers.js
+```
+![CityGenerator](https://github.com/universalbit-dev/CityGenerator/blob/master/workers/citygenerator-workers.png "citygenerator")
+
 #### Setup HA Cluster:
-#### [HArmadillium](https://universalbit-dev.github.io/HArmadillium/)
+#### [HArmadillium](https://github.com/universalbit-dev/armadillium/blob/main/HArmadillium.md)
+
+
+[back](./)
+
