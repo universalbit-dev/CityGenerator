@@ -6,4 +6,6 @@
 ![OMNI_LHS](https://github.com/universalbit-dev/CityGenerator/blob/master/public/windturbine/images/omni_LHS.png "omni_lhs")
 ![OMNI_RHS](https://github.com/universalbit-dev/CityGenerator/blob/master/public/windturbine/images/omni_RHS.png "omni_rhs")
 ![OMNI_ROTOR_RHS](https://github.com/universalbit-dev/CityGenerator/blob/master/public/windturbine/images/omni_Rotor_RHS.png "omni_rotor_rhs")
-
+![OMNI_ROTOR_LHS](https://github.com/universalbit-dev/CityGenerator/blob/master/public/windturbine/images/omni_rotor_LHS.png "omni_rotor_lhs")
+![SPACER](https://github.com/universalbit-dev/CityGenerator/blob/master/public/windturbine/images/spacer.png "spacer")
+![Turbine_SCREW](https://github.com/universalbit-dev/CityGenerator/blob/master/public/windturbine/images/turbne_screw.png "turbine_screw")
