@@ -61,7 +61,7 @@ npm i && npm audit fix
 #### PM2 Process Manager
 * [pm2](https://pm2.io/docs/runtime/guide/process-management/)
 ```
-npm i pm2 -g
+npm i pm2 --save
 ```
 
 * [Typescript WebPack](https://webpack.js.org/guides/typescript/)
