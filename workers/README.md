@@ -4,7 +4,8 @@ layout: default
 * [BTC Node](https://github.com/universalbit-dev/universalbit-dev/tree/main/blockchain/bitcoin)
 * [Buy-Sell](https://github.com/universalbit-dev/gekko-m4/blob/master/README.md)
 ---
-* [Mining]()
+* [Mining LTC](https://f2pool.io/mining/guides/how-to-mine-litecoin/)
+* [Mining BTC](https://f2pool.io/mining/guides/how-to-mine-bitcoin/)
 
 ##### This is a multi-threaded CPU miner for Litecoin and Bitcoin,   
 ##### fork of Jeff Garzik's [reference cpuminer]().
