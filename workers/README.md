@@ -6,12 +6,15 @@ layout: default
 ---
 * [Mining]()
 
-##### This is a multi-threaded CPU miner for Litecoin and Bitcoin,
+##### This is a multi-threaded CPU miner for Litecoin and Bitcoin,   
 ##### fork of Jeff Garzik's [reference cpuminer]().
 ---
 #### [Downloads](https://sourceforge.net/projects/cpuminer/files/)
 #### [Git tree](https://github.com/pooler/cpuminer)
 ---
+* [GPU Mining](https://simplemining.net/)
+
+
 #### Dependencies:
 ```bash
 sudo apt install libcurl4-openssl-dev libjansson-dev build-essential
