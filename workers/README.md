@@ -57,7 +57,7 @@ sudo chmod 755 -R workers
 cd workers
 pm2 start workers.js
 ```
-![CityGenerator](https://github.com/universalbit-dev/CityGenerator/blob/master/workers/citygenerator-workers-ltc.png "citygenerator")
+![CityGenerator](https://github.com/universalbit-dev/CityGenerator/blob/master/workers/citygenerator-workers-btc.png "citygenerator")
 
 #### Setup HA Cluster:
 #### [HArmadillium](https://github.com/universalbit-dev/armadillium/blob/main/HArmadillium.md)
