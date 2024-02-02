@@ -29,7 +29,8 @@
 * [Buildify](https://github.com/universalbit-dev/CityGenerator/blob/master/public/3d/buildify/Buildify_1.0.pdf)
 
 
-### Installation: [NodeJs20 LTS](https://nodejs.org/en/blog/release)
+### Installation: 
+[NodeJs20 LTS](https://nodejs.org/en/blog/release)
 
 * Clone the project
 ```bash
