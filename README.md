@@ -44,6 +44,7 @@ Build Project:
 ```bash
 npm run build
 ```
+# Work in Progress
 ---
 #### PM2 Process Manager
 * [pm2](https://pm2.io/docs/runtime/guide/process-management/)
@@ -53,9 +54,6 @@ npm i pm2 --save
 
 * [Typescript WebPack](https://webpack.js.org/guides/typescript/)
 * [WebPack Module Federarion](https://webpack.js.org/concepts/module-federation/) 
-
-# Work in Progress
----
 
 * [documentation](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/usageguide.md).
 * [open issues](https://github.com/probabletrain/mapgenerator/issues) for a list of proposed features (and known issues).
