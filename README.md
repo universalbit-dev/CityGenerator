@@ -28,26 +28,8 @@
 * [ThreeJS](https://threejs.org/manual/#en/fundamentals)
 * [Buildify](https://github.com/universalbit-dev/CityGenerator/blob/master/public/3d/buildify/Buildify_1.0.pdf)
 
-To get a local copy up and running follow these steps.
-##### Install [NodeJs 20](https://nodejs.org/en)
-```bash
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
-```
-[?](https://github.com/nvm-sh/nvm#installing-and-updating)
-```bash
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-```
-[NodeJs Release](https://nodejs.org/en/blog/release)
-```bash
-nvm i 20
-```
-
-* ##### Virtual Environment [NodeEnv](https://github.com/universalbit-dev/gekko-m4/tree/master/docs/nodenv)
-
-### Installation
+### Installation: [NodeJs20 LTS](https://nodejs.org/en/blog/release)
 
 * Clone the project
 ```bash
@@ -56,6 +38,11 @@ git clone https://github.com/universalbit-dev/CityGenerator.git
 * Install packages with npm 
 ```bash
 npm i && npm audit fix
+```
+
+Build Project:
+```bash
+npm run build
 ```
 ---
 #### PM2 Process Manager
@@ -67,10 +54,6 @@ npm i pm2 --save
 * [Typescript WebPack](https://webpack.js.org/guides/typescript/)
 * [WebPack Module Federarion](https://webpack.js.org/concepts/module-federation/) 
 
-Build:
-```bash
-npm run build
-```
 # Work in Progress
 ---
 
