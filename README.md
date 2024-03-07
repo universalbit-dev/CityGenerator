@@ -41,10 +41,14 @@ git clone https://github.com/universalbit-dev/CityGenerator.git
 npm i && npm audit fix
 ```
 
-Build Project:
+##### Build Project:
 ```bash
 npm run build
 ```
+#### after build project run /dist/index.html file
+
+
+
 # Work in Progress
 ---
 #### PM2 Process Manager
