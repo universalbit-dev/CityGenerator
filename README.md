@@ -13,7 +13,7 @@
 * [License](https://www.gnu.org/licenses/lgpl-3.0.txt)
 * [Contact](#contact)
 
-##### About The Project: @probabletrain
+##### About The Project: [@probabletrain](https://github.com/ProbableTrain/MapGenerator)
 * [WebSite](https://maps.probabletrain.com/#/)
 * [Support](https://ko-fi.com/probabletrain)
   
