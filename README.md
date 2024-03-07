@@ -46,7 +46,7 @@ npm i && npm audit fix
 npm run build
 ```
 #### after build project run /dist/index.html file
-
+<img src="https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/citygenerator-algo-run.png" width="40%"></img>
 
 
 # Work in Progress
