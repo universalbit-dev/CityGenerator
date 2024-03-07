@@ -12,15 +12,18 @@
       "fab city",
       "maps"
    ],
-   "contribution": "universalbit",
+   "contribution": "universalbit-dev",
    "author": "probabletrain",
    "license": "LGPL-3.0",
    "devDependencies": {
       "@types/d3-quadtree": "^3.0.6",
       "@types/dat.gui": "^0.7.12",
       "@types/file-saver": "^2.0.7",
+      "@types/jsts": "^0.17.22",
       "@types/noisejs": "^0.0.31",
       "@types/three": "^0.160.0",
+      "tsd": "^0.30.7",
+      "typescript": "^5.4.2",
       "webpack": "^5.90.0",
       "webpack-cli": "^5.1.4"
    },
@@ -35,11 +38,14 @@
       "lodash": "^4.17.21",
       "loglevel": "^1.9.1",
       "noisejs": "^2.1.0",
+      "ol": "^9.0.0",
       "polyk": "^0.24.0",
+      "roughjs": "^4.6.6",
       "simplex-noise": "^4.0.1",
       "simplify-js": "^1.2.4",
       "three": "^0.160.1",
       "three-csg-ts": "^3.1.13",
-      "ts-loader": "^9.5.1"
+      "ts-loader": "^9.5.1",
+      "vite": "^5.1.5"
    }
 }

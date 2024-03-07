@@ -12,5 +12,9 @@
       "esModuleInterop": true,
       "allowSyntheticDefaultImports": true,
       "declaration": true
-    }
+    },
+     "files": [
+        "index.d.ts"
+    ]
+    
   }
