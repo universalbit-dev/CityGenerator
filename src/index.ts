@@ -15,7 +15,6 @@ import Vector from './ts/vector';
 import { SVG } from '@svgdotjs/svg.js';
 import ModelGenerator from './ts/model_generator';
 import { saveAs } from 'file-saver';
-
 class Main {
     public readonly STARTING_WIDTH = 1440;  // Initially zooms in if width > STARTING_WIDTH
 
