@@ -59,11 +59,3 @@ const rasterLayer = new TileLayer({
   source: new OSM(),
 });
 
-const map = new Map({
-  layers: [rasterLayer, vectorLayer],
-  target: document.getElementById('map'),
-  view: new View({
-    center: fromLonLat([126.979293, 37.528787]),
-    zoom: 15,
-  }),
-});
