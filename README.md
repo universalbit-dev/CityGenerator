@@ -13,7 +13,8 @@
 * [License](https://www.gnu.org/licenses/lgpl-3.0.txt)
 * [Contact](#contact)
 
-##### About The Project: [@probabletrain](https://github.com/ProbableTrain/MapGenerator)
+##### About The Project: from [@probabletrain](https://github.com/ProbableTrain/MapGenerator)
+
 * [WebSite](https://maps.probabletrain.com/#/)
 * [Support](https://ko-fi.com/probabletrain)
   
@@ -22,7 +23,7 @@
 ##### This tool procedurally generates images of city maps. The process can be automated, or controlled at each stage give you finer control over the output.
 #### [Generated](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/algorithmoverview.md) city ​​map can be downloaded as map.png map.svg or map.png(heightmap) file.
 
-#### Getting Started
+#### Getting Started using different builder tools
 * [Blender](https://www.blender.org/)
 * [Building Tools](https://ranjian0.github.io/building_tools/)
 * [ThreeJS](https://threejs.org/manual/#en/fundamentals)
