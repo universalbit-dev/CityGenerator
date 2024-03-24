@@ -46,7 +46,7 @@ npm i && npm audit fix
 ```bash
 npm run build
 ```
-#### after build project open /dist/index.html file
+#### after build project open /dist/index.html file  -- algorithm in operation --
 <img src="https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/gif/citygenerator_algo.gif" width="auto"></img>
 
 
