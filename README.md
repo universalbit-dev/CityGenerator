@@ -41,6 +41,11 @@ git clone https://github.com/universalbit-dev/CityGenerator.git
 ```bash
 npm i && npm audit fix
 ```
+---
+
+##### [Compiler WebPack5 release](https://webpack.js.org/blog/2020-10-10-webpack-5-release/)
+##### [TypeScript Note](https://webpack.js.org/guides/typescript/)
+
 
 ##### Build Project:
 ```bash
