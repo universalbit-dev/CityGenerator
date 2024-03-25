@@ -71,7 +71,7 @@ npm i pm2 --save
 
 * #### [CityGenerator usage](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/usageguide.md)
 
-### BlockChain Net and No-Profit  [Why?](https://www.blockchain-council.org/blockchain/blockchain-mining-a-comprehensive-step-by-step-guide/)
+### BlockChain Net Node and No-Profit  [Why?](https://www.blockchain-council.org/blockchain/blockchain-mining-a-comprehensive-step-by-step-guide/)
 
 ##### Bitcoin Pruned Node:
 * [BTC Node](https://github.com/universalbit-dev/universalbit-dev/tree/main/blockchain/bitcoin)
