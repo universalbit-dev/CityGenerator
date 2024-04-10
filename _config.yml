@@ -1,22 +1,6 @@
 title: CityGenerator
+theme: jekyll-theme-minimal
 description: keep calm and make something of amazing
 logo: docs/assets/images/[map]01.png
 show_downloads: false
-google_analytics: G-3XFFLMRBQL 
-remote_theme: pages-themes/minimal@v0.2.0
-plugins:
-- "jekyll-feed"
-- "jekyll-seo-tag"
-- "jekyll-remote-theme"
-- "jekyll-redirect-from"
-- "jekyll-coffeescript"
-- "jekyll-github-metadata"
-lsi: false
-safe: true
-incremental: false
-highlighter: rouge
-gist:
-noscript: false
-kramdown:
-math_engine: mathjax
-syntax_highlighter: rouge
+google_analytics: G-MN27QKSXPR
