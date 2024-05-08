@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import * as log from 'loglevel';
 import * as PolyK from 'polyk';
 import Vector from '../vector';
-import * as  geom from 'jsts/org/locationtech/jts/geom.js';
+import { geom } from 'jsts';
 export default class PolygonUtil {
     private static geometryFactory = new jsts.geom.GeometryFactory();
     /**
