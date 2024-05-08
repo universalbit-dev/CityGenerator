@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { CSG } from 'three-csg-ts';
 import Vector from './vector';
 import {BuildingModel} from './ui/buildings';
+import * as BufferGeometryUtils from "three/examples/jsm/utils/BufferGeometryUtils";
 
 enum ModelGeneratorStates {
     WAITING,
@@ -43,7 +44,7 @@ export default class ModelGenerator {
                 private blocks: Vector[][]) {
     }
 
-    
+
     private setState(s: ModelGeneratorStates): void {
         this.state = s;
         log.info(ModelGeneratorStates[s]);
@@ -61,7 +62,7 @@ export default class ModelGenerator {
             case ModelGeneratorStates.SUBTRACT_OCEAN: {
                 const seaLevelMesh = this.polygonToMesh(this.ground, 0);
                 this.threeToBlender(seaLevelMesh);
-                
+
 
                 const seaMesh = this.polygonToMesh(this.sea, 0);
                 this.threeToBlender(seaMesh);
