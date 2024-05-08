@@ -16,7 +16,7 @@ import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
 import {fromLonLat} from 'ol/proj.js';
 
 const source = new VectorSource();
-fetch('data/geojson/roads-seoul.geojson')
+fetch('data/geojson/world-cities.geojson')
   .then(function (response) {
     return response.json();
   })
