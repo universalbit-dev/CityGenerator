@@ -19,7 +19,7 @@
       "@types/d3-quadtree": "^3.0.6",
       "@types/dat.gui": "^0.7.12",
       "@types/file-saver": "^2.0.7",
-      "@types/jsts": "^0.17.22",
+      "@types/jsts": "^0.17.23",
       "@types/noisejs": "^0.0.31",
       "@types/three": "^0.160.0",
       "tsd": "^0.30.7",
@@ -29,6 +29,7 @@
    },
    "dependencies": {
       "@svgdotjs/svg.js": "^3.2.0",
+      "@types/openlayers": "^4.6.23",
       "d3-quadtree": "^3.0.1",
       "dat.gui": "^0.7.9",
       "file-saver": "^2.0.5",
