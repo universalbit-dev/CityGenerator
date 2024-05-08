@@ -33,11 +33,12 @@
 
 
 ### Installation: 
-[NodeJs20 LTS](https://nodejs.org/en/blog/release)
+[NodeJsv20.13.0 LTS](https://nodejs.org/en/blog/release/v20.13.0)
 
 * Clone the project
 ```bash
 git clone https://github.com/universalbit-dev/CityGenerator.git
+cd CityGenerator
 ```
 * Install packages with npm 
 ```bash
