@@ -26,10 +26,10 @@ export default class ModelGenerator {
     private groundMesh: THREE.Mesh;
     private groundBsp: CSG;
     private polygonsToProcess: Vector[][] = [];
-    private roadsGeometry = new THREE.Geometry();
-    private blocksGeometry = new THREE.Geometry();
+    private roadsGeometry = new THREE.BufferGeometry();
+    private blocksGeometry = new THREE.BufferGeometry ();
     private roadsBsp: CSG;
-    private buildingsGeometry = new THREE.Geometry();
+    private buildingsGeometry = new THREE.BufferGeometry ();
     private buildingsToProcess: BuildingModel[];
 
 
@@ -93,7 +93,7 @@ export default class ModelGenerator {
 
                 const road = this.polygonsToProcess.pop();
                 const roadsMesh = this.polygonToMesh(road, 0);
-                this.roadsGeometry.merge(roadsMesh.geometry as THREE.Geometry, this.groundMesh.matrix);
+                this.roadsGeometry.merge(roadsMesh.geometry as THREE.BufferGeometry, this.groundMesh.matrix);
                 break;
             }
             case ModelGeneratorStates.ADD_BLOCKS: {
@@ -107,7 +107,7 @@ export default class ModelGenerator {
 
                 const block = this.polygonsToProcess.pop();
                 const blockMesh = this.polygonToMesh(block, 1);
-                this.blocksGeometry.merge(blockMesh.geometry as THREE.Geometry, this.groundMesh.matrix);
+                this.blocksGeometry.merge(blockMesh.geometry as THREE.BufferGeometry, this.groundMesh.matrix);
                 break;
             }
             case ModelGeneratorStates.ADD_BUILDINGS: {
@@ -120,7 +120,7 @@ export default class ModelGenerator {
 
                 const b = this.buildingsToProcess.pop();
                 const buildingMesh = this.polygonToMesh(b.lotScreen, b.height);
-                this.buildingsGeometry.merge(buildingMesh.geometry as THREE.Geometry, this.groundMesh.matrix);
+                this.buildingsGeometry.merge(buildingMesh.geometry as THREE.BufferGeometry, this.groundMesh.matrix);
                 break;
             }
             case ModelGeneratorStates.CREATE_ZIP: {
