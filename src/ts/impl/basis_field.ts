@@ -76,8 +76,8 @@ export abstract class BasisField {
         this.folder = folder;
         folder.add(this._centre, 'x');
         folder.add(this._centre, 'y');
-        folder.add(this, '_size');
-        folder.add(this, '_decay', -50, 50);
+        folder.add(this, 'size');
+        folder.add(this, 'decay', -50, 50);
     }
 
     /**
