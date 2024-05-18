@@ -48,12 +48,12 @@ View :
 * open /dist/index.html file  -- see algorithm in operation -- and generate city --
 ---
 <img src="" width="auto"></img>
-
-* CDN threejs@0.164.1
-* CDN jsts@latest
+on board:
+* CDN [threejs@0.164.1](https://www.jsdelivr.com/package/npm/three)
+* CDN [jsts@latest](https://www.jsdelivr.com/package/npm/jsts)
 * old_bundle.js
 
-
+---
 
 Status:Development
 ---
