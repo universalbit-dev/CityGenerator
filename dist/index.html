@@ -5,7 +5,19 @@
   <title>CityGenerator</title>
   <link rel="stylesheet" href="node_modules/ol/ol.css">
   <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jsts@2.11.0/dist/jsts.min.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.161.4/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/"
+      }
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/jsts@2.11.3/dist/jsts.min.js"></script>
+
+
+
+
 </head>
 
 <body style="background-color:grey,margin: 0;" <style>
@@ -15,7 +27,7 @@
     <canvas id="map-canvas"></canvas>  <!-- Must match util.ts and style.css -->
     <canvas id="img-canvas"></canvas>
   </div>
-  <script src="bundle.js"></script>
+  <script src="bundle_old.js"></script>
 
 </body>
 
