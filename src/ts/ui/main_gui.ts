@@ -1,4 +1,3 @@
-import * as THREE from 'three';
 import * as log from 'loglevel';
 import DomainController from './domain_controller';
 import TensorField from '../impl/tensor_field';
@@ -24,28 +23,28 @@ import PolygonUtil from '../impl/polygon_util';
  * Handles Map folder, glues together impl
  */
 export default class MainGUI {
-    numBigParks: number = 21;
-    numSmallParks: number = 8;
-    clusterBigParks: boolean = true;
+    private numBigParks: number = 2;
+    private numSmallParks: number = 0;
+    private clusterBigParks: boolean = false;
 
-    domainController = DomainController.getInstance();
-    intersections: Vector[] = [];
-    bigParks: Vector[][] = [];
-    smallParks: Vector[][] = [];
-    animate: boolean = true;
-    animationSpeed: number = 30;
+    private domainController = DomainController.getInstance();
+    private intersections: Vector[] = [];
+    private bigParks: Vector[][] = [];
+    private smallParks: Vector[][] = [];
+    private animate: boolean = true;
+    private animationSpeed: number = 30;
 
-    coastline: WaterGUI;
-    mainRoads: RoadGUI;
-    majorRoads: RoadGUI;
-    minorRoads: RoadGUI;
-    buildings: Buildings;
+    private coastline: WaterGUI;
+    private mainRoads: RoadGUI;
+    private majorRoads: RoadGUI;
+    private minorRoads: RoadGUI;
+    private buildings: Buildings;
 
     // Params
-    coastlineParams: WaterParams;
-    mainParams: StreamlineParams;
-    majorParams: StreamlineParams;
-    minorParams: StreamlineParams = {
+    private coastlineParams: WaterParams;
+    private mainParams: StreamlineParams;
+    private majorParams: StreamlineParams;
+    private minorParams: StreamlineParams = {
         dsep: 20,
         dtest: 15,
         dstep: 1,
@@ -58,9 +57,9 @@ export default class MainGUI {
         collideEarly: 0,
     };
 
-    redraw: boolean = true;
+    private redraw: boolean = true;
 
-    constructor(private guiFolder: dat.GUI, protected tensorField: TensorField, protected closeTensorFolder: () => void) {
+    constructor(private guiFolder: dat.GUI, private tensorField: TensorField, private closeTensorFolder: () => void) {
         guiFolder.add(this, 'generateEverything');
         // guiFolder.add(this, 'simpleBenchMark');
         const animateController = guiFolder.add(this, 'animate');
@@ -328,5 +327,4 @@ export default class MainGUI {
     public get coastlinePolygon(): Vector[] {
         return PolygonUtil.resizeGeometry(this.coastline.coastline, 15 * this.domainController.zoom, false);
     }
-    
 }

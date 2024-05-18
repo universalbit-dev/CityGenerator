@@ -1,4 +1,3 @@
-import * as THREE from 'three';
 import * as log from 'loglevel';
 import Vector from '../vector';
 import { SVG } from '@svgdotjs/svg.js';
@@ -129,7 +128,7 @@ export class DefaultCanvasWrapper extends CanvasWrapper {
         const fontSize = 50 * this._scale;
         this.ctx.font = `small-caps ${fontSize}px Verdana`;
         this.ctx.textAlign = "center";
-        this.ctx.fillText("city", this._width/2, this._height - (80 * this._scale - fontSize));
+        this.ctx.fillText("san francisco", this._width/2, this._height - (80 * this._scale - fontSize));
     }
 
     drawRectangle(x: number, y: number, width: number, height: number): void {

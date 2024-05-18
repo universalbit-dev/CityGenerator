@@ -1,4 +1,3 @@
-import * as THREE from 'three';
 import * as log from 'loglevel';
 import Vector from '../vector';
 import Util from '../util';

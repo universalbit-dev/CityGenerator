@@ -1,4 +1,3 @@
-import * as THREE from 'three';
 import * as log from 'loglevel';
 import CanvasWrapper from './canvas_wrapper';
 import DomainController from './domain_controller';

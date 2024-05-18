@@ -1,8 +1,7 @@
-import * as THREE from 'three';
 import * as log from 'loglevel';
 import interact from 'interactjs';
 import Util from '../util';
-import Vector from '../vector';
+import Vector from '../Vector';
 import DomainController from './domain_controller';
 
 interface Draggable {

@@ -1,4 +1,3 @@
-import * as THREE from 'three';
 import * as log from 'loglevel';
 import DomainController from './domain_controller';
 import TensorField from '../impl/tensor_field';
@@ -17,7 +16,7 @@ export interface BuildingModel {
 }
 
 /**
- * Pseudo 3D buildings //https://www.youtube.com/watch?v=h6cyNPe5kZg
+ * Pseudo 3D buildings
  */
 class BuildingModels {
     private domainController = DomainController.getInstance();
