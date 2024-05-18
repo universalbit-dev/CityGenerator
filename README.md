@@ -43,7 +43,7 @@ cd CityGenerator
 ```bash
 npm i && npm audit fix
 ```
-View :
+### View :
 ---
 * open /dist/index.html file  -- see algorithm in operation -- and generate city --
 ---
