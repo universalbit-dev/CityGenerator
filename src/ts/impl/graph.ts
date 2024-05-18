@@ -1,4 +1,3 @@
-import * as THREE from 'three';
 import * as log from 'loglevel';
 import * as isect from 'isect';
 import * as d3 from 'd3-quadtree';

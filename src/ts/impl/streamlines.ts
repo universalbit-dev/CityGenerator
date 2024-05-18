@@ -1,4 +1,3 @@
-import * as THREE from 'three';
 import * as log from 'loglevel';
 import * as simplify from 'simplify-js';
 import Vector from '../vector';

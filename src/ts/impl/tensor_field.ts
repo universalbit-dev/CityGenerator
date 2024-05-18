@@ -1,8 +1,6 @@
-import * as THREE from 'three';
 import * as log from 'loglevel';
-import noise from 'noisejs';
-import SimplexNoise from 'simplex-noise';
-import { createNoise2D } from 'simplex-noise';
+// import * as noise from 'noisejs';
+import * as SimplexNoise from 'simplex-noise';
 import Tensor from './tensor';
 import Vector from '../vector';
 import {Grid, Radial, BasisField} from './basis_field';
@@ -16,20 +14,28 @@ export interface NoiseParams {
     noiseAngleGlobal: number;
 }
 
-/* Combines basis fields Noise added when sampling a point in a park */
+/**
+ * Combines basis fields
+ * Noise added when sampling a point in a park
+ */
+export default class TensorField {
+    private basisFields: BasisField[] = [];
+    private noise: SimplexNoise;
 
- export default class TensorField {
-    public basisFields: BasisField[]=[];
-    public noise:typeof SimplexNoise;
-    public parks: Vector[][]=[];
-    public sea: Vector[]=[];
-    public river: Vector[]=[];
+    public parks: Vector[][] = [];
+    public sea: Vector[] = [];
+    public river: Vector[] = [];
     public ignoreRiver = false;
+
     public smooth = false;
-    constructor(public noiseParams: NoiseParams){this.noise;}
 
-    /* Used when integrating coastline and river */
+    constructor(public noiseParams: NoiseParams) {
+        this.noise = new SimplexNoise();
+    }
 
+    /**
+     * Used when integrating coastline and river
+     */
     enableGlobalNoise(angle: number, size: number): void {
         this.noiseParams.globalNoise = true;
         this.noiseParams.noiseAngleGlobal = angle;
@@ -42,7 +48,7 @@ export interface NoiseParams {
 
     addGrid(centre: Vector, size: number, decay: number, theta: number): void {
         const grid = new Grid(centre, size, decay, theta);
-        this.addField(grid);
+        this.addField(grid);        
     }
 
     addRadial(centre: Vector, size: number, decay: number): void {
@@ -103,10 +109,11 @@ export interface NoiseParams {
         return tensorAcc;
     }
 
-    /* Noise Angle is in degrees */
+    /**
+     * Noise Angle is in degrees
+     */
     getRotationalNoise(point: Vector, noiseSize: number, noiseAngle: number): number {
-      const noise2D = createNoise2D();
-      return noise2D(point.x / noiseSize, point.y / noiseSize) * noiseAngle * Math.PI / 180;
+        return this.noise.noise2D(point.x / noiseSize, point.y / noiseSize) * noiseAngle * Math.PI / 180;
     }
 
     onLand(point: Vector): boolean {

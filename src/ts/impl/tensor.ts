@@ -1,4 +1,3 @@
-import * as THREE from 'three';
 import Vector from '../vector';
 
 export default class Tensor {
