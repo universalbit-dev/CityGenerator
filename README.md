@@ -47,7 +47,7 @@ npm i && npm audit fix
 ---
 * open /dist/index.html file  -- see algorithm in operation -- and generate city --
 ---
-<img src="" width="auto"></img>
+<img src="https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/gif/citygenerator.gif" width="auto"></img>
 on board:
 * CDN [threejs@0.164.1](https://www.jsdelivr.com/package/npm/three)
 * CDN [jsts@latest](https://www.jsdelivr.com/package/npm/jsts)
