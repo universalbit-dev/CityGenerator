@@ -44,8 +44,16 @@ cd CityGenerator
 ```bash
 npm i && npm audit fix
 ```
+
+* open /dist/index.html file  -- see algorithm in operation -- and generate city --
 ---
 
+* CDN threejs@latest
+* CDN jsts@latest
+* old_bundle.js
+
+Status:Development
+---
 ##### [Compiler WebPack5 release](https://webpack.js.org/blog/2020-10-10-webpack-5-release/)
 ##### [TypeScript Note](https://webpack.js.org/guides/typescript/)
 
