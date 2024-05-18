@@ -1,10 +1,8 @@
 import * as log from 'loglevel';
-//https://threejs.org/manual/#en/fundamentals
-import * as THREE from 'three';
-import { CSG } from 'three-csg-ts';
+import * as THREE from 'three'
 import Vector from './vector';
+import { CSG } from 'three-csg-ts';
 import {BuildingModel} from './ui/buildings';
-import * as BufferGeometryUtils from "three/examples/jsm/utils/BufferGeometryUtils";
 
 enum ModelGeneratorStates {
     WAITING,
@@ -18,7 +16,9 @@ enum ModelGeneratorStates {
 }
 
 export default class ModelGenerator {
-    private readonly groundLevel = 20;
+    private readonly groundLevel = 20;  // Thickness of groundMesh
+
+    private readonly exportSTL = require('threejs-export-stl');
     private resolve: (blob: any) => void = b => {};
     private zip: any;
     private state: ModelGeneratorStates = ModelGeneratorStates.WAITING;
@@ -26,10 +26,10 @@ export default class ModelGenerator {
     private groundMesh: THREE.Mesh;
     private groundBsp: CSG;
     private polygonsToProcess: Vector[][] = [];
-    private roadsGeometry = new THREE.BufferGeometry();
-    private blocksGeometry = new THREE.BufferGeometry ();
+    private roadsGeometry = new THREE.Geometry();
+    private blocksGeometry = new THREE.Geometry();
     private roadsBsp: CSG;
-    private buildingsGeometry = new THREE.BufferGeometry ();
+    private buildingsGeometry = new THREE.Geometry();
     private buildingsToProcess: BuildingModel[];
 
 
@@ -44,6 +44,18 @@ export default class ModelGenerator {
                 private blocks: Vector[][]) {
     }
 
+    public async getSTL(): Promise<any> {
+        return new Promise<any>(resolve => {
+            this.resolve = resolve;
+            const JSZip = require("jszip");
+            this.zip = new JSZip();
+            this.zip.file("model/README.txt", "For a tutorial on putting these models together to create a city, go to https://maps.probabletrain.com/#/stl");
+
+            this.groundMesh = this.polygonToMesh(this.ground, this.groundLevel);
+            this.groundBsp = CSG.fromMesh(this.groundMesh);
+            this.setState(ModelGeneratorStates.SUBTRACT_OCEAN);
+        });
+    }
 
     private setState(s: ModelGeneratorStates): void {
         this.state = s;
@@ -62,22 +74,29 @@ export default class ModelGenerator {
             case ModelGeneratorStates.SUBTRACT_OCEAN: {
                 const seaLevelMesh = this.polygonToMesh(this.ground, 0);
                 this.threeToBlender(seaLevelMesh);
-
+                const seaLevelSTL = this.exportSTL.fromMesh(seaLevelMesh);
+                this.zip.file("model/domain.stl", seaLevelSTL);
 
                 const seaMesh = this.polygonToMesh(this.sea, 0);
                 this.threeToBlender(seaMesh);
+                const seaMeshSTL = this.exportSTL.fromMesh(seaMesh);
+                this.zip.file("model/sea.stl", seaMeshSTL);
                 this.setState(ModelGeneratorStates.ADD_COASTLINE);
                 break;
             }
             case ModelGeneratorStates.ADD_COASTLINE: {
                 const coastlineMesh = this.polygonToMesh(this.coastline, 0);
                 this.threeToBlender(coastlineMesh);
+                const coastlineSTL = this.exportSTL.fromMesh(coastlineMesh);
+                this.zip.file("model/coastline.stl", coastlineSTL);
                 this.setState(ModelGeneratorStates.SUBTRACT_RIVER);
                 break;
             }
             case ModelGeneratorStates.SUBTRACT_RIVER: {
                 const riverMesh = this.polygonToMesh(this.river, 0);
                 this.threeToBlender(riverMesh);
+                const riverSTL = this.exportSTL.fromMesh(riverMesh);
+                this.zip.file("model/river.stl", riverSTL);
                 this.setState(ModelGeneratorStates.ADD_ROADS);
                 this.polygonsToProcess = this.minorRoads.concat(this.majorRoads).concat(this.mainRoads);
                 break;
@@ -86,6 +105,9 @@ export default class ModelGenerator {
                 if (this.polygonsToProcess.length === 0) {
                     const mesh = new THREE.Mesh(this.roadsGeometry);
                     this.threeToBlender(mesh);
+                    const buildingsSTL = this.exportSTL.fromMesh(mesh);
+                    this.zip.file("model/roads.stl", buildingsSTL);
+                    
                     this.setState(ModelGeneratorStates.ADD_BLOCKS);
                     this.polygonsToProcess = [...this.blocks];
                     break;
@@ -93,34 +115,39 @@ export default class ModelGenerator {
 
                 const road = this.polygonsToProcess.pop();
                 const roadsMesh = this.polygonToMesh(road, 0);
-                this.roadsGeometry.merge(roadsMesh.geometry as THREE.BufferGeometry, this.groundMesh.matrix);
+                this.roadsGeometry.merge(roadsMesh.geometry as THREE.Geometry, this.groundMesh.matrix);
                 break;
             }
             case ModelGeneratorStates.ADD_BLOCKS: {
                 if (this.polygonsToProcess.length === 0) {
                     const mesh = new THREE.Mesh(this.blocksGeometry);
                     this.threeToBlender(mesh);
+                    const blocksSTL = this.exportSTL.fromMesh(mesh);
+                    this.zip.file("model/blocks.stl", blocksSTL);
+
                     this.setState(ModelGeneratorStates.ADD_BUILDINGS);
                     this.buildingsToProcess = [...this.buildings];
-                    break;
+                    break; 
                 }
 
                 const block = this.polygonsToProcess.pop();
                 const blockMesh = this.polygonToMesh(block, 1);
-                this.blocksGeometry.merge(blockMesh.geometry as THREE.BufferGeometry, this.groundMesh.matrix);
+                this.blocksGeometry.merge(blockMesh.geometry as THREE.Geometry, this.groundMesh.matrix);
                 break;
             }
             case ModelGeneratorStates.ADD_BUILDINGS: {
                 if (this.buildingsToProcess.length === 0) {
                     const mesh = new THREE.Mesh(this.buildingsGeometry);
                     this.threeToBlender(mesh);
+                    const buildingsSTL = this.exportSTL.fromMesh(mesh);
+                    this.zip.file("model/buildings.stl", buildingsSTL);
                     this.setState(ModelGeneratorStates.CREATE_ZIP);
                     break;
                 }
 
                 const b = this.buildingsToProcess.pop();
                 const buildingMesh = this.polygonToMesh(b.lotScreen, b.height);
-                this.buildingsGeometry.merge(buildingMesh.geometry as THREE.BufferGeometry, this.groundMesh.matrix);
+                this.buildingsGeometry.merge(buildingMesh.geometry as THREE.Geometry, this.groundMesh.matrix);
                 break;
             }
             case ModelGeneratorStates.CREATE_ZIP: {
@@ -139,7 +166,7 @@ export default class ModelGenerator {
      * Rotate and scale mesh so up is in the right direction
      */
     private threeToBlender(mesh: THREE.Object3D): void {
-        mesh.scale.multiplyScalar(0.04);
+        mesh.scale.multiplyScalar(0.02);
         mesh.updateMatrixWorld(true);
     }
 
