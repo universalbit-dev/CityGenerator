@@ -49,7 +49,7 @@ View :
 ---
 <img src="" width="auto"></img>
 
-* CDN threejs@latest
+* CDN threejs@0.164.1
 * CDN jsts@latest
 * old_bundle.js
 
