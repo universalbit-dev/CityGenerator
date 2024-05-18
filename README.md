@@ -32,8 +32,7 @@
 * [Buildify](https://github.com/universalbit-dev/CityGenerator/blob/master/public/3d/buildify/Buildify_1.0.pdf)
 
 
-### Installation: 
-[NodeJsv20.13.0 LTS](https://nodejs.org/en/blog/release/v20.13.0)
+### Installation: [NodeJsv20.13.0 LTS](https://nodejs.org/en/blog/release/v20.13.0)
 
 * Clone the project
 ```bash
@@ -44,13 +43,17 @@ cd CityGenerator
 ```bash
 npm i && npm audit fix
 ```
-
+View :
+---
 * open /dist/index.html file  -- see algorithm in operation -- and generate city --
 ---
+<img src="" width="auto"></img>
 
 * CDN threejs@latest
 * CDN jsts@latest
 * old_bundle.js
+
+
 
 Status:Development
 ---
@@ -62,7 +65,7 @@ Status:Development
 ```bash
 npm run build
 ```
-#### after build project open /dist/index.html file  -- algorithm in operation --
+
 <img src="https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/gif/citygenerator_algo.gif" width="auto"></img>
 
 
