@@ -42,7 +42,7 @@
         "buildingModels": true,
         "outlineSize": 1
     },
-    "Assassin": {
+    "NLTK Assassin": {
         "bgColour": "rgb(77,96,89)",
         "buildingStroke": "rgb(72,91,84)",
         "seaColour": "rgb(36,40,43)",
