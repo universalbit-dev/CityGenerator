@@ -119,7 +119,11 @@
             new OpenLayers.Projection("EPSG:4326"), 
             map.getProjectionObject()
           );
-    
+    var Mosul = new OpenLayers.LonLat(43.16,36.35)
+          .transform(
+            new OpenLayers.Projection("EPSG:4326"), 
+            map.getProjectionObject()
+          );
     
     
     var zoom=0;
