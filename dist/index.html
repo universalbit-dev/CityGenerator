@@ -32,31 +32,36 @@
 
     var Kyiv = new OpenLayers.LonLat(30.52,50.45)
           .transform(
-            new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
-            map.getProjectionObject() // to Spherical Mercator Projection
+            new OpenLayers.Projection("EPSG:4326"),
+            map.getProjectionObject() 
           );
     var Aleppo = new OpenLayers.LonLat(37.21,36.19)
           .transform(
-            new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
-            map.getProjectionObject() // to Spherical Mercator Projection
+            new OpenLayers.Projection("EPSG:4326"), 
+            map.getProjectionObject() 
           );
     
      var Rome = new OpenLayers.LonLat(12.55,41.89)
           .transform(
-            new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
-            map.getProjectionObject() // to Spherical Mercator Projection
+            new OpenLayers.Projection("EPSG:4326"), 
+            map.getProjectionObject() 
           );
     var Atlanta = new OpenLayers.LonLat(-84.22 ,33.76)
           .transform(
-            new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
-            map.getProjectionObject() // to Spherical Mercator Projection
+            new OpenLayers.Projection("EPSG:4326"), 
+            map.getProjectionObject()
           );
     var Belchite = new OpenLayers.LonLat(-0.75 ,41.31)
           .transform(
-            new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
-            map.getProjectionObject() // to Spherical Mercator Projection
+            new OpenLayers.Projection("EPSG:4326"), 
+            map.getProjectionObject() 
           );
-                  
+    var Berlin = new OpenLayers.LonLat(13.39 ,52.54)
+          .transform(
+            new OpenLayers.Projection("EPSG:4326"), 
+            map.getProjectionObject()
+          );
+    
     var zoom=0;
 
     var markers = new OpenLayers.Layer.Markers( "Markers" );
