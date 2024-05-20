@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head lang="en">
@@ -41,7 +42,7 @@
             map.getProjectionObject() 
           );
     
-     var Rome = new OpenLayers.LonLat(12.55,41.89)
+    var Rome = new OpenLayers.LonLat(12.55,41.89)
           .transform(
             new OpenLayers.Projection("EPSG:4326"), 
             map.getProjectionObject() 
@@ -57,6 +58,12 @@
             map.getProjectionObject() 
           );
     var Berlin = new OpenLayers.LonLat(13.39 ,52.54)
+          .transform(
+            new OpenLayers.Projection("EPSG:4326"), 
+            map.getProjectionObject()
+          );
+          
+    var Dresden = new OpenLayers.LonLat(13.75 ,51.05)
           .transform(
             new OpenLayers.Projection("EPSG:4326"), 
             map.getProjectionObject()
