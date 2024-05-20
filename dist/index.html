@@ -78,6 +78,11 @@
             new OpenLayers.Projection("EPSG:4326"), 
             map.getProjectionObject()
           );
+    var Hiroshima = new OpenLayers.LonLat(132.45,34.42)
+          .transform(
+            new OpenLayers.Projection("EPSG:4326"), 
+            map.getProjectionObject()
+          );
     
     var zoom=0;
 
