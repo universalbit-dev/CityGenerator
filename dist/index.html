@@ -102,6 +102,13 @@
             map.getProjectionObject()
           );
     
+    var Julich = new OpenLayers.LonLat(6.39,50.92)
+          .transform(
+            new OpenLayers.Projection("EPSG:4326"), 
+            map.getProjectionObject()
+          );
+    
+    
     var zoom=0;
 
     var markers = new OpenLayers.Layer.Markers( "Markers" );
