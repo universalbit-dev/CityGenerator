@@ -50,19 +50,22 @@
           .transform(
             new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
             map.getProjectionObject() // to Spherical Mercator Projection
-          );    
-    var zoom=11;
+          );
+    var Belchite = new OpenLayers.LonLat(-0.75 ,41.31)
+          .transform(
+            new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+            map.getProjectionObject() // to Spherical Mercator Projection
+          );
+                  
+    var zoom=0;
 
     var markers = new OpenLayers.Layer.Markers( "Markers" );
     map.addLayer(markers);
-    markers.addMarker(new OpenLayers.Marker(Kyiv));
-    map.setCenter (Rome, zoom);
-    
-    
+    var World = new OpenLayers.LonLat(20.60 ,43.04)
+    map.setCenter (World, zoom);   
   </script>
-<!--https://www.openstreetmap.org/#map=6/42.088/12.564 >
-
+  
+<!--https://www.openstreetmap.org/#map=6/42.088/12.564 -->
 </body>
-
 
 </html>
