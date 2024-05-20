@@ -173,6 +173,12 @@
             map.getProjectionObject()
           );
     
+    var Warszawa = new OpenLayers.LonLat(21.13,52.23)
+          .transform(
+            new OpenLayers.Projection("EPSG:4326"), 
+            map.getProjectionObject()
+          );
+    
     var zoom=0;
 
     var markers = new OpenLayers.Layer.Markers( "Markers" );
