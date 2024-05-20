@@ -148,6 +148,13 @@
             new OpenLayers.Projection("EPSG:4326"), 
             map.getProjectionObject()
           );
+
+    var Sarajevo = new OpenLayers.LonLat(18.42,43.85)
+          .transform(
+            new OpenLayers.Projection("EPSG:4326"), 
+            map.getProjectionObject()
+          );
+    
     
     var zoom=0;
 
