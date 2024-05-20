@@ -73,6 +73,11 @@
             new OpenLayers.Projection("EPSG:4326"), 
             map.getProjectionObject()
           );
+    var Hamburg = new OpenLayers.LonLat(10.13,53.65)
+          .transform(
+            new OpenLayers.Projection("EPSG:4326"), 
+            map.getProjectionObject()
+          );
     
     var zoom=0;
 
