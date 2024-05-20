@@ -166,7 +166,12 @@
             new OpenLayers.Projection("EPSG:4326"), 
             map.getProjectionObject()
           );
-
+    
+    var Valletta = new OpenLayers.LonLat(14.52,35.90)
+          .transform(
+            new OpenLayers.Projection("EPSG:4326"), 
+            map.getProjectionObject()
+          );
     
     var zoom=0;
 
