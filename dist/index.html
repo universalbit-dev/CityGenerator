@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head lang="en">
@@ -133,6 +132,18 @@
           );
 
     var oradour_sur_Glane = new OpenLayers.LonLat(1.03,45.93)
+          .transform(
+            new OpenLayers.Projection("EPSG:4326"), 
+            map.getProjectionObject()
+          );
+    
+    var oradour_sur_Glane = new OpenLayers.LonLat(1.03,45.93)
+          .transform(
+            new OpenLayers.Projection("EPSG:4326"), 
+            map.getProjectionObject()
+          );
+
+    var Raqqa = new OpenLayers.LonLat(39.03,35.95)
           .transform(
             new OpenLayers.Projection("EPSG:4326"), 
             map.getProjectionObject()
