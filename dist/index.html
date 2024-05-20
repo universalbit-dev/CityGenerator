@@ -114,6 +114,12 @@
             map.getProjectionObject()
           );
     
+    var London = new OpenLayers.LonLat(0.10,51.49)
+          .transform(
+            new OpenLayers.Projection("EPSG:4326"), 
+            map.getProjectionObject()
+          );
+    
     
     
     var zoom=0;
