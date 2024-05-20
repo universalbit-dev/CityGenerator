@@ -35,13 +35,30 @@
             new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
             map.getProjectionObject() // to Spherical Mercator Projection
           );
-          
+    var Aleppo = new OpenLayers.LonLat(37.21,36.19)
+          .transform(
+            new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+            map.getProjectionObject() // to Spherical Mercator Projection
+          );
+    
+     var Rome = new OpenLayers.LonLat(12.55,41.89)
+          .transform(
+            new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+            map.getProjectionObject() // to Spherical Mercator Projection
+          );
+    var Atlanta = new OpenLayers.LonLat(-84.22 ,33.76)
+          .transform(
+            new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+            map.getProjectionObject() // to Spherical Mercator Projection
+          );    
     var zoom=11;
 
     var markers = new OpenLayers.Layer.Markers( "Markers" );
     map.addLayer(markers);
     markers.addMarker(new OpenLayers.Marker(Kyiv));
-    map.setCenter (Kyiv, zoom);
+    map.setCenter (Rome, zoom);
+    
+    
   </script>
 <!--https://www.openstreetmap.org/#map=6/42.088/12.564 >
 
