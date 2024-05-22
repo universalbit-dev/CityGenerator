@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<!-- https://cs.stanford.edu/people/karpathy/convnetjs/demo/trainers.html -->
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>ConvNetJS Trainer Comparison on MNIST</title>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vis-network@9.1.9/peer/umd/vis-network.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vis-network@9.1.9/styles/vis-network.min.css"></script>
+<script src="https://cdn.jsdelivr.net/npm/convnet@1.0.0/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/util@0.12.5/util.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mnist@1.1.0/dist/mnist.min.js"></script>
+
+<script>
+var t = "/* */";
+var layer_defs = [];
+layer_defs.push({type:'input', out_sx:21, out_sy:21, out_depth:1});
+layer_defs.push({type:'fc', num_neurons:144, activation:'relu'});
+layer_defs.push({type:'conv', num_neurons:144, activation:'sigmoid'});
+layer_defs.push({type:'softmax', num_classes:8});
+
+var LR = 0.01;
+var BS = 8;
+var L2 = 0.001;
+nets = [];
+trainer_defs = [];
+trainer_defs.push({learning_rate:10*LR, method: 'sgd', momentum: 0.0, batch_size:BS, l2_decay:L2});
+trainer_defs.push({learning_rate:LR, method: 'sgd', momentum: 0.9, batch_size:BS, l2_decay:L2});
+trainer_defs.push({learning_rate:LR, method: 'adagrad', eps: 1e-6, batch_size:BS, l2_decay:L2});
+trainer_defs.push({learning_rate:LR, method: 'windowgrad', eps: 1e-6, ro: 0.95, batch_size:BS, l2_decay:L2});
+trainer_defs.push({learning_rate:1.0, method: 'adadelta', eps: 1e-6, ro:0.95, batch_size:BS, l2_decay:L2});
+trainer_defs.push({learning_rate:LR, method: 'nesterov', momentum: 0.9, batch_size:BS, l2_decay:L2});
+
+legend = ['sgd', 'sgd+momentum', 'adagrad', 'windowgrad', 'adadelta', 'nesterov'];
+
+// --------------------------
+// BEGIN MNIST SPECIFIC STUFF
+// --------------------------
+classes_txt = ['0','1','2','3','4','5','6','7','8','9'];
+
+var use_validation_data = false;
+var sample_training_instance = function() {
+
+  var bi = Math.floor(Math.random()*loaded_train_batches.length);
+  var b = loaded_train_batches[bi];
+  var k = Math.floor(Math.random()*3000); // sample within the batch
+  var n = b*3000+k;
+
+  if(step_num%5000===0 && step_num>0) {
+    for(var i=0;i<num_batches;i++) {
+      if(!loaded[i]) {
+        load_data_batch(i);
+        break;
+      }
+    }
+  }
+
+  var p = img_data[b].data;
+  var x = new convnetjs.Vol(28,28,1,0.0);
+  var W = 28*28;
+  for(var i=0;i<W;i++) {
+    var ix = ((W * k) + i) * 4;
+    x.w[i] = p[ix]/255.0;
+  }
+  x = convnetjs.augment(x, 24);
+
+  var isval = use_validation_data && n%10===0 ? true : false;
+  return {x:x, label:labels[n], isval:isval};
+}
+
+var sample_test_instance = function() {
+  var b = 20;
+  var k = Math.floor(Math.random()*3000);
+  var n = b*3000+k;
+
+  var p = img_data[b].data;
+  var x = new convnetjs.Vol(28,28,1,0.0);
+  var W = 28*28;
+  for(var i=0;i<W;i++) {
+    var ix = ((W * k) + i) * 4;
+    x.w[i] = p[ix]/255.0;
+  }
+  x = convnetjs.augment(x, 24);
+  return {x:x, label:labels[n]};
+}
+
+var num_batches = 21; // 20 training batches, 1 test
+var data_img_elts = new Array(num_batches);
+var img_data = new Array(num_batches);
+var loaded = new Array(num_batches);
+var loaded_train_batches = [];
+var step_num = 0;
+
+var lossWindows = [];
+var trainAccWindows = [];
+var testAccWindows = [];
+var lossGraph, trainGraph, testGraph;
+$(window).load(function() {
+
+$("#layerdef").val(t);
+
+  for(var k=0;k<loaded.length;k++) { loaded[k] = false; }
+  load_data_batch(0);
+  load_data_batch(20);
+  start_fun();
+  reload();
+});
+
+var reload = function() {
+
+  eval($("#layerdef").val());
+
+  var N = trainer_defs.length;
+  nets = [];trainers = [];
+  for(var i=0;i<N;i++) {
+    var net = new convnetjs.Net();
+    net.makeLayers(layer_defs);
+    var trainer = new convnetjs.Trainer(net, trainer_defs[i]);
+    nets.push(net);
+    trainers.push(trainer);
+  }
+
+  step_num = 0;
+
+  lossWindows = [];
+  trainAccWindows = [];
+  testAccWindows = [];
+  for(var i=0;i<N;i++) {
+    lossWindows.push(new cnnutil.Window(800));
+    trainAccWindows.push(new cnnutil.Window(800));
+    testAccWindows.push(new cnnutil.Window(800));
+  }
+  lossGraph = new cnnvis.MultiGraph(legend);
+  trainGraph = new cnnvis.MultiGraph(legend);
+  testGraph = new cnnvis.MultiGraph(legend);
+}
+
+var start_fun = function() {
+  if(loaded[0] && loaded[20]) {
+    console.log('starting!');
+    setInterval(load_and_step, 0);
+  }
+  else { setTimeout(start_fun, 200); }
+}
+
+var load_data_batch = function(batch_num) {
+  // Load the dataset with JS in background
+  data_img_elts[batch_num] = new Image();
+  var data_img_elt = data_img_elts[batch_num];
+  data_img_elt.onload = function() {
+    var data_canvas = document.createElement('canvas');
+    data_canvas.width = data_img_elt.width;
+    data_canvas.height = data_img_elt.height;
+    var data_ctx = data_canvas.getContext("2d");
+    data_ctx.drawImage(data_img_elt, 0, 0); // copy it over... bit wasteful :(
+    img_data[batch_num] = data_ctx.getImageData(0, 0, data_canvas.width, data_canvas.height);
+    loaded[batch_num] = true;
+    if(batch_num < 20) { loaded_train_batches.push(batch_num); }
+    console.log('finished loading data batch ' + batch_num);
+  };
+  data_img_elt.src = "mnist/mnist_batch_" + batch_num + ".png";
+}
+
+// ------------------------
+// END MNIST SPECIFIC STUFF
+// ------------------------
+
+var load_and_step = function() {
+  step_num++;
+  var sample = sample_training_instance();
+  var test_sample = sample_test_instance();
+  var N = nets.length;
+  var losses = [];
+  var trainacc = [];
+  testacc = [];
+  for(var i=0;i<N;i++) {
+
+  var stats = trainers[i].train(sample.x, sample.label);
+  var yhat = nets[i].getPrediction();
+  trainAccWindows[i].add(yhat === sample.label ? 1.0 : 0.0);
+  lossWindows[i].add(stats.loss);
+
+
+  nets[i].forward(test_sample.x);
+  var yhat_test = nets[i].getPrediction();
+  testAccWindows[i].add(yhat_test === test_sample.label ? 1.0 : 0.0);
+
+  if(step_num % 100 === 0) {
+  losses.push(lossWindows[i].get_average());
+  trainacc.push(trainAccWindows[i].get_average());
+  testacc.push(testAccWindows[i].get_average());
+  }
+}
+  if(step_num % 100 === 0) {
+  lossGraph.add(step_num, losses);
+  lossGraph.drawSelf(document.getElementById("lossgraph"));
+  trainGraph.add(step_num, trainacc);
+  trainGraph.drawSelf(document.getElementById("trainaccgraph"));
+  testGraph.add(step_num, testacc);
+  testGraph.drawSelf(document.getElementById("testaccgraph"));
+  }
+}
+
+</script>
+
+</head>
+<body></body>
+
+</html>
