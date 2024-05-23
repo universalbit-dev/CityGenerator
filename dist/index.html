@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head lang="en">
-  
+
   <meta charset="utf-8">
   <title>CityGenerator</title>
   <link rel="stylesheet" href="node_modules/ol/ol.css">
@@ -15,12 +15,18 @@
       }
     }
   </script>
-  <div include-html="nn.html"></div>
+  <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+   <script>
+      $(function() {
+         $("#includeHtml").load("nn.html");
+      });
+   </script>
 
 </head>
 
 <body style="background-color:white,margin: 0;" </style>
-  <svg id="map-svg"></svg>
+ <div id="includeHtml"></div>
+ <svg id="map-svg"></svg>
   <div>
     <canvas id="map-canvas"></canvas>  <!-- Must match util.ts and style.css -->
     <canvas id="img-canvas"></canvas>

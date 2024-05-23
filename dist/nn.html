@@ -71,12 +71,10 @@ var sample_training_instance = function() {
   var isval = use_validation_data && n%10===0 ? true : false;
   return {x:x, label:labels[n], isval:isval};
 }
-
-var sample_test_instance = function() {
+  var sample_test_instance = function() {
   var b = 20;
   var k = Math.floor(Math.random()*3000);
   var n = b*3000+k;
-
   var p = img_data[b].data;
   var x = new convnetjs.Vol(28,28,1,0.0);
   var W = 28*28;
