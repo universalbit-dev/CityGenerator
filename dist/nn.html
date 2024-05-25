@@ -18,9 +18,13 @@
 <script>
 var t = "/* */";
 var layer_defs = [];
-layer_defs.push({type:'input', out_sx:21, out_sy:21, out_depth:1});
-layer_defs.push({type:'fc', num_neurons:144, activation:'relu'});
-layer_defs.push({type:'conv', num_neurons:144, activation:'sigmoid'});
+/*  */
+var x=Math.floor((Math.random() * 24) + 1); //random whole number between 1 and 24
+var y=Math.floor((Math.random() * 24) + 1); //random whole number between 1 and 24
+var neuro = Math.floor((Math.random() * 144) + 1); //random whole number between 1 and 144
+layer_defs.push({type:'input', out_sx:x, out_sy:y, out_depth:1});
+layer_defs.push({type:'fc', num_neurons:neuro, activation:'relu'});
+layer_defs.push({type:'conv', num_neurons:neuro, activation:'sigmoid'});
 layer_defs.push({type:'softmax', num_classes:8});
 
 var LR = 0.01;
