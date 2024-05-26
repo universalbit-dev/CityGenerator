@@ -7,6 +7,7 @@
 * [Object3D to Json]
 <img src="https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/gif/object3d_tojson.gif" width="auto"></img>
 
+[citygenerator.json](https://raw.githubusercontent.com/universalbit-dev/CityGenerator/master/json/citygenerator.json)
 ```bash
 "metadata": {
 		"version": 4.6,
