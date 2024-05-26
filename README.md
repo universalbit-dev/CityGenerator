@@ -7,6 +7,14 @@
 * [Object3D to Json]
 <img src="https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/gif/object3d_tojson.gif" width="auto"></img>
 
+```bash
+"metadata": {
+		"version": 4.6,
+		"type": "Object",
+		"generator": "Object3D.toJSON"
+	},
+```
+
 ## Table of Contents
 
 * [About the Project](#about-the-project-probabletrain)
