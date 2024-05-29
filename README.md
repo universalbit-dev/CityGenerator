@@ -38,8 +38,9 @@
 #### Getting Started using different builder tool
 * [ThreeJS Editor](https://threejs.org/editor/)
 * [MeshLab](https://www.meshlab.net/#features)
-#### Cleaning and simplifying a mesh with meshlab  [STL-file](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/stl.md)
+#### Cleaning and simplifying a mesh with meshlab  -- [Modeling STL-files in Blender] (https://github.com/universalbit-dev/CityGenerator/blob/master/docs/stl.md)
 filters > Remeshing, Simplification and Reconstruction > Quadric Edge Collapse Decimation
+<img src="" width="auto"></img>
 
 * [Blender](https://www.blender.org/)
   
@@ -47,6 +48,8 @@ filters > Remeshing, Simplification and Reconstruction > Quadric Edge Collapse D
 ---
 * [Building Tools](https://ranjian0.github.io/building_tools/)
 * [Buildify](https://github.com/universalbit-dev/CityGenerator/blob/master/public/3d/buildify/Buildify_1.0.pdf)
+
+[view](https://github.com/universalbit-dev/CityGenerator/blob/master/stl/nofullstack_model.stl) exported stl 3d model
 
 ### [Usage](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/usageguide.md)
 ---
