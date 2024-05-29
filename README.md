@@ -18,11 +18,8 @@
 		"generator": "Object3D.toJSON"
 	},
 ```
-
-##### Table of Contents
-* [About the Project](#about-the-project-probabletrain)
-* [Getting Started](#getting-started)
-* [Installation](#installation)
+* [Use CityGenerator](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/usageguide.md)
+* [Installation from source](#installation)
 * [Net](https://github.com/universalbit-dev/CityGenerator/tree/master/network)
 * [Workers](https://github.com/universalbit-dev/CityGenerator#multi-threaded-cpu-miner-for-litecoin-and-bitcoin)
 * [3D Buildings](https://github.com/universalbit-dev/CityGenerator/tree/master/public/3d/buildings)
@@ -37,14 +34,11 @@
 ##### Thanks!
 ---
 
-
-
 #### Getting Started using different builder tool
 * [ThreeJS Editor](https://threejs.org/editor/)
 * [MeshLab](https://www.meshlab.net/#features)
 #### Cleaning and simplifying a mesh with meshlab  -- [Modeling STL-files in Blender](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/stl.md)
 filters > Remeshing, Simplification and Reconstruction > Quadric Edge Collapse Decimation
-<img src="" width="auto"></img>
 
 * [Blender](https://www.blender.org/)
   
@@ -81,6 +75,7 @@ cd CityGenerator
 npm i && npm audit fix
 ```
 
+#about-the-project
 ##### [Compiler WebPack5 release](https://webpack.js.org/blog/2020-10-10-webpack-5-release/)
 ##### [TypeScript Note](https://webpack.js.org/guides/typescript/)
 
