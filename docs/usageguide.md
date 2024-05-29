@@ -6,7 +6,7 @@ git clone https://github.com/universalbit-dev/CityGenerator.git
 cd CityGenerator
 ```
 
-then generate city 
+then [generate city](https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/gif/citygenerator.gif) 
 ## Basic Usage
 
 - Click `Generate` in the menu in the top right
