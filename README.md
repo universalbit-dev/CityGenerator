@@ -34,14 +34,13 @@
 ---
 
 
-#### Getting Started using different builder tools
-* [AlgorithmOverview](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/algorithmoverview.md)
+
+#### Getting Started using different builder tool
 * [ThreeJS Editor](https://threejs.org/editor/)
 * [MeshLab](https://www.meshlab.net/#features)
 #### Cleaning and simplifying a mesh with meshlab  [STL-file](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/stl.md)
 filters > Remeshing, Simplification and Reconstruction > Quadric Edge Collapse Decimation
 
-  
 * [Blender](https://www.blender.org/)
   
 ---
@@ -49,6 +48,20 @@ filters > Remeshing, Simplification and Reconstruction > Quadric Edge Collapse D
 * [Building Tools](https://ranjian0.github.io/building_tools/)
 * [Buildify](https://github.com/universalbit-dev/CityGenerator/blob/master/public/3d/buildify/Buildify_1.0.pdf)
 
+### [Usage](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/usageguide.md)
+---
+* open > /dist/index.html file  and [generate city](https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/gif/citygenerator.gif)
+---
+<img src="https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/gif/citygenerator.gif" width="auto"></img>
+on board:
+* CDN [threejs@0.164.1](https://www.jsdelivr.com/package/npm/three)
+* CDN [jsts@latest](https://www.jsdelivr.com/package/npm/jsts)
+* bundle_edit.js
+
+---
+---
+
+[Developer Area]
 
 ### Installation: [NodeJsv20.13.0 LTS](https://nodejs.org/en/blog/release/v20.13.0)
 
@@ -61,21 +74,7 @@ cd CityGenerator
 ```bash
 npm i && npm audit fix
 ```
-### [Usage]:
----
-* open /dist/index.html file  -- see algorithm in operation -- and generate city --
----
-<img src="https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/gif/citygenerator.gif" width="auto"></img>
-on board:
-* CDN [threejs@0.164.1](https://www.jsdelivr.com/package/npm/three)
-* CDN [jsts@latest](https://www.jsdelivr.com/package/npm/jsts)
-* bundle_edit.js
 
----
----
-
-Status:Development
----
 ##### [Compiler WebPack5 release](https://webpack.js.org/blog/2020-10-10-webpack-5-release/)
 ##### [TypeScript Note](https://webpack.js.org/guides/typescript/)
 
