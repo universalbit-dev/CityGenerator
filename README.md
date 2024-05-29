@@ -19,7 +19,7 @@
 	},
 ```
 * [Use CityGenerator](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/usageguide.md)
-* [Installation from source](#installation)
+* [Installation from source](#developer-area)
 * [Net](https://github.com/universalbit-dev/CityGenerator/tree/master/network)
 * [Workers](https://github.com/universalbit-dev/CityGenerator#multi-threaded-cpu-miner-for-litecoin-and-bitcoin)
 * [3D Buildings](https://github.com/universalbit-dev/CityGenerator/tree/master/public/3d/buildings)
