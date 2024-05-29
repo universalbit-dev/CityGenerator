@@ -79,25 +79,23 @@ npm i && npm audit fix
 ##### [TypeScript Note](https://webpack.js.org/guides/typescript/)
 
 
-##### Build Project from source: [Work in Progress]
+##### Build Project from source
 ```bash
 npm run build
 ```
 <img src="https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/gif/citygenerator_algo.gif" width="auto"></img>
 
 ---
-#### PM2 Process Manager
-* [pm2](https://pm2.io/docs/runtime/guide/process-management/)
-```
-npm i pm2 --save
-```
 
 * [Typescript WebPack](https://webpack.js.org/guides/typescript/)
-* [WebPack Module Federarion](https://webpack.js.org/concepts/module-federation/) 
-* [CityGenerator usage](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/usageguide.md)
+* [WebPack Module Federarion](https://webpack.js.org/concepts/module-federation/)
+* [Pm2](https://pm2.io/docs/runtime/guide/process-management/)
 
-Network:
-##### BlockChain Net Node and No-Profit  [Why?](https://www.blockchain-council.org/blockchain/blockchain-mining-a-comprehensive-step-by-step-guide/)
+---
+---
+
+#### BlockChain Net node:
+##### Net Node and No-Profit  [Why?](https://www.blockchain-council.org/blockchain/blockchain-mining-a-comprehensive-step-by-step-guide/)
 ##### Bitcoin Pruned Net Node:
 * [BTC Node](https://github.com/universalbit-dev/universalbit-dev/tree/main/blockchain/bitcoin)
 ##### Multi-threaded CPU miner for Litecoin and Bitcoin 
@@ -111,9 +109,6 @@ feel free to make something of amazing.
   
 ## Contact
 ##### UniversalBit - [UniversalBit-dev](https://github.com/universalbit-dev)
-##### Keir - [@probabletrain](https://twitter.com/probabletrain) - probabletrain@gmail.com
-##### Project Link: [https://github.com/probabletrain/mapgenerator](https://github.com/probabletrain/mapgenerator)
-#### [Contributors](https://github.com/ProbableTrain/MapGenerator#contributors-)
 
 ## License
 Distributed under the LGPL-3.0 License. See [lgpl-3.0.txt](https://www.gnu.org/licenses/lgpl-3.0.txt)
