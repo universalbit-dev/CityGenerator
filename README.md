@@ -1,7 +1,10 @@
-##### [Support UniversalBit Project](https://github.com/universalbit-dev/universalbit-dev/tree/main/support)
-##### [Disambiguation](https://en.wikipedia.org/wiki/Wikipedia:Disambiguation)
+* [Support UniversalBit Project](https://github.com/universalbit-dev/universalbit-dev/tree/main/support)
+* [Disambiguation](https://en.wikipedia.org/wiki/Wikipedia:Disambiguation)
+* [Bash Reference Manual](https://www.gnu.org/software/bash/manual/html_node/index.html)
+---
+---
+* [CityGenerator](https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/gif/citygenerator.gif) && [Threejs-Editor](https://threejs.org/editor/)
 
-* [CityGenerator] && [Threejs-Editor](https://threejs.org/editor/)
 <img src="https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/gif/city_generator_threejs_editor.gif" width="auto"></img>
 
 * [Object3D to Json]
@@ -30,7 +33,8 @@
 ##### About Author of City Map Generator: [@probabletrain](https://github.com/ProbableTrain/MapGenerator)
 * [WebSite](https://maps.probabletrain.com/#/)
 * [Support](https://ko-fi.com/probabletrain)
-  Thanks!
+  
+##### Thanks!
 ---
 
 
@@ -116,4 +120,3 @@ feel free to make something of amazing.
 ## License
 Distributed under the LGPL-3.0 License. See [lgpl-3.0.txt](https://www.gnu.org/licenses/lgpl-3.0.txt)
 
-* [Bash Reference Manual](https://www.gnu.org/software/bash/manual/html_node/index.html)
