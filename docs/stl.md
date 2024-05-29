@@ -1,14 +1,3 @@
-#
-#
-#
-#
-#
-
-[Upgrade to Blender 3]()
-* work in progress
-
-
-
 # Creating a 3D Model
 [Learning Together](https://www.blender.org/) How to create 3d models in Blender.
 This does, however, give you more control over the final 3D model.
