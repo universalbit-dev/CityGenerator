@@ -48,7 +48,7 @@ filters > Remeshing, Simplification and Reconstruction > Quadric Edge Collapse D
 * [Buildify](https://github.com/universalbit-dev/CityGenerator/blob/master/public/3d/buildify/Buildify_1.0.pdf)
 
 ### [View](https://github.com/universalbit-dev/CityGenerator/blob/master/stl/nofullstack_model.stl) exported stl 3d model
-### [Usage](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/usageguide.md)
+### [Use CityGenerator](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/usageguide.md)
 ---
 * open > /dist/index.html file  and [generate city](https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/gif/citygenerator.gif)
 ---
