@@ -1,5 +1,12 @@
 # Usage Guide
+clone citygenerator project and open > /dist/index.html file  using your browser 
 
+```bash
+git clone https://github.com/universalbit-dev/CityGenerator.git
+cd CityGenerator
+```
+
+then generate city 
 ## Basic Usage
 
 - Click `Generate` in the menu in the top right
