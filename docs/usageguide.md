@@ -17,9 +17,11 @@ then generate city
 
 High-DPI displays: This will impact pan+zoom performance.
 
-### Download City
+### Download City 
 You can download the city as a `.png`, `.svg`, or as a heightmap. The downloaded image will contain what's on screen, so if you're zoomed in, that's all that will be contained in the image.
 Use `imageScale` to control the resolution of the downloaded `.png` - higher imageScale for higher resolution.
+
+3D Model [STL-file](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/stl.md)
 
 To download a heightmap, select the 'Heightmap' style from the Style folder, and download an image as usual.
 See [Heightmap](heightmap.md) for more details.
