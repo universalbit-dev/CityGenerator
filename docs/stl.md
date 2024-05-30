@@ -1,6 +1,6 @@
 # Creating a 3D Model
 [Learning Together](https://www.blender.org/) How to create 3d models in Blender.
-This does, however, give you more control over the final 3D model.
+Give you more control over the final 3D model.
 
 
 ## Quick Blender Overview
