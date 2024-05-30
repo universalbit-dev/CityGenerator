@@ -34,7 +34,7 @@
 ##### Thanks!
 ---
 
-#### Getting Started using different builder tool
+#### Getting Started
 * [ThreeJS Editor](https://threejs.org/editor/)
 * [MeshLab](https://www.meshlab.net/#features)
 #### Cleaning and simplifying a mesh with meshlab  -- [Modeling STL-files in Blender](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/stl.md)
