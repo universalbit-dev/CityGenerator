@@ -40,10 +40,10 @@
 #### Cleaning and simplifying a mesh with meshlab  -- [Modeling STL-files in Blender](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/stl.md)
 filters > Remeshing, Simplification and Reconstruction > Quadric Edge Collapse Decimation
 
+---
+---
+
 * [Blender](https://www.blender.org/)
-  
----
----
 * [Building Tools](https://ranjian0.github.io/building_tools/)
 * [Buildify](https://github.com/universalbit-dev/CityGenerator/blob/master/public/3d/buildify/Buildify_1.0.pdf)
 
