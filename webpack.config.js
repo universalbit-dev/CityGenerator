@@ -4,7 +4,10 @@ const { ModuleFederationPlugin } = require('webpack').container;
   module.exports = {
     entry: './src/index.ts',
     mode: 'development',
-    plugins: [new ModuleFederationPlugin({runtime: 'fab-city',shared: ['lodash'],}),],
+    plugins: [new ModuleFederationPlugin({
+    runtime: 'fab-city',
+    shared: ['lodash','jsts','convnetjs'],
+    }),],
 
   devtool: 'inline-source-map',
     module: {
