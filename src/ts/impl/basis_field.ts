@@ -75,8 +75,8 @@ export abstract class BasisField {
         this.folder = folder;
         folder.add(this._centre, 'x');
         folder.add(this._centre, 'y');
-        folder.add(this, '_size');
-        folder.add(this, '_decay', -50, 50);
+        folder.add(this, 'size');
+        folder.add(this, 'decay', -50, 50);
     }
 
     /**
@@ -91,7 +91,7 @@ export abstract class BasisField {
         if (this._decay === 0 && normDistanceToCentre >= 1) {
             return 0;
         }
-        return Math.max(0, (1 - normDistanceToCentre)) ** this._decay;
+        return Math.max(0, (1 - normDistanceToCentre)) ** this.decay;
     }
 }
 
