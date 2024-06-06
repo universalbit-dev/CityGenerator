@@ -1,6 +1,6 @@
+import * as THREE from 'three';
 import * as log from 'loglevel';
-// import * as noise from 'noisejs';
-import * as SimplexNoise from 'simplex-noise';
+import SimplexNoise from 'simplex-noise';
 import Tensor from './tensor';
 import Vector from '../vector';
 import {Grid, Radial, BasisField} from './basis_field';
@@ -20,8 +20,7 @@ export interface NoiseParams {
  */
 export default class TensorField {
     private basisFields: BasisField[] = [];
-    private noise: SimplexNoise;
-
+    private noise = new (<any>THREE).SimplexNoise();;
     public parks: Vector[][] = [];
     public sea: Vector[] = [];
     public river: Vector[] = [];
@@ -30,7 +29,7 @@ export default class TensorField {
     public smooth = false;
 
     constructor(public noiseParams: NoiseParams) {
-        this.noise = new SimplexNoise();
+        this.noise = new (<any>THREE).SimplexNoise();
     }
 
     /**
