@@ -26,10 +26,10 @@ export default class ModelGenerator {
     private groundMesh: THREE.Mesh;
     private groundBsp: CSG;
     private polygonsToProcess: Vector[][] = [];
-    private roadsGeometry = new THREE.Geometry();
-    private blocksGeometry = new THREE.Geometry();
+    private roadsGeometry = new (<any>THREE).Geometry();
+    private blocksGeometry = new (<any>THREE).Geometry();
     private roadsBsp: CSG;
-    private buildingsGeometry = new THREE.Geometry();
+    private buildingsGeometry = new (<any>THREE).Geometry();
     private buildingsToProcess: BuildingModel[];
 
 
