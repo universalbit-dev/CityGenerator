@@ -53,7 +53,9 @@ filters > Remeshing, Simplification and Reconstruction > Quadric Edge Collapse D
 ---
 * open > /dist/index.html file  and [generate city](https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/gif/citygenerator.gif)
 ---
-<img src="https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/gif/citygenerator.gif" width="300"></img>
+
+<img src="https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/gif/citygenerator.gif" width="600"></img>
+
 on board:
 * CDN [threejs@0.164.1](https://www.jsdelivr.com/package/npm/three)
 * CDN [jsts@latest](https://www.jsdelivr.com/package/npm/jsts)
