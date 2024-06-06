@@ -17,10 +17,11 @@ Mining BitCoin for fun and profit
 #### Asic Miners (asynctonous miner)
 * [Asicminervalue](https://www.asicminervalue.com/)
 
+* [Cpu mining](https://bitcoinwiki.org/wiki/cpu-mining)
 ##### [This is a multi-threaded CPU miner for Litecoin and Bitcoin](https://github.com/universalbit-dev/CityGenerator/tree/master/workers),   
 ##### fork of Jeff Garzik's [reference cpuminer]().
 ---
-#### [Downloads](https://sourceforge.net/projects/cpuminer/files/)
+#### [Downloads cpu miner from sourceforge.net](https://sourceforge.net/projects/cpuminer/files/)
 #### [Git tree](https://github.com/pooler/cpuminer)
 ---
 
