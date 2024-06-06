@@ -103,7 +103,7 @@ export default class ModelGenerator {
             }
             case ModelGeneratorStates.ADD_ROADS: {
                 if (this.polygonsToProcess.length === 0) {
-                    const mesh = new THREE.Mesh(this.roadsGeometry);
+                    const mesh = new (<any>THREE).Mesh(this.roadsGeometry);
                     this.threeToBlender(mesh);
                     const buildingsSTL = this.exportSTL.fromMesh(mesh);
                     this.zip.file("model/roads.stl", buildingsSTL);
@@ -115,12 +115,13 @@ export default class ModelGenerator {
 
                 const road = this.polygonsToProcess.pop();
                 const roadsMesh = this.polygonToMesh(road, 0);
-                this.roadsGeometry.merge(roadsMesh.geometry as THREE.Geometry, this.groundMesh.matrix);
+                
+                this.roadsGeometry.merge((roadsMesh.geometry), this.groundMesh.matrix);
                 break;
             }
             case ModelGeneratorStates.ADD_BLOCKS: {
                 if (this.polygonsToProcess.length === 0) {
-                    const mesh = new THREE.Mesh(this.blocksGeometry);
+                    const mesh = new (<any>THREE).Mesh(this.blocksGeometry);
                     this.threeToBlender(mesh);
                     const blocksSTL = this.exportSTL.fromMesh(mesh);
                     this.zip.file("model/blocks.stl", blocksSTL);
@@ -132,12 +133,12 @@ export default class ModelGenerator {
 
                 const block = this.polygonsToProcess.pop();
                 const blockMesh = this.polygonToMesh(block, 1);
-                this.blocksGeometry.merge(blockMesh.geometry as THREE.Geometry, this.groundMesh.matrix);
+                this.blocksGeometry.merge((blockMesh.geometry), this.groundMesh.matrix);
                 break;
             }
             case ModelGeneratorStates.ADD_BUILDINGS: {
                 if (this.buildingsToProcess.length === 0) {
-                    const mesh = new THREE.Mesh(this.buildingsGeometry);
+                    const mesh = new (<any>THREE).Mesh(this.buildingsGeometry);
                     this.threeToBlender(mesh);
                     const buildingsSTL = this.exportSTL.fromMesh(mesh);
                     this.zip.file("model/buildings.stl", buildingsSTL);
@@ -147,7 +148,7 @@ export default class ModelGenerator {
 
                 const b = this.buildingsToProcess.pop();
                 const buildingMesh = this.polygonToMesh(b.lotScreen, b.height);
-                this.buildingsGeometry.merge(buildingMesh.geometry as THREE.Geometry, this.groundMesh.matrix);
+                this.buildingsGeometry.merge((buildingMesh.geometry), this.groundMesh.matrix);
                 break;
             }
             case ModelGeneratorStates.CREATE_ZIP: {
@@ -178,7 +179,7 @@ export default class ModelGenerator {
             log.error("Tried to export empty polygon as OBJ");
             return null;
         }
-        const shape = new THREE.Shape();
+        const shape = new (<any>THREE).Shape();
         shape.moveTo(polygon[0].x, polygon[0].y);
         for (let i = 1; i < polygon.length; i++) {
             shape.lineTo(polygon[i].x, polygon[i].y);
@@ -186,7 +187,7 @@ export default class ModelGenerator {
         shape.lineTo(polygon[0].x, polygon[0].y);
 
         if (height === 0) {
-            return new THREE.Mesh(new THREE.ShapeGeometry(shape));
+            return new (<any>THREE).Mesh(new (<any>THREE).ShapeGeometry(shape));
         }
 
         const extrudeSettings = {
@@ -195,8 +196,8 @@ export default class ModelGenerator {
             bevelEnabled: false,
         };
 
-        const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-        const mesh = new THREE.Mesh(geometry);
+        const geometry = new (<any>THREE).ExtrudeGeometry(shape, extrudeSettings);
+        const mesh = new (<any>THREE).Mesh(geometry);
         // mesh.translateZ(-height);
         mesh.updateMatrixWorld(true);
         return mesh;
