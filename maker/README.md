@@ -6,7 +6,7 @@
 * [Mining LTC](https://f2pool.io/mining/guides/how-to-mine-litecoin/)
 * [Mining BTC](https://f2pool.io/mining/guides/how-to-mine-bitcoin/)
 
-##### This is a multi-threaded CPU miner for Litecoin and Bitcoin,   
+##### [This is a multi-threaded CPU miner for Litecoin and Bitcoin](https://github.com/universalbit-dev/CityGenerator/tree/master/workers),   
 ##### fork of Jeff Garzik's [reference cpuminer]().
 ---
 #### [Downloads](https://sourceforge.net/projects/cpuminer/files/)
