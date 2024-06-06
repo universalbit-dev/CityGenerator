@@ -1,10 +1,21 @@
 ## [Maker Zone](https://en.wikipedia.org/wiki/Maker_culture)
 
-* [BTC Node](https://github.com/universalbit-dev/universalbit-dev/tree/main/blockchain/bitcoin)
-* [Buy-Sell](https://github.com/universalbit-dev/gekko-m4/blob/master/README.md)
+#### NetWork Node -- Mining (cpu-gpu-asic) -- BuySell --
 ---
+bitcoin network node
+* [BTC Node](https://github.com/universalbit-dev/universalbit-dev/tree/main/blockchain/bitcoin)
+[Live Map](https://bitnodes.io/nodes/live-map/)
+
+simulate your strategy ,buy and sell cryptocurrency
+* [Gekko-M4-Globular-Cluster](https://github.com/universalbit-dev/gekko-m4/blob/master/README.md)
+
+Mining BitCoin for fun and profit 
 * [Mining LTC](https://f2pool.io/mining/guides/how-to-mine-litecoin/)
 * [Mining BTC](https://f2pool.io/mining/guides/how-to-mine-bitcoin/)
+#### Gpu Mining Os
+* [GPU Mining](https://simplemining.net/)
+#### Asic Miners (asynctonous miner)
+* [Asicminervalue](https://www.asicminervalue.com/)
 
 ##### [This is a multi-threaded CPU miner for Litecoin and Bitcoin](https://github.com/universalbit-dev/CityGenerator/tree/master/workers),   
 ##### fork of Jeff Garzik's [reference cpuminer]().
@@ -63,7 +74,5 @@ pm2 start workers.js
 #### [HArmadillium](https://github.com/universalbit-dev/armadillium/blob/main/HArmadillium.md)
 [back](./)
 
-#### Gpu Mining Os
-* [GPU Mining](https://simplemining.net/)
 
 
