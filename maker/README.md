@@ -40,7 +40,7 @@ sudo chmod 755 -R workers
 ```
 
 ##### Install [Node v20.6.0](https://nodejs.org/en/blog/release/v20.6.0)
-#### Start mining process with PM2
+#### Start cpu mining process with PM2
 ```
 cd workers
 npm i pm2 -g
