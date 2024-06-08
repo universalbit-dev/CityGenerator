@@ -1,7 +1,7 @@
 import * as log from 'loglevel';
 import * as PolyK from 'polyk';
 import Vector from '../vector';
-//import * as jsts from 'jsts';
+import * as jsts from 'jsts';
 
 export default class PolygonUtil {
     private static geometryFactory = new jsts.geom.GeometryFactory();
