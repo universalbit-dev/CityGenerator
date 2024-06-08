@@ -23,9 +23,9 @@ import PolygonUtil from '../impl/polygon_util';
  * Handles Map folder, glues together impl
  */
 export default class MainGUI {
-    private numBigParks: number = 30;
-    private numSmallParks: number = 60;
-    private clusterBigParks: boolean = true;
+    private numBigParks: number = 2;
+    private numSmallParks: number = 0;
+    private clusterBigParks: boolean = false;
 
     private domainController = DomainController.getInstance();
     private intersections: Vector[] = [];
@@ -62,8 +62,8 @@ export default class MainGUI {
     constructor(private guiFolder: dat.GUI, private tensorField: TensorField, private closeTensorFolder: () => void) {
         guiFolder.add(this, 'generateEverything');
         // guiFolder.add(this, 'simpleBenchMark');
-        const animateController = guiFolder.add(this, 'animate');
-        guiFolder.add(this, 'animationSpeed');
+        const animateController = guiFolder.add(null, 'animate');
+        guiFolder.add(null, 'animationSpeed');
 
         this.coastlineParams = Object.assign({
             coastNoise: {
@@ -102,16 +102,16 @@ export default class MainGUI {
         this.mainRoads = new RoadGUI(this.mainParams, integrator, this.guiFolder, closeTensorFolder, 'Main', redraw).initFolder();
         this.majorRoads = new RoadGUI(this.majorParams, integrator, this.guiFolder, closeTensorFolder, 'Major', redraw, this.animate).initFolder();
         this.minorRoads = new RoadGUI(this.minorParams, integrator, this.guiFolder, closeTensorFolder, 'Minor', redraw, this.animate).initFolder();
-        
+
         const parks = guiFolder.addFolder('Parks');
         parks.add({Generate: () => {
             this.buildings.reset();
             this.addParks();
             this.redraw = true;
         }}, 'Generate');
-        parks.add(this, 'clusterBigParks');
-        parks.add(this, 'numBigParks');
-        parks.add(this, 'numSmallParks');
+        parks.add(null, 'clusterBigParks');
+        parks.add(null, 'numBigParks');
+        parks.add(null, 'numSmallParks');
 
         const buildingsFolder = guiFolder.addFolder('Buildings');
         this.buildings = new Buildings(tensorField, buildingsFolder, redraw, this.minorParams.dstep, this.animate);
@@ -207,10 +207,10 @@ export default class MainGUI {
             this.smallParks = [];
             if (polygons.length > this.numBigParks) {
                 if (this.clusterBigParks) {
-                    // Group in adjacent polygons 
+                    // Group in adjacent polygons
                     const parkIndex = Math.floor(Math.random() * (polygons.length - this.numBigParks));
                     for (let i = parkIndex; i < parkIndex + this.numBigParks; i++) {
-                        this.bigParks.push(polygons[i]);    
+                        this.bigParks.push(polygons[i]);
                     }
                 } else {
                     for (let i = 0; i < this.numBigParks; i++) {
@@ -254,7 +254,7 @@ export default class MainGUI {
             const buildingsChanged = this.buildings.update();
             continueUpdate = minorChanged || majorChanged || mainChanged || buildingsChanged;
         }
-        
+
         this.redraw = this.redraw || continueUpdate;
     }
 
@@ -273,7 +273,7 @@ export default class MainGUI {
         style.lots = this.buildings.lots;
 
         if (style instanceof DefaultStyle && style.showBuildingModels || style instanceof RoughStyle) {
-            style.buildingModels = this.buildings.models;    
+            style.buildingModels = this.buildings.models;
         }
 
         style.parks = [];
