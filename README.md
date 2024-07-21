@@ -1,7 +1,5 @@
-* [Support UniversalBit Project](https://github.com/universalbit-dev/universalbit-dev/tree/main/support)
-* [Disambiguation](https://en.wikipedia.org/wiki/Wikipedia:Disambiguation)
-* [Bash Reference Manual](https://www.gnu.org/software/bash/manual/html_node/index.html)
----
+#### [Support UniversalBit Project](https://github.com/universalbit-dev/universalbit-dev/tree/main/support) -- ####[Disambiguation](https://en.wikipedia.org/wiki/Wikipedia:Disambiguation) -- ####[Bash Reference Manual](https://www.gnu.org/software/bash/manual/html_node/index.html)
+
 ---
 * [CityGenerator](https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/gif/citygenerator.gif) && [Threejs-Editor](https://threejs.org/editor/)
 
