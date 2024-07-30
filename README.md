@@ -62,7 +62,7 @@ on board:
 ---
 ---
 
-## [Developer Area]
+## [Development Areas]
 
 ### Installation: [NodeJsv20.13.0 LTS](https://nodejs.org/en/blog/release/v20.13.0)
 
