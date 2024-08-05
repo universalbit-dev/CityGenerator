@@ -8,8 +8,6 @@ Bitcoin network node
 
 Simulate your strategy ,buy and sell cryptocurrency
 * [Gekko-M4-Globular-Cluster](https://github.com/universalbit-dev/gekko-m4/blob/master/README.md)
-
-### Mining BitCoin for fun and profit 
 * [Mining LTC](https://f2pool.io/mining/guides/how-to-mine-litecoin/)
 * [Mining BTC](https://f2pool.io/mining/guides/how-to-mine-bitcoin/)
 #### Gpu Mining Os
