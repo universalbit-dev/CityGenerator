@@ -8,5 +8,5 @@
 
 |                             |                             |
 | ----------------------------------- | ----------------------------------- |
-| ![map_15](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/assets/images/%5Bmap%5D15.png) | ![map_14](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/assets/images/%5Bmap%5D14.png)  |
+| ![map_13](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/assets/images/%5Bmap%5D13.png)  |
 
