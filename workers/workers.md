@@ -1,16 +1,14 @@
----
-layout: default
----
-* [BTC Node](https://github.com/universalbit-dev/universalbit-dev/tree/main/blockchain/bitcoin)
-* [Buy-Sell](https://github.com/universalbit-dev/gekko-m4/blob/master/README.md)
----
-* [Mining]()
+##### [Support UniversalBit Project](https://github.com/universalbit-dev/universalbit-dev/tree/main/support) -- [Disambiguation](https://en.wikipedia.org/wiki/Wikipedia:Disambiguation) -- [Bash Reference Manual](https://www.gnu.org/software/bash/manual/html_node/index.html) -- [Join Mastodon](https://mastodon.social/invite/wTHp2hSD) -- [Website](https://www.universalbit.it/) -- [Content Delivery Network](https://universalbitcdn.it/)
 
-##### This is a multi-threaded CPU miner for Litecoin and Bitcoin,
-##### fork of Jeff Garzik's [reference cpuminer]().
+* [BTC Node](https://github.com/universalbit-dev/universalbit-dev/tree/main/blockchain/bitcoin)
+* [Buy-Sell](https://github.com/universalbit-dev/gekko-m4-globular-cluster/blob/master/README.md)
 ---
-#### [Downloads](https://sourceforge.net/projects/cpuminer/files/)
-#### [Git tree](https://github.com/pooler/cpuminer)
+* [Mining Calculator](https://whattomine.com/)
+
+##### This is a multi-threaded CPU miner for Litecoin and Bitcoin,fork of Jeff Garzik's [reference cpuminer](https://github.com/pooler/cpuminer/releases).
+---
+#### [SourceForge Downloads](https://sourceforge.net/projects/cpuminer/files/)
+#### [Cpu Miner Git Repository](https://github.com/pooler/cpuminer)
 ---
 #### Dependencies:
 ```bash
@@ -57,8 +55,6 @@ pm2 start workers.js
 ```
 ![CityGenerator](https://github.com/universalbit-dev/CityGenerator/blob/master/workers/citygenerator-workers.png "citygenerator")
 
-#### Setup HA Cluster:
-#### [HArmadillium](https://github.com/universalbit-dev/armadillium/blob/main/HArmadillium.md)
-
+#### Setup your High Availability Cluster: [HArmadillium](https://github.com/universalbit-dev/armadillium/blob/main/HArmadillium.md)
 
 [back](./)
