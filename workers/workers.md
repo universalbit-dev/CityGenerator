@@ -16,7 +16,11 @@ make
 ```
 
 ##### Note: before start cpu miner process
+```bash
+git clone https://github.com/universalbit-dev/CityGenerator.git
 ```
+
+```bash
 cd ~/CityGenerator
 npm i && npm audit fix
 sudo chmod 755 -R CityGenerator/workers
