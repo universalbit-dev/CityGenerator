@@ -24,6 +24,7 @@ cd workers
 npm i && npm i pm2 -g
 pm2 start workers.js
 ```
+<img src="" width="auto"></img>
 
 ---
 * [SourceForge Downloads](https://sourceforge.net/projects/cpuminer/files/)
