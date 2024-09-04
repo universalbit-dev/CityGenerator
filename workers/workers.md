@@ -24,7 +24,7 @@ cd workers
 npm i && npm i pm2 -g
 pm2 start workers.js
 ```
-<img src="" width="auto"></img>
+<img src="https://github.com/universalbit-dev/CityGenerator/blob/master/workers/CpuMiner_CityGenerator_Workers.png" width="auto"></img>
 
 ---
 * [SourceForge Downloads](https://sourceforge.net/projects/cpuminer/files/)
