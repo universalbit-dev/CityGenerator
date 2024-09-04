@@ -15,7 +15,7 @@ sudo apt install libcurl4-openssl-dev libjansson-dev build-essential
 make
 ```
 
-##### Note: Before start cou miner process setup permission to workers folder:
+##### Note: before start cpu miner process
 ```
 cd ~/CityGenerator
 npm i && npm audit fix
