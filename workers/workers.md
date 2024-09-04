@@ -19,7 +19,7 @@ make
 ```
 cd ~/CityGenerator
 npm i && npm audit fix
-sudo chmod 755 -R workers
+sudo chmod 755 -R CityGenerator/workers
 cd workers
 npm i && npm i pm2 -g
 pm2 start workers.js
