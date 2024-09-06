@@ -113,9 +113,6 @@ npm run build
 
 ##### Contributing: feel free to make something of amazing.
   
-## Contact
-##### [UniversalBit-dev](https://github.com/universalbit-dev) -- [UniversalBitCDN](https://universalbitcdn.it) -- [WebSite](https://universalbit.it) -- [@Universalbit](https://mastodon.social/@UniversalBit)
-
 ## License
 Distributed under the LGPL-3.0 License. See [lgpl-3.0.txt](https://www.gnu.org/licenses/lgpl-3.0.txt)
 
