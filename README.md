@@ -25,32 +25,30 @@ after generating and customizing your city it is possible to export the project 
 	},
 ```
 * [CityGenerator usage](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/usageguide.md)
-* [Build Your Project](##Development)
 * [License](https://www.gnu.org/licenses/lgpl-3.0.txt)
-* [Contact](#contact)
-
+  
 ##### About Author of City Map Generator: [@probabletrain](https://github.com/ProbableTrain/MapGenerator)
 * [WebSite](https://maps.probabletrain.com/#/)
 * [Support](https://ko-fi.com/probabletrain)
   
 ##### Thanks!
 ---
----
-* [Buildings](https://github.com/universalbit-dev/CityGenerator/tree/master/public/3d/buildings)
+
+...this is something of amazing
 * [Building Tools](https://ranjian0.github.io/building_tools/) 
 * [Buildify](https://github.com/universalbit-dev/CityGenerator/blob/master/public/3d/buildify/Buildify_1.0.pdf)
 ---
----
+
 
 <img src="https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/gif/citygenerator.gif" width="600"></img>
 ---
----
+
 ### Clone the project
 ```bash
 git clone https://github.com/universalbit-dev/CityGenerator.git
 cd CityGenerator
 ```
-### Install packages with npm 
+### Install packages with npm then generate your city model
 ```bash
 npm i && npm audit fix
 open dist/index.html
@@ -62,10 +60,8 @@ open dist/index.html
 ```bash
 npm run build
 ```
----
 * [Typescript WebPack](https://webpack.js.org/guides/typescript/)
 * [WebPack Module Federarion](https://webpack.js.org/concepts/module-federation/)
----
 ---
 ##### Contributing: feel free to make something of amazing.
   
