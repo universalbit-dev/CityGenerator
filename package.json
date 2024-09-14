@@ -4,6 +4,7 @@
    "description": "citygenerator fab city",
    "private": true,
    "scripts": {
+      "open-my-html": "open dist/index.html",
       "test": "echo \"Error: no test specified\" && exit 1",
       "build": "webpack"
    },
@@ -22,6 +23,7 @@
       "@types/jsts": "^0.17.23",
       "@types/noisejs": "^0.0.31",
       "@types/three": "^0.160.0",
+      "open": "^10.1.0",
       "tsd": "^0.30.7",
       "typescript": "^5.4.2",
       "webpack": "^5.90.0",
@@ -30,6 +32,7 @@
    "dependencies": {
       "@svgdotjs/svg.js": "^3.2.0",
       "@types/openlayers": "^4.6.23",
+      "audit": "^0.0.6",
       "convnetjs": "^0.3.0",
       "d3": "^7.9.0",
       "d3-quadtree": "^3.0.1",
@@ -41,6 +44,7 @@
       "lodash": "^4.17.21",
       "loglevel": "^1.9.1",
       "noisejs": "^2.1.0",
+      "npm": "^10.8.3",
       "ol": "^9.0.0",
       "polyk": "^0.24.0",
       "roughjs": "^4.6.6",
