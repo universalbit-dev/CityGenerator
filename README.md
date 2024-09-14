@@ -5,7 +5,6 @@
 is an application designed to generate a city model
 [](https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/gif/citygenerator.gif)
 
-
 <img src="https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/gif/city_generator_threejs_editor.gif" width="600"></img>
 
 * [View 3D model](https://github.com/universalbit-dev/CityGenerator/blob/master/stl/nofullstack_model.stl)
@@ -56,8 +55,6 @@ cd CityGenerator
 npm i && npm audit fix
 open dist/index.html
 ```
-
-#about-the-project
 * [Compiler WebPack5 release](https://webpack.js.org/blog/2020-10-10-webpack-5-release/)
 * [TypeScript Note](https://webpack.js.org/guides/typescript/)
 
