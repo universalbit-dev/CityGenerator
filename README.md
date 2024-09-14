@@ -18,13 +18,7 @@
 	},
 ```
 * [CityGenerator usage](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/usageguide.md)
-* [NetWorking and Blockchain Node](https://github.com/universalbit-dev/CityGenerator/tree/master/network)
-* [BlockChain Workers](https://github.com/universalbit-dev/CityGenerator#multi-threaded-cpu-miner-for-litecoin-and-bitcoin)
-* [3D](https://github.com/universalbit-dev/CityGenerator/tree/master/public/3d/buildings)
-* [Low Voltage HHO Module](https://github.com/universalbit-dev/CityGenerator/blob/master/public/hho/Low_Voltage_HHO_Module.md)
-* [Wind Turbine](https://github.com/universalbit-dev/CityGenerator/blob/master/public/windturbine/ArchimedesWindTurbine.md)
 * [Build Your Project](##Development)
-
 * [License](https://www.gnu.org/licenses/lgpl-3.0.txt)
 * [Contact](#contact)
 
