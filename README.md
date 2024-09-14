@@ -61,7 +61,6 @@ open dist/index.html
 ```bash
 npm run build
 ```
-* [Typescript WebPack](https://webpack.js.org/guides/typescript/)
 * [WebPack Module Federarion](https://webpack.js.org/concepts/module-federation/)
 ---
 ##### Contributing: feel free to make something of amazing.
