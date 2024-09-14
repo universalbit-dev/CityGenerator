@@ -2,12 +2,6 @@
 
 To download a heightmap, click `Downlad -> Heightmap`. Alternatively, select the 'Heightmap' style from the Style folder, and download an image as usual.
 The heightmap resolution is controlled relative to the canvas resolution by `imageScale`.
-
-## Brief 3D Model Instructions
-
-Here's a walkthrough of how I use heightmaps to create 3D models and renders of my cities.
-I plan on implementing a `.obj` export feature which will be better-suited to this task. The height maps aren't ideal as they don't create rectangular geometry for the buildings. As you can see in the render, if the building is not aligned to the pixels, it has a jagged edge. This results in a lot of unecessary geometry that slows down rendering and geometry creation.
-
 | Result |
 | :----------: |
 | ![Result](images/heightmap/heightmap_render.png) |
