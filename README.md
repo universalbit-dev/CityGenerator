@@ -8,6 +8,7 @@ is an application designed to generate a city model
 <img src="https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/gif/city_generator_threejs_editor.gif" width="600"></img>
 
 * [View 3D model](https://github.com/universalbit-dev/CityGenerator/blob/master/stl/nofullstack_model.stl)
+* [Algorithm](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/Interactive_Procedural_Street_Modeling.pdf)
 * [Object3D to Json]
 #### Getting Started
 * [ThreeJS Editor](https://threejs.org/editor/)
