@@ -6,7 +6,7 @@ const { ModuleFederationPlugin } = require('webpack').container;
     mode: 'development',
     plugins: [new ModuleFederationPlugin({
     runtime: 'fab-city',
-    shared: ['lodash','jsts','convnetjs'],
+    shared: ['lodash','convnetjs','jsts','@types/jsts'],
     }),],
 
   devtool: 'inline-source-map',
@@ -15,7 +15,7 @@ const { ModuleFederationPlugin } = require('webpack').container;
         {
           test: /\.tsx?$/,use:'raw-loader',
           use: 'ts-loader',
-          exclude: /node_modules/,
+          //exclude: /node_modules/,
         },
       ],
     },
