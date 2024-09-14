@@ -64,7 +64,6 @@ filters > Remeshing, Simplification and Reconstruction > Quadric Edge Collapse D
 on board: Content Delivery Network
 * CDN [threejs@0.164.1](https://www.jsdelivr.com/package/npm/three)
 * CDN [jsts@latest](https://www.jsdelivr.com/package/npm/jsts)
-* bundle_edit.js [work in progress]
 ---
 ---
 
