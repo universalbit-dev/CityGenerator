@@ -40,9 +40,6 @@ after generating and customizing your city it is possible to export the project 
 * [Buildings](https://github.com/universalbit-dev/CityGenerator/tree/master/public/3d/buildings)
 * [Building Tools](https://ranjian0.github.io/building_tools/) 
 * [Buildify](https://github.com/universalbit-dev/CityGenerator/blob/master/public/3d/buildify/Buildify_1.0.pdf)
-
-### [Use CityGenerator](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/usageguide.md)
-
 ---
 ---
 
@@ -68,7 +65,6 @@ open dist/index.html
 ```bash
 npm run build
 ```
-<img src="https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/gif/citygenerator_algo.gif" width="auto"></img>
 ---
 * [Typescript WebPack](https://webpack.js.org/guides/typescript/)
 * [WebPack Module Federarion](https://webpack.js.org/concepts/module-federation/)
