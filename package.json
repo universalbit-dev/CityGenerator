@@ -4,7 +4,6 @@
    "description": "citygenerator fab city",
    "private": true,
    "scripts": {
-      "open-my-html": "open dist/index.html",
       "test": "echo \"Error: no test specified\" && exit 1",
       "build": "webpack"
    },
@@ -40,7 +39,7 @@
       "file-saver": "^2.0.5",
       "interactjs": "^1.10.26",
       "isect": "^3.0.2",
-      "jsts": "^2.7.1",
+      "jsts": "^2.11.3",
       "lodash": "^4.17.21",
       "loglevel": "^1.9.1",
       "noisejs": "^2.1.0",
