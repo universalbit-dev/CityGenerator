@@ -1,21 +1,11 @@
 {
-    "compilerOptions": {
-      "target": "es2022",
-      "lib": ["es2021","dom","esnext"],
-      "outDir": "./dist/",
-      "sourceMap": true,
-      "noImplicitAny": true,
-      "module": "commonjs",
-      "jsx": "react",
-      "allowJs": true,
-      "moduleResolution": "node",
-      "esModuleInterop": true,
-      "allowSyntheticDefaultImports": true,
-      "declaration": true
-    },
-    "include": ["src/**/*"],
-     "files": [
-        "index.d.ts"
-    ]
-    
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "noImplicitAny": true,
+    "module": "es6",
+    "target": "es2015",
+    "jsx": "react",
+    "allowJs": true,
+    "moduleResolution": "node"
   }
+}
