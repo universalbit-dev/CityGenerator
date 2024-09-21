@@ -17,3 +17,4 @@ sudo wget -qO - https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo ap
 * [WebGL](https://askubuntu.com/questions/299345/how-to-enable-webgl-in-chrome-on-ubuntu#299346)
 * [WebGl-Utils](https://webglfundamentals.org/docs/module-webgl-utils.html)
 * [Fundamentals](https://webglfundamentals.org/webgl/lessons/webgl-setup-and-installation.html)
+* [WebCL](https://www.khronos.org/api/webcl)
