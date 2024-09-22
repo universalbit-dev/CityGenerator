@@ -15,8 +15,6 @@
 
 #### required:
 ```bash
-git clone https://github.com/pooler/cpuminer.git
-cd cpuminer
 sudo apt install libcurl4-openssl-dev libjansson-dev build-essential
 ./autogen.sh
 ./configure CFLAGS="-O3" # make sure -O3 is an O and not a zero!
