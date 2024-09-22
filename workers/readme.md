@@ -12,7 +12,6 @@
 * [This is a multi-threaded CPU miner for Litecoin and Bitcoin](https://github.com/universalbit-dev/CityGenerator/tree/master/workers),
 ![CityGenerator](https://github.com/universalbit-dev/CityGenerator/blob/master/workers/citygenerator-workers-btc.png "citygenerator")
 
-
 #### required:
 ```bash
 sudo apt install libcurl4-openssl-dev libjansson-dev build-essential
@@ -37,6 +36,7 @@ npm i pm2 -g
 pm2 start workers.js
 ```
 [How Bitcoin Mining really Works](https://www.freecodecamp.org/news/how-bitcoin-mining-really-works-38563ec38c87/)
+[CPU Miner once again](https://github.com/universalbit-dev/CityGenerator/blob/master/workers/workers.md)
 
 #### Gpu Mining (Simplemining.net)
 * [GPU](https://github.com/universalbit-dev/universalbit-dev/tree/main/blockchain)
