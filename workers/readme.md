@@ -42,6 +42,7 @@ pm2 start workers.js
 * [GPU](https://github.com/universalbit-dev/universalbit-dev/tree/main/blockchain)
     
 #### Asic Miners (ESP32)
+* [MicroMiner](https://github.com/universalbit-dev/esptool/blob/master/README.md)
 * [BitMaker](https://github.com/BitMaker-hub/NerdMiner_v2)
 * [ESP-Miner](https://github.com/skot/ESP-Miner)
   
