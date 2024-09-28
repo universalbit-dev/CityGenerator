@@ -52,7 +52,7 @@ cd CityGenerator
 ### Install packages with npm then generate your city model
 ```bash
 npm i && npm audit fix
-open dist/index.html
+npm run citygenerator
 ```
 * [Compiler WebPack5 release](https://webpack.js.org/blog/2020-10-10-webpack-5-release/)
 * [TypeScript Note](https://webpack.js.org/guides/typescript/)
