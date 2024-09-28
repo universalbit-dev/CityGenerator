@@ -5,7 +5,6 @@
    "private": true,
    "scripts": {
       "citygenerator": "open dist/index.html",
-      "postinstall":"npm run citygenerator",
       "build": "webpack"
    },
    "keywords": [
