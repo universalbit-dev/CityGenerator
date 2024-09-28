@@ -4,6 +4,8 @@
    "description": "citygenerator fab city",
    "private": true,
    "scripts": {
+      "citygenerator": "open dist/index.html",
+      "postinstall":"npm run citygenerator",
       "build": "webpack"
    },
    "keywords": [
@@ -21,6 +23,7 @@
       "@types/jsts": "^0.17.23",
       "@types/noisejs": "^0.0.31",
       "@types/three": "^0.160.0",
+      "open": "^10.1.0",
       "tsd": "^0.30.7",
       "typescript": "^5.4.2",
       "webpack": "^5.90.0",
