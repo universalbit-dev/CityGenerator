@@ -21,10 +21,10 @@ const { ModuleFederationPlugin } = require('webpack').container;
     },
     resolve: {
       extensions: [ '.tsx', '.ts', '.js' ],
+      byDependency: {
+      commonjs: { aliasFields: ['browser'], },
+      url: { preferRelative: true, },
+      },
     },
-    output: {
-      filename: 'bundle.js',
-      path: path.resolve(__dirname, 'dist'),
-    },
-
-  };
+    output: {filename: 'bundle.js',path: path.resolve(__dirname, 'dist'),},
+};
