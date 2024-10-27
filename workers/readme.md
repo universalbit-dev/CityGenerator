@@ -25,7 +25,7 @@ make
 ##### Note: setup workers folder web permission before start workers.js script
 ```bash
 cd CityGenerator
-sudo chmod 755 -R workers
+sudo chmod 700 -R workers
 ```
 
 #### cpu mining process with PM2
