@@ -9,7 +9,7 @@ is an application designed to generate a city model
 
 * [View 3D model](https://github.com/universalbit-dev/CityGenerator/blob/master/stl/nofullstack_model.stl)
 * [Algorithm](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/Interactive_Procedural_Street_Modeling.pdf)
-* [Object3D to Json]
+* [Object3D to Json](https://github.com/mrdoob/three.js/wiki/JSON-Object-Scene-format-4)
 #### Getting Started
 * [ThreeJS Editor](https://threejs.org/editor/)
 is a cross-browser JavaScript library and application programming interface (API) used to create and display animated 3D computer graphics in a web browser using WebGL.
