@@ -35,6 +35,11 @@ npm i && npm audit fix
 npm i pm2 -g
 pm2 start workers.js
 ```
+![CityGenerator](https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/CityGenerator_Workers.png "citygenerator")
+
+
+
+
 * [How Bitcoin Mining really Works](https://www.freecodecamp.org/news/how-bitcoin-mining-really-works-38563ec38c87/)
 * [CPU Miner once again](https://github.com/universalbit-dev/CityGenerator/blob/master/workers/workers.md)
 
