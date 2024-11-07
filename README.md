@@ -52,7 +52,7 @@ after generating and customizing your city it is possible to import the project 
 * [Buildify](https://github.com/universalbit-dev/CityGenerator/blob/master/public/3d/buildify/Buildify_1.0.pdf)
 ---
 
-
+[development]
 
 * [Compiler WebPack5 release](https://webpack.js.org/blog/2020-10-10-webpack-5-release/)
 * [TypeScript Note](https://webpack.js.org/guides/typescript/)
