@@ -14,12 +14,47 @@
     }
   </script>
   <script src="https://cdn.jsdelivr.net/npm/mnist@1.1.0/dist/mnist.min.js"></script>
-  
 </head>
 
 <body>
+  
+<script src="./deepqlearn.js"></script>
+<script>
+var num_inputs = 27; // 9 eyes, each sees 3 numbers (wall, green, red thing proximity)
+var num_actions = 5; // 5 possible angles agent can turn
+var temporal_window = 1; // amount of temporal memory. 0 = agent lives in-the-moment :)
+var network_size = num_inputs*temporal_window + num_actions*temporal_window + num_inputs;
 
-  <script src="./convnet.js">
+// the value function network computes a value of taking any of the possible actions
+// given an input state. Here we specify one explicitly the hard way
+// but user could also equivalently instead use opt.hidden_layer_sizes = [20,20]
+// to just insert simple relu hidden layers.
+var layer_defs = [];
+layer_defs.push({type:'input', out_sx:1, out_sy:1, out_depth:network_size});
+layer_defs.push({type:'fc', num_neurons: 50, activation:'relu'});
+layer_defs.push({type:'fc', num_neurons: 50, activation:'relu'});
+layer_defs.push({type:'regression', num_neurons:num_actions});
+
+// options for the Temporal Difference learner that trains the above net
+// by backpropping the temporal difference learning rule.
+var tdtrainer_options = {learning_rate:0.001, momentum:0.0, batch_size:64, l2_decay:0.01};
+
+var opt = {};
+opt.temporal_window = temporal_window;
+opt.experience_size = 30000;
+opt.start_learn_threshold = 1000;
+opt.gamma = 0.7;
+opt.learning_steps_total = 200000;
+opt.learning_steps_burnin = 3000;
+opt.epsilon_min = 0.05;
+opt.epsilon_test_time = 0.05;
+opt.layer_defs = layer_defs;
+opt.tdtrainer_options = tdtrainer_options;
+
+var brain = new deepqlearn.Brain(num_inputs, num_actions, opt); // woohoo
+</script>
+
+<script src="./convnet.js">
   var t = "/* */";
   var layer_defs = [];
   /*  */
@@ -197,7 +232,6 @@
     testGraph.drawSelf(document.getElementById("testaccgraph"));
     }
   }
-
   </script>
 
  <svg id="map-svg"></svg>
@@ -207,177 +241,6 @@
   </div>
   <script src="bundle_edit.js"></script>
 
-<!-- Backend OpenLayers API-->
-<div id="mapdiv"></div>
-
-  <link href="https://cdn.jsdelivr.net/npm/ol@9.2.3/ol.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/ol@9.2.3/index.min.js">
-    map = new OpenLayers.Map("mapdiv");
-    map.addLayer(new OpenLayers.Layer.OSM());
-
-    var Kyiv = new OpenLayers.LonLat(30.52,50.45)
-          .transform(
-            new OpenLayers.Projection("EPSG:4326"),
-            map.getProjectionObject()
-          );
-
-    var Aleppo = new OpenLayers.LonLat(37.21,36.19)
-          .transform(
-            new OpenLayers.Projection("EPSG:4326"),
-            map.getProjectionObject()
-          );
-
-    var Rome = new OpenLayers.LonLat(12.55,41.89)
-          .transform(
-            new OpenLayers.Projection("EPSG:4326"),
-            map.getProjectionObject()
-          );
-
-    var Atlanta = new OpenLayers.LonLat(-84.22 ,33.76)
-          .transform(
-            new OpenLayers.Projection("EPSG:4326"),
-            map.getProjectionObject()
-          );
-    var Belchite = new OpenLayers.LonLat(-0.75 ,41.31)
-          .transform(
-            new OpenLayers.Projection("EPSG:4326"),
-            map.getProjectionObject()
-          );
-
-    var Berlin = new OpenLayers.LonLat(13.39 ,52.54)
-          .transform(
-            new OpenLayers.Projection("EPSG:4326"),
-            map.getProjectionObject()
-          );
-    var Dresden = new OpenLayers.LonLat(13.75 ,51.05)
-          .transform(
-            new OpenLayers.Projection("EPSG:4326"),
-            map.getProjectionObject()
-          );
-
-     var Grozny = new OpenLayers.LonLat(40.17,44.62)
-          .transform(
-            new OpenLayers.Projection("EPSG:4326"),
-            map.getProjectionObject()
-          );
-
-    var Hamburg = new OpenLayers.LonLat(10.13,53.65)
-          .transform(
-            new OpenLayers.Projection("EPSG:4326"),
-            map.getProjectionObject()
-          );
-
-    var Hiroshima = new OpenLayers.LonLat(132.45,34.42)
-          .transform(
-            new OpenLayers.Projection("EPSG:4326"),
-            map.getProjectionObject()
-          );
-
-    var Hue = new OpenLayers.LonLat(107.60,16.46)
-          .transform(
-            new OpenLayers.Projection("EPSG:4326"),
-            map.getProjectionObject()
-          );
-
-    var Hull = new OpenLayers.LonLat(-0.24,53.77)
-          .transform(
-            new OpenLayers.Projection("EPSG:4326"),
-            map.getProjectionObject()
-          );
-
-    var Julich = new OpenLayers.LonLat(6.39,50.92)
-          .transform(
-            new OpenLayers.Projection("EPSG:4326"),
-            map.getProjectionObject()
-          );
-
-    var Kabul = new OpenLayers.LonLat(69.15,34.52)
-          .transform(
-            new OpenLayers.Projection("EPSG:4326"),
-            map.getProjectionObject()
-          );
-
-    var London = new OpenLayers.LonLat(0.10,51.49)
-          .transform(
-            new OpenLayers.Projection("EPSG:4326"),
-            map.getProjectionObject()
-          );
-
-    var Mosul = new OpenLayers.LonLat(43.16,36.35)
-          .transform(
-            new OpenLayers.Projection("EPSG:4326"),
-            map.getProjectionObject()
-          );
-
-    var Nagasaki = new OpenLayers.LonLat(129.88,32.74)
-          .transform(
-            new OpenLayers.Projection("EPSG:4326"),
-            map.getProjectionObject()
-          );
-
-    var oradour_sur_Glane = new OpenLayers.LonLat(1.03,45.93)
-          .transform(
-            new OpenLayers.Projection("EPSG:4326"),
-            map.getProjectionObject()
-          );
-
-    var Raqqa = new OpenLayers.LonLat(39.03,35.95)
-          .transform(
-            new OpenLayers.Projection("EPSG:4326"),
-            map.getProjectionObject()
-          );
-
-    var Sarajevo = new OpenLayers.LonLat(18.42,43.85)
-          .transform(
-            new OpenLayers.Projection("EPSG:4326"),
-            map.getProjectionObject()
-          );
-
-    var Volgograd = new OpenLayers.LonLat(44.45,48.73)
-          .transform(
-            new OpenLayers.Projection("EPSG:4326"),
-            map.getProjectionObject()
-          );
-
-    var Timbuktu = new OpenLayers.LonLat(-3.01,16.77)
-          .transform(
-            new OpenLayers.Projection("EPSG:4326"),
-            map.getProjectionObject()
-          );
-
-    var Tokyo = new OpenLayers.LonLat(139.94,35.71)
-          .transform(
-            new OpenLayers.Projection("EPSG:4326"),
-            map.getProjectionObject()
-          );
-
-    var Valletta = new OpenLayers.LonLat(14.52,35.90)
-          .transform(
-            new OpenLayers.Projection("EPSG:4326"),
-            map.getProjectionObject()
-          );
-
-    var Warszawa = new OpenLayers.LonLat(21.13,52.23)
-          .transform(
-            new OpenLayers.Projection("EPSG:4326"),
-            map.getProjectionObject()
-          );
-
-    var Ieper = new OpenLayers.LonLat(2.90,50.87)
-          .transform(
-            new OpenLayers.Projection("EPSG:4326"),
-            map.getProjectionObject()
-          );
-
-    var zoom=0;
-
-    var markers = new OpenLayers.Layer.Markers( "Markers" );
-    map.addLayer(markers);
-    //
-    var World = new OpenLayers.LonLat(20.60 ,43.04)
-    map.setCenter (World, zoom);
-  </script>
 </body>
 
-<!-- https://validator.w3.org/nu/#file -->
 </html>
