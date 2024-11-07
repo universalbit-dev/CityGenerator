@@ -34,7 +34,6 @@ after generating and customizing your city it is possible to import the project 
   
 ##### Thanks!
 ---
-
 ...this is something of amazing
 * [Building Tools](https://ranjian0.github.io/building_tools/) 
 * [Buildify](https://github.com/universalbit-dev/CityGenerator/blob/master/public/3d/buildify/Buildify_1.0.pdf)
