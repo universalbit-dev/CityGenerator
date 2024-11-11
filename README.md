@@ -2,7 +2,7 @@
 
 ---
 ### [CityGenerator]
-is an application designed to generate american city model.the idea is to generate [fabcity](https://fab.city/resources/2022-fab-city-book/) models
+is an application designed to generate city model.the idea is to generate [fabcity](https://fab.city/resources/2022-fab-city-book/) models
 
 ### Clone the project
 ```bash
