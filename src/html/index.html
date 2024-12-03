@@ -7,7 +7,7 @@
   <script type="importmap">
     {
       "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@0.161.4/build/three.module.js",
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.js",
         "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/",
         "jsts": "https://cdn.jsdelivr.net/npm/jsts@2.11.3/dist/jsts.min.js"
       }
@@ -74,7 +74,7 @@ trainer = new convnetjs.SGDTrainer(net, {method:'adadelta', batch_size:20, l2_de
     <canvas id="map-canvas" width="300" height="150"></canvas>  <!-- Must match util.ts and style.css -->
     <canvas id="img-canvas" width="300" height="150"></canvas>
   </div>
-  <script src="bundle_edit.js"></script>
+  <script src="bundle_edit.js"></script><script src="bundle.js"></script>
 
 </body>
 
