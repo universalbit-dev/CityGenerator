@@ -1,7 +1,8 @@
-### [OpenCL Headers](https://cn.khronos.org/opencl/),mesa,vulkan and microcode packages:
+### [OpenCL Headers](https://cn.khronos.org/opencl/),mesa,vulkan and microcode packages: 
+##### [Ubuntu 24.04 LTS](https://ubuntu.com/blog/tag/ubuntu-24-04-lts)
 
 ```bash
-sudo apt-get -y install ocl-icd-opencl-dev opencl-headers mesa-common-dev mesa-opencl-icd mesa-utils-extra clinfo libvulkan1 mesa-vulkan-drivers vulkan-utils amd64-microcode intel-microcode iucode-tool thermald gdebi-core
+sudo apt-get -y install ocl-icd-opencl-dev opencl-headers mesa-common-dev mesa-opencl-icd mesa-utils clinfo libvulkan1 mesa-vulkan-drivers amd64-microcode intel-microcode iucode-tool thermald gdebi-core
 ```
 
 ### [Vulkan SDK](https://www.lunarg.com/vulkan-sdk/)
