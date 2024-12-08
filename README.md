@@ -20,7 +20,7 @@ npm run citygenerator
 * [ThreeJS Editor](https://threejs.org/editor/)
 is a cross-browser JavaScript library and application programming interface (API) used to create and display animated 3D computer graphics in a web browser using WebGL.
 after generating and customizing your city it is possible to import the project in STL format(3D). ThreeJs editor is useful for quick viewing,editing and export data in json .
-* [CityGenerator](https://github.com/universalbit-dev/CityGenerator/blob/master/stl/nofullstack_model.stl)
+* [CityGenerator -- STL Model View --](https://github.com/universalbit-dev/CityGenerator/blob/master/stl/nofullstack_model.stl)
 
 ```bash
 "metadata": {"version": 4.6,"type": "Object","generator": "Object3D.toJSON"},
