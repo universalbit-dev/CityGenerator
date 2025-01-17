@@ -6,7 +6,7 @@ const { ModuleFederationPlugin } = require('webpack').container;
     mode: 'development',
     plugins: [new ModuleFederationPlugin({
     runtime: 'fab-city',
-    shared: ['lodash','convnetjs','jsts','@types/jsts'],
+    shared: ['lodash','convnetjs','jsts','@types/jsts','digibyte-js'],
     }),],
 
   devtool: 'inline-source-map',
