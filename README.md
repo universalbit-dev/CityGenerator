@@ -69,6 +69,7 @@ npm run build
 
 ##### Blockchain Approach
 ```bash
+npm install -g browserify
 cd node_modules/digibyte-js
 npm run build 
 ```
