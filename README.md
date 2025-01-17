@@ -66,6 +66,17 @@ npm run build
 ```
 * [WebPack Module Federarion](https://webpack.js.org/concepts/module-federation/)
 ---
+
+##### Blockchain Approach
+```bash
+cd node_modules/digibyte-js
+npm run build 
+```
+This will generate a file named digibyte.js.
+
+-- [DigiByte Integration Guide](https://www.digibyte.org/docs/integrationguide.pdf) --
+-- [Documentation and examples](https://github.com/RenzoDD/digibyte-js?tab=readme-ov-file#documentation--examples-) --
+
 ##### Contributing: feel free to make something of amazing.
   
 ## License
