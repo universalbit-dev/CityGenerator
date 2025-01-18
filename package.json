@@ -5,7 +5,8 @@
    "private": true,
    "scripts": {
       "citygenerator": "open dist/index.html",
-      "build": "webpack"
+      "build": "webpack",
+      "fabify":"browserify -r ./node_modules/digibyte-js/index.js:digibyte-js -o ./digibyte.js"
    },
    "keywords": [
       "citygenerator",
