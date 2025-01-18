@@ -70,7 +70,7 @@ npm run build
 ##### Blockchain Approach
 ```bash
 npm install -g browserify
-npm run fabiby
+npm run fabify
 ```
 This will generate a file named digibyte.js.
 
