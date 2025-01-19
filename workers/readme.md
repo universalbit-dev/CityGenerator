@@ -22,23 +22,18 @@ make
 ##### Alternative:
 * [Downloads cpu miner from sourceforge.net](https://sourceforge.net/projects/cpuminer/files/)
 
-##### Note: setup workers folder web permission before start workers.js script
+##### Note: setup folder permission before start workers.js script
 ```bash
-cd CityGenerator
-sudo chmod 700 -R workers
+sudo chmod 744 -R ~/CityGenerator/workers
 ```
 
-#### cpu mining process with PM2
+#### start cpu mining process with [PM2](https://pm2.keymetrics.io/docs/usage/quick-start/)
 ```bash
-cd workers
-npm i && npm audit fix
-npm i pm2 -g
+cd ~/CityGenerator/workers
+npm i 
 pm2 start workers.js
 ```
 ![CityGenerator](https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/CityGenerator_Workers.png "citygenerator")
-
-
-
 
 * [How Bitcoin Mining really Works](https://www.freecodecamp.org/news/how-bitcoin-mining-really-works-38563ec38c87/)
 * [CPU Miner once again](https://github.com/universalbit-dev/CityGenerator/blob/master/workers/workers.md)
