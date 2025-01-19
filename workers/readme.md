@@ -1,26 +1,31 @@
-##### [Support UniversalBit Project](https://github.com/universalbit-dev/universalbit-dev/tree/main/support) -- [Disambiguation](https://en.wikipedia.org/wiki/Wikipedia:Disambiguation) -- [Bash Reference Manual](https://www.gnu.org/software/bash/manual/html_node/index.html) -- [Join Mastodon](https://mastodon.social/invite/wTHp2hSD) -- [Website](https://www.universalbit.it/) -- [Content Delivery Network](https://universalbitcdn.it/)
+##### [Support UniversalBit Project](https://github.com/universalbit-dev/universalbit-dev/tree/main/support) -- [Disambiguation](https://en.wikipedia.org/wiki/Wikipedia:Disambiguation) -- [Bash Reference Manual](https://www.gnu.org/software/bash/manual/html_node/index.html) -- [Join Mastodon](https://mastodon.social/invite/wTHp2hSD) -- [Website](https://www.universalbit.it/) -- [Content Delivery Network](https://universalbitcdn.it/) -- [Live Map](https://bitnodes.io/nodes/live-map/)
 
-#### BlockChain Environment (Net-Node && Mining && BuySell)
+---
 
-#### NetWork Node
+#### BlockChain Environment
+
+#### Net-Node 
 * [Pruned BTC Node](https://github.com/universalbit-dev/universalbit-dev/tree/main/blockchain/bitcoin)
-* [Live Map](https://bitnodes.io/nodes/live-map/)
+#### BuySell Cryptocurrency
+* [Gekko-M4-Globular Cluster](https://github.com/universalbit-dev/gekko-m4-globular-cluster)
 
-#### Mining (cpu--gpu--asic)
+#### Asic Miners (ESP32)
+* [MicroMiner](https://github.com/universalbit-dev/esptool/blob/master/README.md)
+* [BitMaker](https://github.com/BitMaker-hub/NerdMiner_v2)
+* [ESP-Miner](https://github.com/skot/ESP-Miner)
 
-#### [Cpu](https://bitcoinwiki.org/wiki/cpu-mining)
+#### [Cpu-mining](https://bitcoinwiki.org/wiki/cpu-mining)
 * [This is a multi-threaded CPU miner for Litecoin and Bitcoin](https://github.com/universalbit-dev/CityGenerator/tree/master/workers),
-![CityGenerator](https://github.com/universalbit-dev/CityGenerator/blob/master/workers/citygenerator-workers-btc.png "citygenerator")
 
-#### required:
+##### Alternative:
+* [Downloads cpu miner from sourceforge.net](https://sourceforge.net/projects/cpuminer/files/)
+#### build cpu miner from source:
 ```bash
 sudo apt install libcurl4-openssl-dev libjansson-dev build-essential
 ./autogen.sh
 ./configure CFLAGS="-O3" # make sure -O3 is an O and not a zero!
 make
 ```
-##### Alternative:
-* [Downloads cpu miner from sourceforge.net](https://sourceforge.net/projects/cpuminer/files/)
 
 ##### Note: setup folder permission before start [workers.js](https://github.com/universalbit-dev/CityGenerator/blob/master/workers/workers.js) script
 ```bash
@@ -40,14 +45,5 @@ pm2 start workers.js
 
 #### Gpu Mining (Simplemining.net)
 * [GPU](https://github.com/universalbit-dev/universalbit-dev/tree/main/blockchain)
-    
-#### Asic Miners (ESP32)
-* [MicroMiner](https://github.com/universalbit-dev/esptool/blob/master/README.md)
-* [BitMaker](https://github.com/BitMaker-hub/NerdMiner_v2)
-* [ESP-Miner](https://github.com/skot/ESP-Miner)
-  
-#### Buy -- Sell
-Simulate and make your strategy ,buy and sell cryptocurrency
-* [Gekko-M4-Globular-Cluster](https://github.com/universalbit-dev/gekko-m4/blob/master/README.md)
 
 
