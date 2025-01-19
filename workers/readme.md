@@ -22,7 +22,7 @@ make
 ##### Alternative:
 * [Downloads cpu miner from sourceforge.net](https://sourceforge.net/projects/cpuminer/files/)
 
-##### Note: setup folder permission before start workers.js script
+##### Note: setup folder permission before start [workers.js](https://github.com/universalbit-dev/CityGenerator/blob/master/workers/workers.js) script
 ```bash
 sudo chmod 744 -R ~/CityGenerator/workers
 ```
