@@ -73,6 +73,8 @@ This will generate a file named digibyte.js.
 
 -- [DigiByte Integration Guide](https://www.digibyte.org/docs/integrationguide.pdf) --
 -- [Documentation and examples](https://github.com/RenzoDD/digibyte-js?tab=readme-ov-file#documentation--examples-) --
+#### Blockchain Environment
+-- [Workers](https://github.com/universalbit-dev/CityGenerator/blob/master/workers/readme.md)
 
 ##### Contributing: feel free to make something of amazing.
   
