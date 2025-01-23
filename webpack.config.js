@@ -2,7 +2,7 @@ const path = require('path');
 const { ModuleFederationPlugin } = require('webpack').container;
 
   module.exports = {
-    entry: './src/index.ts',
+    entry: ['./src/index.ts','./src/js/deepqlearn.js','./src/js/convnet.js','./digibyte.js'],
     mode: 'development',
     plugins: [new ModuleFederationPlugin({
     runtime: 'fab-city',
