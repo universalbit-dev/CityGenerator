@@ -4,10 +4,10 @@
    "description": "citygenerator fab city",
    "private": true,
    "scripts": {
-      "citygenerator": "open dist/index.html",
       "build": "webpack",
       "fabify":"browserify -r ./node_modules/digibyte-js/index.js:digibyte-js -o ./digibyte.js",
-      "start": "npm run fabify && npm run citygenerator"
+      "citygenerator": "open dist/index.html",
+      "start": "npm run citygenerator"
    },
    "keywords": [
       "citygenerator",
