@@ -4,6 +4,7 @@
    "description": "citygenerator fab city",
    "private": true,
    "scripts": {
+      "postinstall":"npm install -g npm@11.0.0",
       "build": "webpack",
       "fabify":"browserify -r ./node_modules/digibyte-js/index.js:digibyte-js -o ./digibyte.js",
       "start":"npm run fabify"
