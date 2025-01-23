@@ -6,7 +6,8 @@
    "scripts": {
       "citygenerator": "open dist/index.html",
       "build": "webpack",
-      "fabify":"browserify -r ./node_modules/digibyte-js/index.js:digibyte-js -o ./digibyte.js"
+      "fabify":"browserify -r ./node_modules/digibyte-js/index.js:digibyte-js -o ./digibyte.js",
+      "start": "npm run build && npm run fabify && npm run citygenerator"
    },
    "keywords": [
       "citygenerator",
