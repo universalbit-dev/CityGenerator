@@ -67,11 +67,6 @@ npm run build
 ---
 
 ##### Blockchain Approach
-```bash
-npm run fabify
-```
-This will generate a file named digibyte.js.
-
 -- [DigiByte Integration Guide](https://www.digibyte.org/docs/integrationguide.pdf) --
 -- [Documentation and examples](https://github.com/RenzoDD/digibyte-js?tab=readme-ov-file#documentation--examples-) --
 #### Blockchain Environment
