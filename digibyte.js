@@ -75547,7 +75547,7 @@ Url.prototype.format = function () {
   var auth = this.auth || '';
   if (auth) {
     auth = encodeURIComponent(auth);
-    auth = auth.replace(/%3A/i, ':');
+    auth = auth.replace(/%3A/g, ':');
     auth += '@';
   }
 
