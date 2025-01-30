@@ -66,7 +66,7 @@ npm run build
 * [WebPack Module Federarion](https://webpack.js.org/concepts/module-federation/)
 ---
 
-##### Blockchain Approach
+##### Blockchain Integration: Information about integrating with DigiByte and other blockchain environments.
 -- [DigiByte Integration Guide](https://www.digibyte.org/docs/integrationguide.pdf) --
 -- [Documentation and examples](https://github.com/RenzoDD/digibyte-js?tab=readme-ov-file#documentation--examples-) --
 #### Blockchain Environment
