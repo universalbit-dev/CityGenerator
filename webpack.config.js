@@ -38,7 +38,7 @@ module.exports = {
     },
   },
   output: {
-    filename: 'bundle.js',
+    filename: 'web3.js',
     path: path.resolve(__dirname, 'dist'),
   },
 };
