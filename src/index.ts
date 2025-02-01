@@ -56,74 +56,75 @@ class Main {
     public modelGenerator: ModelGenerator;
 
     constructor() {
-        // GUI Setup
-        this.mainGui = new MainGUI(this.roadsFolder, this.tensorField, () => this.tensorFolder.close());
-        const zoomController = this.gui.add(this.domainController, 'zoom');
-        this.domainController.setZoomUpdate(() => zoomController.updateDisplay());
-        this.gui.add(this, 'generate');
-        this.tensorFolder = this.gui.addFolder('Tensor Field');
-        this.roadsFolder = this.gui.addFolder('Map');
-        this.styleFolder = this.gui.addFolder('Style');
-        this.optionsFolder = this.gui.addFolder('Options');
-        this.downloadsFolder = this.gui.addFolder('Download');
-        // Canvas setup
-        this.canvas = document.getElementById(Util.CANVAS_ID) as HTMLCanvasElement;
-        this.tensorCanvas = new DefaultCanvasWrapper(this.canvas);
-        
-        // Make sure we're not too zoomed out for large resolutions
-        const screenWidth = this.domainController.screenDimensions.x;
-        if (screenWidth > this.STARTING_WIDTH) {
-            this.domainController.zoom = screenWidth / this.STARTING_WIDTH;
-        }
+    // Initialize GUI folders first
+    this.tensorFolder = this.gui.addFolder('Tensor Field');
+    this.roadsFolder = this.gui.addFolder('Map');
+    this.styleFolder = this.gui.addFolder('Style');
+    this.optionsFolder = this.gui.addFolder('Options');
+    this.downloadsFolder = this.gui.addFolder('Download');
+    
+    // Initialize tensorField and mainGui
+    var noiseParamsPlaceholder: NoiseParams = {  // Placeholder values for park + water noise
+        globalNoise: false,
+        noiseSizePark: 20,
+        noiseAnglePark: 90,
+        noiseSizeGlobal: 30,
+        noiseAngleGlobal: 20
+    };
+    this.tensorField = new TensorFieldGUI(this.tensorFolder, this.dragController, true, noiseParamsPlaceholder);
+    this.mainGui = new MainGUI(this.roadsFolder, this.tensorField, () => this.tensorFolder.close());
 
-        // Style setup
-        this.styleFolder.add(this, 'colourScheme', Object.keys(ColourSchemes)).onChange((val: string) => this.changeColourScheme(val));
-
-        this.styleFolder.add(this, 'zoomBuildings').onChange((val: boolean) => {
-            // Force redraw
-            this.previousFrameDrawTensor = true;
-            this._style.zoomBuildings = val;
-        });
-
-        this.styleFolder.add(this, 'buildingModels').onChange((val: boolean) => {
-            // Force redraw
-            this.previousFrameDrawTensor = true;
-            this._style.showBuildingModels = val;
-        });
-        
-        this.styleFolder.add(this, 'showFrame').onChange((val: boolean) => {
-            this.previousFrameDrawTensor = true;
-            this._style.showFrame = val;
-        });
-
-        this.styleFolder.add(this.domainController, 'orthographic');
-        this.styleFolder.add(this, 'cameraX', -15, 15).step(1).onChange(() => this.setCameraDirection());
-        this.styleFolder.add(this, 'cameraY', -15, 15).step(1).onChange(() => this.setCameraDirection());
-
-
-        var noiseParamsPlaceholder: NoiseParams = {  // Placeholder values for park + water noise
-            globalNoise: false,
-            noiseSizePark: 20,
-            noiseAnglePark: 90,
-            noiseSizeGlobal: 30,
-            noiseAngleGlobal: 20
-        };
-
-        this.tensorField = new TensorFieldGUI(this.tensorFolder, this.dragController, true, noiseParamsPlaceholder);
-        this.mainGui = new MainGUI(this.roadsFolder, this.tensorField, () => this.tensorFolder.close());
-
-        this.optionsFolder.add(this.tensorField, 'drawCentre');
-        this.optionsFolder.add(this, 'highDPI').onChange((high: boolean) => this.changeCanvasScale(high));
-        
-        this.downloadsFolder.add(this, 'imageScale', 1, 5).step(1);
-        this.downloadsFolder.add({"PNG": () => this.downloadPng()}, 'PNG');  // This allows custom naming of button
-        this.downloadsFolder.add({"SVG": () => this.downloadSVG()}, 'SVG');
-        this.downloadsFolder.add({"Heightmap": () => this.downloadHeightmap()}, 'Heightmap');
-
-        this.changeColourScheme(this.colourScheme);
-        this.tensorField.setRecommended();
-        requestAnimationFrame(() => this.update());
+    // GUI Setup
+    const zoomController = this.gui.add(this.domainController, 'zoom');
+    this.domainController.setZoomUpdate(() => zoomController.updateDisplay());
+    this.gui.add(this, 'generate');
+    
+    // Canvas setup
+    this.canvas = document.getElementById(Util.CANVAS_ID) as HTMLCanvasElement;
+    this.tensorCanvas = new DefaultCanvasWrapper(this.canvas);
+    
+    // Make sure we're not too zoomed out for large resolutions
+    const screenWidth = this.domainController.screenDimensions.x;
+    if (screenWidth > this.STARTING_WIDTH) {
+        this.domainController.zoom = screenWidth / this.STARTING_WIDTH;
     }
+
+    // Style setup
+    this.styleFolder.add(this, 'colourScheme', Object.keys(ColourSchemes)).onChange((val: string) => this.changeColourScheme(val));
+
+    this.styleFolder.add(this, 'zoomBuildings').onChange((val: boolean) => {
+        // Force redraw
+        this.previousFrameDrawTensor = true;
+        this._style.zoomBuildings = val;
+    });
+
+    this.styleFolder.add(this, 'buildingModels').onChange((val: boolean) => {
+        // Force redraw
+        this.previousFrameDrawTensor = true;
+        this._style.showBuildingModels = val;
+    });
+    
+    this.styleFolder.add(this, 'showFrame').onChange((val: boolean) => {
+        this.previousFrameDrawTensor = true;
+        this._style.showFrame = val;
+    });
+
+    this.styleFolder.add(this.domainController, 'orthographic');
+    this.styleFolder.add(this, 'cameraX', -15, 15).step(1).onChange(() => this.setCameraDirection());
+    this.styleFolder.add(this, 'cameraY', -15, 15).step(1).onChange(() => this.setCameraDirection());
+
+    this.optionsFolder.add(this.tensorField, 'drawCentre');
+    this.optionsFolder.add(this, 'highDPI').onChange((high: boolean) => this.changeCanvasScale(high));
+    
+    this.downloadsFolder.add(this, 'imageScale', 1, 5).step(1);
+    this.downloadsFolder.add({"PNG": () => this.downloadPng()}, 'PNG');  // This allows custom naming of button
+    this.downloadsFolder.add({"SVG": () => this.downloadSVG()}, 'SVG');
+    this.downloadsFolder.add({"Heightmap": () => this.downloadHeightmap()}, 'Heightmap');
+
+    this.changeColourScheme(this.colourScheme);
+    this.tensorField.setRecommended();
+    requestAnimationFrame(() => this.update());
+}
 
     /**
      * Generate an entire map with no control over the process
