@@ -26,7 +26,8 @@ export default class RoadGUI {
                 protected folderName: string,
                 protected redraw: () => void,
                 protected _animate=false) {
-        this.streamlines = new StreamlineGenerator(
+            this.guiFolder.add(this, 'generateEverything');
+            this.streamlines = new StreamlineGenerator(
             this.integrator, this.domainController.origin,
             this.domainController.worldDimensions, this.params);
 
