@@ -4,7 +4,7 @@
    "description": "citygenerator fab city",
    "private": true,
    "scripts": {
-      "postinstall": "npm run build",
+      "postinstall": "npm audit fix && npm run build",
       "build": "webpack",
       "start": "node server.js"
    },
