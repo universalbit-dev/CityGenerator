@@ -13,9 +13,6 @@
       "fab city",
       "maps"
    ],
-    "engines": {
-    "node": "20.x"
-    },
    "contributor": "universalbit-dev",
    "author": "probabletrain",
    "license": "LGPL-3.0",
@@ -61,5 +58,6 @@
       "three-csg-ts": "^3.1.13",
       "ts-loader": "^9.5.1",
       "vite": "^5.1.7"
-   }
+   },
+   "engines": {"node": "20.x"}
 }
