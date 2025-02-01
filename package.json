@@ -13,6 +13,9 @@
       "fab city",
       "maps"
    ],
+    "engines": {
+    "node": "20.x"
+    },
    "contributor": "universalbit-dev",
    "author": "probabletrain",
    "license": "LGPL-3.0",
