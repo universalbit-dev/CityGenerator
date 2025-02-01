@@ -19,9 +19,9 @@ export default class RoadGUI {
 
     private streamlinesInProgress: boolean = false;
 
-    constructor(protected params: StreamlineParams,
+    constructor(private guiFolder: dat.GUI, private tensorField: TensorField, private closeTensorFolder: () => void,
+                protected params: StreamlineParams,
                 protected integrator: FieldIntegrator,
-                protected guiFolder: dat.GUI,
                 protected closeTensorFolder: () => void,
                 protected folderName: string,
                 protected redraw: () => void,
