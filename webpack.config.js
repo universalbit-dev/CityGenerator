@@ -6,11 +6,10 @@ module.exports = {
   mode: 'development',
   plugins: [
     new ModuleFederationPlugin({
-      name: 'fab_city',
+      name: 'fabcity',
       filename: 'remoteEntry.js',
-      exposes: {
-        './Module': './src/index', // Adjust according to your exposed modules
-      },
+      exposes: {'./Module': './src/index',},
+
       shared: {
         lodash: { singleton: true },
         convnetjs: { singleton: true },
@@ -31,7 +30,7 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
+    extensions: ['.tsx', '.ts', '.js' ,'.json','.d.ts','.dt.ts'],
     byDependency: {
       commonjs: { aliasFields: ['browser'] },
       url: { preferRelative: true },
