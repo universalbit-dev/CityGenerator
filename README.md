@@ -1,4 +1,5 @@
 [![CodeQL](https://github.com/universalbit-dev/CityGenerator/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/universalbit-dev/CityGenerator/actions/workflows/github-code-scanning/codeql)
+![Firefox](https://img.shields.io/badge/Firefox-FF7139?style=for-the-badge&logo=Firefox-Browser&logoColor=white)
 ##### [Support UniversalBit Project](https://github.com/universalbit-dev/universalbit-dev/tree/main/support) -- [Disambiguation](https://en.wikipedia.org/wiki/Wikipedia:Disambiguation) -- [Bash Reference Manual](https://www.gnu.org/software/bash/manual/html_node/index.html) -- [Join Mastodon](https://mastodon.social/invite/wTHp2hSD) -- [Website](https://www.universalbit.it/) -- [Content Delivery Network](https://universalbitcdn.it/) -- [Web3](https://github.com/freeCodeCamp/web3-curriculum?tab=readme-ov-file)
 
 ---
