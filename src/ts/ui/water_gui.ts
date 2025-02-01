@@ -19,7 +19,7 @@ import TensorField from '../impl/tensor_field';
 export default class WaterGUI extends RoadGUI {
     protected streamlines: WaterGenerator;
 
-    constructor(private guiFolder: dat.GUI, private tensorField: TensorField, private closeTensorFolder: () => void,
+    constructor(private guiFolder: dat.GUI, private tensorField: TensorField, private closeTensorFolder,
                 protected params: WaterParams,protected integrator: FieldIntegrator,protected folderName: string,protected redraw: () => void) {
         super(params, integrator, guiFolder, closeTensorFolder, folderName, redraw);
         this.streamlines = new WaterGenerator(
