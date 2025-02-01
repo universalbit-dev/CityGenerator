@@ -172,34 +172,44 @@ export default class ModelGenerator {
     }
 
     /**
-     * Extrude a polygon into a THREE.js mesh
+     * Extrude a polygon into a THREE.js mesh  -- copilot enhance --
      */
     private polygonToMesh(polygon: Vector[], height: number): THREE.Mesh {
-        if (polygon.length < 3) {
-            log.error("Tried to export empty polygon as OBJ");
-            return null;
-        }
-        const shape = new (<any>THREE).Shape();
-        shape.moveTo(polygon[0].x, polygon[0].y);
-        for (let i = 1; i < polygon.length; i++) {
-            shape.lineTo(polygon[i].x, polygon[i].y);
-        }
-        shape.lineTo(polygon[0].x, polygon[0].y);
-
-        if (height === 0) {
-            return new (<any>THREE).Mesh(new (<any>THREE).ShapeGeometry(shape));
-        }
-
-        const extrudeSettings = {
-            steps: 1,
-            depth: height,
-            bevelEnabled: false,
-        };
-
-        const geometry = new (<any>THREE).ExtrudeGeometry(shape, extrudeSettings);
-        const mesh = new (<any>THREE).Mesh(geometry);
-        // mesh.translateZ(-height);
-        mesh.updateMatrixWorld(true);
-        return mesh;
+    if (polygon.length < 3) {
+        log.error("Tried to export empty polygon as OBJ");
+        return null;
     }
+    const shape = new THREE.Shape();
+    shape.moveTo(polygon[0].x, polygon[0].y);
+    for (let i = 1; i < polygon.length; i++) {
+        shape.lineTo(polygon[i].x, polygon[i].y);
+    }
+    shape.lineTo(polygon[0].x, polygon[0].y);
+
+    const extrudeSettings = {
+        steps: 2,
+        depth: height,
+        bevelEnabled: true,
+        bevelThickness: 1,
+        bevelSize: 1,
+        bevelOffset: 0,
+        bevelSegments: 2
+    };
+
+    const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+
+    // Apply material
+    const material = new THREE.MeshStandardMaterial({
+        color: 0x808080,
+        metalness: 0.5,
+        roughness: 0.5
+    });
+
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+    mesh.updateMatrixWorld(true);
+    return mesh;
 }
+    }
+
