@@ -16,6 +16,7 @@ import { SVG } from '@svgdotjs/svg.js';
 import ModelGenerator from './ts/model_generator';
 import { saveAs } from 'file-saver';
 class Main {
+
     public readonly STARTING_WIDTH = 1440;  // Initially zooms in if width > STARTING_WIDTH
 
     // UI
@@ -55,6 +56,7 @@ class Main {
     public modelGenerator: ModelGenerator;
 
     constructor() {
+        this.mainGui = new MainGUI(this.roadsFolder, this.tensorField, () => this.tensorFolder.close());
         // GUI Setup
         const zoomController = this.gui.add(this.domainController, 'zoom');
         this.domainController.setZoomUpdate(() => zoomController.updateDisplay());
