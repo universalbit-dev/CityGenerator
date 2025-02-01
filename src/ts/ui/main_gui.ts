@@ -23,8 +23,8 @@ import PolygonUtil from '../impl/polygon_util';
  * Handles Map folder, glues together impl
  */
 export default class MainGUI {
-    private numBigParks: number = 2;
-    private numSmallParks: number = 0;
+    private numBigParks: number = 20;
+    private numSmallParks: number = 10;
     private clusterBigParks: boolean = false;
 
     private domainController = DomainController.getInstance();
