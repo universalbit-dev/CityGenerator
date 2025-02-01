@@ -62,7 +62,7 @@ export default class MainGUI {
     constructor(private guiFolder: dat.GUI, private tensorField: TensorField, private closeTensorFolder: () => void) {
         guiFolder.add(this, 'generateEverything');
         // guiFolder.add(this, 'simpleBenchMark');
-        const animateController = guiFolder.add(null, 'animate');
+        const animateController = guiFolder.add(this, 'animate');
         guiFolder.add(null, 'animationSpeed');
 
         this.coastlineParams = Object.assign({
