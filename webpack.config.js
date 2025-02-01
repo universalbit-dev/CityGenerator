@@ -14,7 +14,6 @@ module.exports = {
       shared: {
         lodash: { singleton: true },
         convnetjs: { singleton: true },
-        jsts: { singleton: true, eager: true },
         '@types/jsts': { singleton: true, eager: true },
         'digibyte-js': { singleton: true },
         browserify: { singleton: true },
