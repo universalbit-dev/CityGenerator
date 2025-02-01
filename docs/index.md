@@ -23,6 +23,6 @@ This HTML file is the main entry point for a web application called "CityGenerat
   - An SVG element with `id="map-svg"`.
   - Two canvas elements with `id="map-canvas"` and `id="img-canvas"`, both sized 300x150.
 - **Additional Scripts**: 
-  - `bundle_edit.js` and `bundle.js` are included at the end of the body.
+  - `web3.js` and `bundle.js` are included at the end of the body.
 
 This setup suggests the application involves machine learning, neural networks, and possibly some graphics rendering using `three.js`. The cookie banner indicates an attempt to handle cookies or run a cookie-less experiment.
