@@ -3,6 +3,7 @@ This HTML file is the main entry point for a web application called "CityGenerat
 * [Copilot](https://docs.github.com/en/copilot) uses AI.
 * [Responsible use of Github Copilot](https://docs.github.com/en/copilot/responsible-use-of-github-copilot-features/responsible-use-of-github-copilot-chat-in-your-ide)
 
+You are currently located in the CityGenerator repository on GitHub, specifically in the dist/index.html file. This repository is primarily composed of JavaScript, with some C, Makefile, TypeScript, and Shell code. The project description indicates it is focused on futuristic city generation with a blockchain approach.
 
 - **HTML Structure**: The basic HTML structure includes a `<!DOCTYPE html>`, `<html>`, `<head>`, and `<body>` tags.
 - **Metadata**: The page is set with `lang="en"` and `charset="utf-8"`. The title of the page is "CityGenerator".
@@ -25,4 +26,4 @@ This HTML file is the main entry point for a web application called "CityGenerat
 - **Additional Scripts**: 
   - `web3.js` and `bundle.js` are included at the end of the body.
 
-This setup suggests the application involves machine learning, neural networks, and possibly some graphics rendering using `three.js`. The cookie banner indicates an attempt to handle cookies or run a cookie-less experiment.
+This setup suggests the application involves machine learning, neural networks, and possibly some graphics rendering using `three.js`. The cookie banner indicates an attempt to run a cookie-less experiment.
