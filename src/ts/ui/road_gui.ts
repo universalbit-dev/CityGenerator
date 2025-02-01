@@ -22,7 +22,6 @@ export default class RoadGUI {
     constructor(private guiFolder: dat.GUI, private tensorField: TensorField, private closeTensorFolder: () => void,
                 protected params: StreamlineParams,
                 protected integrator: FieldIntegrator,
-                protected closeTensorFolder: () => void,
                 protected folderName: string,
                 protected redraw: () => void,
                 protected _animate=false) {
