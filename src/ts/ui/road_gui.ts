@@ -19,14 +19,14 @@ export default class RoadGUI {
 
     private streamlinesInProgress: boolean = false;
 
-    constructor(private guiFolder: dat.GUI, private tensorField: TensorField, private closeTensorFolder: () => void,
-                protected params: StreamlineParams,
+    constructor(protected params: StreamlineParams,
                 protected integrator: FieldIntegrator,
+                protected guiFolder: dat.GUI,
+                protected closeTensorFolder: () => void,
                 protected folderName: string,
                 protected redraw: () => void,
                 protected _animate=false) {
-            this.guiFolder.add(this, 'generateEverything');
-            this.streamlines = new StreamlineGenerator(
+        this.streamlines = new StreamlineGenerator(
             this.integrator, this.domainController.origin,
             this.domainController.worldDimensions, this.params);
 
