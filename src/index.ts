@@ -57,6 +57,7 @@ class Main {
 
     constructor() {
         // GUI Setup
+        this.mainGui = new MainGUI(this.roadsFolder, this.tensorField, () => this.tensorFolder.close());
         const zoomController = this.gui.add(this.domainController, 'zoom');
         this.domainController.setZoomUpdate(() => zoomController.updateDisplay());
         this.gui.add(this, 'generate');
@@ -65,7 +66,6 @@ class Main {
         this.styleFolder = this.gui.addFolder('Style');
         this.optionsFolder = this.gui.addFolder('Options');
         this.downloadsFolder = this.gui.addFolder('Download');
-        this.mainGui = new MainGUI(this.roadsFolder, this.tensorField, () => this.tensorFolder.close());
         // Canvas setup
         this.canvas = document.getElementById(Util.CANVAS_ID) as HTMLCanvasElement;
         this.tensorCanvas = new DefaultCanvasWrapper(this.canvas);
