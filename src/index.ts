@@ -56,8 +56,8 @@ class Main {
     public modelGenerator: ModelGenerator;
 
     constructor() {
-        this.mainGui = new MainGUI(this.guiFolder, this.tensorField, () => this.tensorFolder.close());
         // GUI Setup
+        this.mainGui = new MainGUI(this.roadsFolder, this.tensorField, () => this.tensorFolder.close());
         const zoomController = this.gui.add(this.domainController, 'zoom');
         this.domainController.setZoomUpdate(() => zoomController.updateDisplay());
         this.gui.add(this, 'generate');
