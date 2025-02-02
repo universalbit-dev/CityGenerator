@@ -4,7 +4,7 @@
    "description": "citygenerator fab city",
    "private": true,
    "scripts": {
-      "postinstall": "npm audit fix && npm run build",
+      "postinstall": "npm audit fix && npm run build ",
       "build": "webpack",
       "start": "node server.js"
    },
@@ -31,33 +31,43 @@
       "webpack-cli": "^5.1.4"
    },
    "dependencies": {
+      "@injectit/threejs-nodejs-exporters": "^0.0.2",
       "@svgdotjs/svg.js": "^3.2.0",
       "@types/openlayers": "^4.6.23",
       "audit": "^0.0.6",
       "browserify": "^17.0.1",
+      "cities.json": "^1.1.45",
       "convnetjs": "^0.3.0",
       "d3": "^7.9.0",
       "d3-quadtree": "^3.0.1",
       "dat.gui": "^0.7.9",
       "express": "^4.21.2",
       "file-saver": "^2.0.5",
+      "html-webpack-plugin": "^5.6.3",
+      "install": "^0.13.0",
       "interactjs": "^1.10.26",
       "isect": "^3.0.2",
       "jsts": "^2.11.3",
+      "jszip": "^3.10.1",
       "loglevel": "^1.9.1",
       "noisejs": "^2.1.0",
-      "npm": "^11.0.0",
+      "npm": "^11.1.0",
       "ol": "^9.0.0",
       "path": "^0.12.7",
       "polyk": "^0.24.0",
       "roughjs": "^4.6.6",
       "simplex-noise": "^4.0.1",
       "simplify-js": "^1.2.4",
+      "stl-exporter": "^0.3.6",
+      "stream": "^0.0.3",
+      "stream-browserify": "^3.0.0",
       "three": "^0.160.1",
       "three-buffer-geometry-utils": "^1.0.0",
       "three-csg-ts": "^3.1.13",
       "ts-loader": "^9.5.1",
       "vite": "^5.1.7"
    },
-   "engines": {"node": "20.x"}
+   "engines": {
+      "node": "20.x"
+   }
 }
