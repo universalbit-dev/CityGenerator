@@ -76,7 +76,7 @@ class Main {
             this.domainController.zoom = screenWidth / this.STARTING_WIDTH;
         }
         
-this.styleFolder.add(this, 'colourScheme', Object.keys(ColourSchemes) as any).onChange((val: string) => {
+this.styleFolder.add(this, 'colourScheme' as any).onChange((val: string) => {
     try {
         this.changeColourScheme(val);
     } catch (error) {
