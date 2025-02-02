@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: [
-    './src/main.js',
+    './src/main.ts',
     './src/index.ts',
     './src/js/deepqlearn.js','./src/js/convnet.js','./src/js/vis.js',
     './digibyte.js',
