@@ -75,9 +75,8 @@ class Main {
         if (screenWidth > this.STARTING_WIDTH) {
             this.domainController.zoom = screenWidth / this.STARTING_WIDTH;
         }
-
-        // Style setup
-        this.styleFolder.add(this, 'colourScheme', Object.keys(ColourSchemes)).onChange((val: string) => {
+        
+this.styleFolder.add(this, 'colourScheme', Object.keys(ColourSchemes) as any).onChange((val: string) => {
     try {
         this.changeColourScheme(val);
     } catch (error) {
@@ -85,7 +84,7 @@ class Main {
     }
 });
 
-this.styleFolder.add(this, 'zoomBuildings').onChange((val: boolean) => {
+this.styleFolder.add(this, 'zoomBuildings' as any).onChange((val: boolean) => {
     try {
         this.previousFrameDrawTensor = true;
         this._style.zoomBuildings = val;
@@ -93,7 +92,8 @@ this.styleFolder.add(this, 'zoomBuildings').onChange((val: boolean) => {
         console.error('Error updating zoom buildings:', error);
     }
 });
-        this.styleFolder.add(this, 'buildingModels').onChange((val: boolean) => {
+
+this.styleFolder.add(this, 'buildingModels' as any).onChange((val: boolean) => {
     try {
         this.previousFrameDrawTensor = true;
         this._style.showBuildingModels = val;
@@ -102,8 +102,7 @@ this.styleFolder.add(this, 'zoomBuildings').onChange((val: boolean) => {
     }
 });
 
-       
-         this.styleFolder.add(this, 'showFrame').onChange((val: boolean) => {
+this.styleFolder.add(this, 'showFrame' as any).onChange((val: boolean) => {
     try {
         this.previousFrameDrawTensor = true;
         this._style.showFrame = val;
@@ -112,23 +111,29 @@ this.styleFolder.add(this, 'zoomBuildings').onChange((val: boolean) => {
     }
 });
 
-        this.styleFolder.add(this.domainController, 'orthographic');
-        this.styleFolder.add(this, 'cameraX', -15, 15).step(1).onChange(() => {
+this.styleFolder.add(this, 'cameraX' as any, -15, 15).step(1).onChange(() => {
     try {
         this.setCameraDirection();
     } catch (error) {
         console.error('Error setting camera direction for X:', error);
     }
 });
-this.styleFolder.add(this, 'cameraY', -15, 15).step(1).onChange(() => {
+
+this.styleFolder.add(this, 'cameraY' as any, -15, 15).step(1).onChange(() => {
     try {
         this.setCameraDirection();
     } catch (error) {
         console.error('Error setting camera direction for Y:', error);
     }
 });
-    
 
+this.downloadsFolder.add(this, 'imageScale' as any, 1, 5).step(1).onChange((val: number) => {
+    try {
+        this.imageScale = val;
+    } catch (error) {
+        console.error('Error updating image scale:', error);
+    }
+});
 
         const noiseParamsPlaceholder: NoiseParams = {  // Placeholder values for park + water noise
             globalNoise: false,
@@ -143,14 +148,6 @@ this.styleFolder.add(this, 'cameraY', -15, 15).step(1).onChange(() => {
 
         this.optionsFolder.add(this.tensorField, 'drawCentre');
         this.optionsFolder.add(this, 'highDPI').onChange((high: boolean) => this.changeCanvasScale(high));
-        
- this.downloadsFolder.add(this, 'imageScale', 1, 5).step(1).onChange((val: number) => {
-    try {
-        this.imageScale = val;
-    } catch (error) {
-        console.error('Error updating image scale:', error);
-    }
-});
         this.downloadsFolder.add({"PNG": () => this.downloadPng()}, 'PNG');  // This allows custom naming of button
         this.downloadsFolder.add({"SVG": () => this.downloadSVG()}, 'SVG');
         this.downloadsFolder.add({"STL": () => this.downloadSTL()}, 'STL');
