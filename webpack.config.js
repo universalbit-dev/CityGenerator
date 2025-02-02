@@ -1,8 +1,31 @@
 const path = require('path');
 const { ModuleFederationPlugin } = require('webpack').container;
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: ['./src/index.ts', './src/js/deepqlearn.js', './src/js/convnet.js', './digibyte.js','./dist/bundle.js'],
+  entry: [
+    './src/main.js',
+    './src/index.ts',
+    './src/js/deepqlearn.js','./src/js/convnet.js', 
+    './digibyte.js',
+    './src/ts/model_generator.ts',
+    './src/ts/util.ts',
+    './src/ts/vector.ts',
+    './src/ts/impl/basis_field.ts','./src/ts/impl/graph.ts','./src/ts/impl/grid_storage.ts','./src/ts/impl/integrator.ts',
+    './src/ts/impl/polygon_finder.ts','./src/ts/impl/polygon_util.ts','./src/ts/impl/streamlines.ts','./src/ts/impl/tensor.ts',
+    './src/ts/impl/tensor_field.ts',
+    './src/ts/impl/water_generator.ts',
+    './src/ts/ui/buildings.ts',
+    './src/ts/ui/canvas_wrapper.ts',
+    './src/ts/ui/domain_controller.ts',
+    './src/ts/ui/drag_controller.ts',
+    './src/ts/ui/main_gui.ts',
+    './src/ts/ui/road_gui.ts',
+    './src/ts/ui/style.ts',
+    './src/ts/ui/tensor_field_gui.ts',
+    './src/ts/ui/water_gui.ts',
+    './dist/bundle.js'
+  ],
   mode: 'development',
   plugins: [
     new ModuleFederationPlugin({
@@ -11,11 +34,12 @@ module.exports = {
       exposes: {'./Module': './src/index',},
 
       shared: {
-        lodash: { singleton: true },
-        convnetjs: { singleton: true },
+        'lodash': { singleton: true },
+        'jszip':{singleton: true, eager: true},
+        'convnetjs': { singleton: true },
         '@types/jsts': { singleton: true, eager: true },
         'digibyte-js': { singleton: true },
-        browserify: { singleton: true },
+        'browserify': { singleton: true },
       },
     }),
   ],
@@ -29,13 +53,16 @@ module.exports = {
       },
     ],
   },
+  
   resolve: {
-    extensions: ['.tsx', '.ts', '.js' ,'.json','.d.ts','.dt.ts'],
+    extensions: ['.ts', '.js' ,'.json','.d.ts','.dt.ts'],
     byDependency: {
       commonjs: { aliasFields: ['browser'] },
       url: { preferRelative: true },
     },
+     
   },
+ 
   output: {
     filename: 'web3.js',
     path: path.resolve(__dirname, 'dist'),
