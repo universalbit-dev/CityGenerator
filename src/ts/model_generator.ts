@@ -3,6 +3,8 @@ import * as THREE from 'three'
 import Vector from './vector';
 import { CSG } from 'three-csg-ts';
 import {BuildingModel} from './ui/buildings';
+import { mergeBufferGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 
 enum ModelGeneratorStates {
     WAITING,
@@ -18,7 +20,7 @@ enum ModelGeneratorStates {
 export default class ModelGenerator {
     private readonly groundLevel = 20;  // Thickness of groundMesh
 
-    private readonly exportSTL = require('threejs-export-stl');
+    private readonly exportSTL = require('stl-exporter');
     private resolve: (blob: any) => void = b => {};
     private zip: any;
     private state: ModelGeneratorStates = ModelGeneratorStates.WAITING;
@@ -26,10 +28,10 @@ export default class ModelGenerator {
     private groundMesh: THREE.Mesh;
     private groundBsp: CSG;
     private polygonsToProcess: Vector[][] = [];
-    private roadsGeometry = new (<any>THREE).Geometry();
-    private blocksGeometry = new (<any>THREE).Geometry();
+    private roadsGeometry = new THREE.BufferGeometry();
+    private blocksGeometry = new THREE.BufferGeometry();
+    private buildingsGeometry = new THREE.BufferGeometry();
     private roadsBsp: CSG;
-    private buildingsGeometry = new (<any>THREE).Geometry();
     private buildingsToProcess: BuildingModel[];
 
 
@@ -49,7 +51,7 @@ export default class ModelGenerator {
             this.resolve = resolve;
             const JSZip = require("jszip");
             this.zip = new JSZip();
-            this.zip.file("model/README.txt", "For a tutorial on putting these models together to create a city, go to https://maps.probabletrain.com/#/stl");
+            this.zip.file("model/stl_binary.md", "");
 
             this.groundMesh = this.polygonToMesh(this.ground, this.groundLevel);
             this.groundBsp = CSG.fromMesh(this.groundMesh);
@@ -115,8 +117,10 @@ export default class ModelGenerator {
 
                 const road = this.polygonsToProcess.pop();
                 const roadsMesh = this.polygonToMesh(road, 0);
-                
-                this.roadsGeometry.merge((roadsMesh.geometry), this.groundMesh.matrix);
+       
+                const roadsGeometries = [this.roadsGeometry, roadsMesh.geometry];
+                this.roadsGeometry = mergeBufferGeometries(roadsGeometries);
+                //this.roadsGeometry((roadsMesh.geometry), this.groundMesh.matrix);
                 break;
             }
             case ModelGeneratorStates.ADD_BLOCKS: {
@@ -131,9 +135,15 @@ export default class ModelGenerator {
                     break; 
                 }
 
+
+
+
+
                 const block = this.polygonsToProcess.pop();
                 const blockMesh = this.polygonToMesh(block, 1);
-                this.blocksGeometry.merge((blockMesh.geometry), this.groundMesh.matrix);
+                const blocksGeometries = [this.blocksGeometry, blockMesh.geometry];
+                this.blocksGeometry = mergeBufferGeometries(blocksGeometries);
+                //this.blocksGeometry((blockMesh.geometry), this.groundMesh.matrix);
                 break;
             }
             case ModelGeneratorStates.ADD_BUILDINGS: {
@@ -148,7 +158,9 @@ export default class ModelGenerator {
 
                 const b = this.buildingsToProcess.pop();
                 const buildingMesh = this.polygonToMesh(b.lotScreen, b.height);
-                this.buildingsGeometry.merge((buildingMesh.geometry), this.groundMesh.matrix);
+                const buildingsGeometries = [this.buildingsGeometry, buildingMesh.geometry];
+                this.buildingsGeometry = mergeBufferGeometries(buildingsGeometries);
+                //this.buildingsGeometry((buildingMesh.geometry), this.groundMesh.matrix);
                 break;
             }
             case ModelGeneratorStates.CREATE_ZIP: {
