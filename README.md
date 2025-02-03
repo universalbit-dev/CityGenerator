@@ -14,8 +14,8 @@ cd CityGenerator
 ```
 ### Install packages with npm then generate your city model
 ```bash
-npm i && npm i pm2 -g
-npm run citygenerator
+npm i 
+npm start
 ```
 
 
