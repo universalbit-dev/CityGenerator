@@ -6,7 +6,7 @@ module.exports = {
   entry: [
     './src/main.ts',
     './src/index.ts',
-    './src/js/deepqlearn.js','./src/js/convnet.js', 
+    './src/js/deepqlearn.js','./src/js/convnet.js','./src/js/vis.js',  
     './digibyte.js',
     './src/ts/model_generator.ts',
     './src/ts/util.ts',
