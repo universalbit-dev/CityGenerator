@@ -6,7 +6,7 @@ module.exports = {
   entry: [
     './src/main.ts',
     './src/index.ts',
-    './src/js/deepqlearn.js','./src/js/convnet.js','./src/js/vis.js',
+    './src/js/deepqlearn.js','./src/js/convnet.js', 
     './digibyte.js',
     './src/ts/model_generator.ts',
     './src/ts/util.ts',
@@ -24,7 +24,8 @@ module.exports = {
     './src/ts/ui/style.ts',
     './src/ts/ui/tensor_field_gui.ts',
     './src/ts/ui/water_gui.ts',
-    './dist/bundle.js'
+    './dist/bundle.js',
+    './geodesic_dome/geodesicDome.ts'
   ],
   mode: 'development',
   plugins: [
@@ -36,6 +37,7 @@ module.exports = {
       shared: {
         'lodash': { singleton: true },
         'jszip':{singleton: true, eager: true},
+        'cities.json':{singleton: true, eager: true},
         'convnetjs': { singleton: true },
         '@types/jsts': { singleton: true, eager: true },
         'digibyte-js': { singleton: true },
