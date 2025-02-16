@@ -64,7 +64,7 @@
       "three": "^0.160.1",
       "three-buffer-geometry-utils": "^1.0.0",
       "three-csg-ts": "^3.1.13",
-      "ts-loader": "^9.5.1",
+      "ts-loader": "^9.5.2",
       "vite": "^5.1.7"
    },
    "engines": {
