@@ -36,7 +36,7 @@
       "@types/openlayers": "^4.6.23",
       "audit": "^0.0.6",
       "browserify": "^17.0.1",
-      "cities.json": "^1.1.45",
+      "cities.json": "^1.1.47",
       "convnetjs": "^0.3.0",
       "d3": "^7.9.0",
       "d3-quadtree": "^3.0.1",
