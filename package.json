@@ -61,9 +61,10 @@
       "stl-exporter": "^0.3.6",
       "stream": "^0.0.3",
       "stream-browserify": "^3.0.0",
-      "three": "^0.160.1",
+      "three": "^0.175.0",
       "three-buffer-geometry-utils": "^1.0.0",
       "three-csg-ts": "^3.1.13",
+      "threejs-export-stl": "^0.0.4",
       "ts-loader": "^9.5.1",
       "vite": "^6.2.6"
    },
