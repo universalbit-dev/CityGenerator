@@ -1,4 +1,3 @@
-```typescript
 // Importing necessary libraries and modules
 import * as log from 'loglevel';
 import * as dat from 'dat.gui'; // GUI library for UI controls
@@ -250,4 +249,3 @@ class Main {
 window.addEventListener('load', (): void => {
     new Main();
 });
-```
