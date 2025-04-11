@@ -1,14 +1,9 @@
 import * as log from 'loglevel';
-import * as THREE from 'three';
+import * as THREE from 'three'
 import Vector from './vector';
 import { CSG } from 'three-csg-ts';
-import { BuildingModel } from './ui/buildings';
-import { mergeBufferGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import {BuildingModel} from './ui/buildings';
 
-/**
- * Enum representing the various states of the `ModelGenerator`.
- */
 enum ModelGeneratorStates {
     WAITING,
     SUBTRACT_OCEAN,
@@ -20,12 +15,10 @@ enum ModelGeneratorStates {
     CREATE_ZIP,
 }
 
-/**
- * The `ModelGenerator` class generates 3D models for a city using THREE.js and exports them as STL files.
- */
 export default class ModelGenerator {
-    private readonly groundLevel = 20; // Thickness of the ground mesh
-    private readonly exportSTL = require('stl-exporter');
+    private readonly groundLevel = 20;  // Thickness of groundMesh
+
+    private readonly exportSTL = require('threejs-export-stl');
     private resolve: (blob: any) => void = b => {};
     private zip: any;
     private state: ModelGeneratorStates = ModelGeneratorStates.WAITING;
@@ -33,79 +26,30 @@ export default class ModelGenerator {
     private groundMesh: THREE.Mesh;
     private groundBsp: CSG;
     private polygonsToProcess: Vector[][] = [];
-    private roadsGeometry = new THREE.BufferGeometry();
-    private blocksGeometry = new THREE.BufferGeometry();
-    private buildingsGeometry = new THREE.BufferGeometry();
+    private roadsGeometry = new THREE.Geometry();
+    private blocksGeometry = new THREE.Geometry();
     private roadsBsp: CSG;
+    private buildingsGeometry = new THREE.Geometry();
     private buildingsToProcess: BuildingModel[];
 
-    /**
-     * Constructs a new `ModelGenerator` instance.
-     * 
-     * @param ground - Array of vectors representing the ground polygon.
-     * @param sea - Array of vectors representing the sea polygon.
-     * @param coastline - Array of vectors representing the coastline polygon.
-     * @param river - Array of vectors representing the river polygon.
-     * @param mainRoads - Array of arrays of vectors representing main roads.
-     * @param majorRoads - Array of arrays of vectors representing major roads.
-     * @param minorRoads - Array of arrays of vectors representing minor roads.
-     * @param buildings - Array of `BuildingModel` objects representing buildings.
-     * @param blocks - Array of arrays of vectors representing city blocks.
-     */
-    
-    /**
-     * Generates a bridge mesh connecting two points.
-     * @param start - Start vector of the bridge.
-     * @param end - End vector of the bridge.
-     * @param height - Height of the bridge above water.
-     * @returns The generated THREE.js mesh for the bridge.
-     */
-    
-    export function generateBridgeMesh(start: Vector, end: Vector, height: number): THREE.Mesh {
-    const bridgeShape = new THREE.Shape();
-    bridgeShape.moveTo(start.x, start.y);
-    bridgeShape.lineTo(end.x, end.y);
 
-    const extrudeSettings = {
-        steps: 2,
-        depth: height,
-        bevelEnabled: false,
-    };
-
-    const geometry = new THREE.ExtrudeGeometry(bridgeShape, extrudeSettings);
-    const material = new THREE.MeshStandardMaterial({
-        color: 0x8B4513, // Bridge color (e.g., brown)
-        metalness: 0.2,
-        roughness: 0.7,
-    });
-
-    const mesh = new THREE.Mesh(geometry, material);
-    return mesh;
+    constructor(private ground: Vector[],
+                private sea: Vector[],
+                private coastline: Vector[],
+                private river: Vector[],
+                private mainRoads: Vector[][],
+                private majorRoads: Vector[][],
+                private minorRoads: Vector[][],
+                private buildings: BuildingModel[],
+                private blocks: Vector[][]) {
     }
-    
-    constructor(
-        private ground: Vector[],
-        private sea: Vector[],
-        private coastline: Vector[],
-        private river: Vector[],
-        private mainRoads: Vector[][],
-        private majorRoads: Vector[][],
-        private minorRoads: Vector[][],
-        private buildings: BuildingModel[],
-        private blocks: Vector[][],
-    ) {}
 
-    /**
-     * Generates and returns the STL representation of the city as a Promise.
-     * 
-     * @returns A Promise that resolves with the STL blob.
-     */
     public async getSTL(): Promise<any> {
         return new Promise<any>(resolve => {
             this.resolve = resolve;
             const JSZip = require("jszip");
             this.zip = new JSZip();
-            this.zip.file("model/stl_binary.md", "");
+            this.zip.file("model/README.txt", "For a tutorial on putting these models together to create a city, go to https://maps.probabletrain.com/#/stl");
 
             this.groundMesh = this.polygonToMesh(this.ground, this.groundLevel);
             this.groundBsp = CSG.fromMesh(this.groundMesh);
@@ -113,20 +57,14 @@ export default class ModelGenerator {
         });
     }
 
-    /**
-     * Updates the state of the model generator.
-     * 
-     * @param s - The new state of the model generator.
-     */
     private setState(s: ModelGeneratorStates): void {
         this.state = s;
         log.info(ModelGeneratorStates[s]);
     }
 
     /**
-     * Updates the model generation process. This method is designed to avoid blocking the main thread.
-     * 
-     * @returns `true` if the model generation is in progress, otherwise `false`.
+     * Return true if processing a model
+     * Work done in update loop so main thread isn't swamped
      */
     public update(): boolean {
         switch(this.state) {
@@ -134,7 +72,6 @@ export default class ModelGenerator {
                 return false;
             }
             case ModelGeneratorStates.SUBTRACT_OCEAN: {
-                // Process ocean subtraction
                 const seaLevelMesh = this.polygonToMesh(this.ground, 0);
                 this.threeToBlender(seaLevelMesh);
                 const seaLevelSTL = this.exportSTL.fromMesh(seaLevelMesh);
@@ -147,16 +84,86 @@ export default class ModelGenerator {
                 this.setState(ModelGeneratorStates.ADD_COASTLINE);
                 break;
             }
-            // Other states follow similar logic
-            // ...
+            case ModelGeneratorStates.ADD_COASTLINE: {
+                const coastlineMesh = this.polygonToMesh(this.coastline, 0);
+                this.threeToBlender(coastlineMesh);
+                const coastlineSTL = this.exportSTL.fromMesh(coastlineMesh);
+                this.zip.file("model/coastline.stl", coastlineSTL);
+                this.setState(ModelGeneratorStates.SUBTRACT_RIVER);
+                break;
+            }
+            case ModelGeneratorStates.SUBTRACT_RIVER: {
+                const riverMesh = this.polygonToMesh(this.river, 0);
+                this.threeToBlender(riverMesh);
+                const riverSTL = this.exportSTL.fromMesh(riverMesh);
+                this.zip.file("model/river.stl", riverSTL);
+                this.setState(ModelGeneratorStates.ADD_ROADS);
+                this.polygonsToProcess = this.minorRoads.concat(this.majorRoads).concat(this.mainRoads);
+                break;
+            }
+            case ModelGeneratorStates.ADD_ROADS: {
+                if (this.polygonsToProcess.length === 0) {
+                    const mesh = new THREE.Mesh(this.roadsGeometry);
+                    this.threeToBlender(mesh);
+                    const buildingsSTL = this.exportSTL.fromMesh(mesh);
+                    this.zip.file("model/roads.stl", buildingsSTL);
+                    
+                    this.setState(ModelGeneratorStates.ADD_BLOCKS);
+                    this.polygonsToProcess = [...this.blocks];
+                    break;
+                }
+
+                const road = this.polygonsToProcess.pop();
+                const roadsMesh = this.polygonToMesh(road, 0);
+                this.roadsGeometry.merge(roadsMesh.geometry as THREE.Geometry, this.groundMesh.matrix);
+                break;
+            }
+            case ModelGeneratorStates.ADD_BLOCKS: {
+                if (this.polygonsToProcess.length === 0) {
+                    const mesh = new THREE.Mesh(this.blocksGeometry);
+                    this.threeToBlender(mesh);
+                    const blocksSTL = this.exportSTL.fromMesh(mesh);
+                    this.zip.file("model/blocks.stl", blocksSTL);
+
+                    this.setState(ModelGeneratorStates.ADD_BUILDINGS);
+                    this.buildingsToProcess = [...this.buildings];
+                    break; 
+                }
+
+                const block = this.polygonsToProcess.pop();
+                const blockMesh = this.polygonToMesh(block, 1);
+                this.blocksGeometry.merge(blockMesh.geometry as THREE.Geometry, this.groundMesh.matrix);
+                break;
+            }
+            case ModelGeneratorStates.ADD_BUILDINGS: {
+                if (this.buildingsToProcess.length === 0) {
+                    const mesh = new THREE.Mesh(this.buildingsGeometry);
+                    this.threeToBlender(mesh);
+                    const buildingsSTL = this.exportSTL.fromMesh(mesh);
+                    this.zip.file("model/buildings.stl", buildingsSTL);
+                    this.setState(ModelGeneratorStates.CREATE_ZIP);
+                    break;
+                }
+
+                const b = this.buildingsToProcess.pop();
+                const buildingMesh = this.polygonToMesh(b.lotScreen, b.height);
+                this.buildingsGeometry.merge(buildingMesh.geometry as THREE.Geometry, this.groundMesh.matrix);
+                break;
+            }
+            case ModelGeneratorStates.CREATE_ZIP: {
+                this.zip.generateAsync({type:"blob"}).then((blob: any) => this.resolve(blob));
+                this.setState(ModelGeneratorStates.WAITING);
+                break;
+            }
+            default: {
+                break;
+            }
         }
         return true;
     }
 
     /**
-     * Rotates and scales a mesh so that the "up" direction is correct.
-     * 
-     * @param mesh - The 3D mesh to transform.
+     * Rotate and scale mesh so up is in the right direction
      */
     private threeToBlender(mesh: THREE.Object3D): void {
         mesh.scale.multiplyScalar(0.02);
@@ -164,11 +171,7 @@ export default class ModelGenerator {
     }
 
     /**
-     * Converts a polygon into a THREE.js mesh by extruding it to a specified height.
-     * 
-     * @param polygon - Array of vectors representing the polygon.
-     * @param height - The height to extrude the polygon.
-     * @returns The generated THREE.js mesh.
+     * Extrude a polygon into a THREE.js mesh
      */
     private polygonToMesh(polygon: Vector[], height: number): THREE.Mesh {
         if (polygon.length < 3) {
@@ -182,27 +185,19 @@ export default class ModelGenerator {
         }
         shape.lineTo(polygon[0].x, polygon[0].y);
 
+        if (height === 0) {
+            return new THREE.Mesh(new THREE.ShapeGeometry(shape));
+        }
+
         const extrudeSettings = {
-            steps: 2,
+            steps: 1,
             depth: height,
-            bevelEnabled: true,
-            bevelThickness: 1,
-            bevelSize: 1,
-            bevelOffset: 0,
-            bevelSegments: 2
+            bevelEnabled: false,
         };
 
         const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-
-        const material = new THREE.MeshStandardMaterial({
-            color: 0x808080,
-            metalness: 0.5,
-            roughness: 0.5
-        });
-
-        const mesh = new THREE.Mesh(geometry, material);
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
+        const mesh = new THREE.Mesh(geometry);
+        // mesh.translateZ(-height);
         mesh.updateMatrixWorld(true);
         return mesh;
     }
