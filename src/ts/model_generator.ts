@@ -52,6 +52,36 @@ export default class ModelGenerator {
      * @param buildings - Array of `BuildingModel` objects representing buildings.
      * @param blocks - Array of arrays of vectors representing city blocks.
      */
+    
+    
+/**
+     * Generates a bridge mesh connecting two points.
+     * @param start - Start vector of the bridge.
+     * @param end - End vector of the bridge.
+     * @param height - Height of the bridge above water.
+     * @returns The generated THREE.js mesh for the bridge.
+     */
+    private generateBridgeMesh(start: Vector, end: Vector, height: number): THREE.Mesh {
+        const bridgeShape = new THREE.Shape();
+        bridgeShape.moveTo(start.x, start.y);
+        bridgeShape.lineTo(end.x, end.y);
+
+        const extrudeSettings = {
+            steps: 2,
+            depth: height,
+            bevelEnabled: false,
+        };
+
+        const geometry = new THREE.ExtrudeGeometry(bridgeShape, extrudeSettings);
+        const material = new THREE.MeshStandardMaterial({
+            color: 0x8B4513, // Bridge color (e.g., brown)
+            metalness: 0.2,
+            roughness: 0.7,
+        });
+
+        const mesh = new THREE.Mesh(geometry, material);
+        return mesh;
+    }
     constructor(
         private ground: Vector[],
         private sea: Vector[],
