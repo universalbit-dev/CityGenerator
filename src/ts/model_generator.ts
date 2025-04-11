@@ -53,8 +53,7 @@ export default class ModelGenerator {
      * @param blocks - Array of arrays of vectors representing city blocks.
      */
     
-    
-/**
+    /**
      * Generates a bridge mesh connecting two points.
      * @param start - Start vector of the bridge.
      * @param end - End vector of the bridge.
@@ -82,6 +81,7 @@ export default class ModelGenerator {
         const mesh = new THREE.Mesh(geometry, material);
         return mesh;
     }
+    
     constructor(
         private ground: Vector[],
         private sea: Vector[],
