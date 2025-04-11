@@ -3,6 +3,7 @@ import * as THREE from 'three'
 import Vector from './vector';
 import { CSG } from 'three-csg-ts';
 import {BuildingModel} from './ui/buildings';
+import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 enum ModelGeneratorStates {
     WAITING,
@@ -26,10 +27,10 @@ export default class ModelGenerator {
     private groundMesh: THREE.Mesh;
     private groundBsp: CSG;
     private polygonsToProcess: Vector[][] = [];
-    private roadsGeometry = new THREE.Geometry();
-    private blocksGeometry = new THREE.Geometry();
+    private roadsGeometry = new THREE.BufferGeometry();
+    private blocksGeometry = new THREE.BufferGeometry();
     private roadsBsp: CSG;
-    private buildingsGeometry = new THREE.Geometry();
+    private buildingsGeometry = new THREE.BufferGeometry();
     private buildingsToProcess: BuildingModel[];
 
 
@@ -115,7 +116,7 @@ export default class ModelGenerator {
 
                 const road = this.polygonsToProcess.pop();
                 const roadsMesh = this.polygonToMesh(road, 0);
-                this.roadsGeometry.merge(roadsMesh.geometry as THREE.Geometry, this.groundMesh.matrix);
+                this.roadsGeometry = BufferGeometryUtils.mergeBufferGeometries([this.roadsGeometry, roadsMesh.geometry as THREE.BufferGeometry]);
                 break;
             }
             case ModelGeneratorStates.ADD_BLOCKS: {
@@ -132,24 +133,31 @@ export default class ModelGenerator {
 
                 const block = this.polygonsToProcess.pop();
                 const blockMesh = this.polygonToMesh(block, 1);
-                this.blocksGeometry.merge(blockMesh.geometry as THREE.Geometry, this.groundMesh.matrix);
+                this.blocksGeometry = BufferGeometryUtils.mergeBufferGeometries([
+                this.blocksGeometry,blockMesh.geometry as THREE.BufferGeometry,]);
                 break;
             }
             case ModelGeneratorStates.ADD_BUILDINGS: {
-                if (this.buildingsToProcess.length === 0) {
-                    const mesh = new THREE.Mesh(this.buildingsGeometry);
-                    this.threeToBlender(mesh);
-                    const buildingsSTL = this.exportSTL.fromMesh(mesh);
-                    this.zip.file("model/buildings.stl", buildingsSTL);
-                    this.setState(ModelGeneratorStates.CREATE_ZIP);
-                    break;
-                }
+    if (this.buildingsToProcess.length === 0) {
+        const mesh = new THREE.Mesh(this.buildingsGeometry);
+        this.threeToBlender(mesh);
+        const buildingsSTL = this.exportSTL.fromMesh(mesh);
+        this.zip.file("model/buildings.stl", buildingsSTL);
+        this.setState(ModelGeneratorStates.CREATE_ZIP);
+        break;
+    }
 
-                const b = this.buildingsToProcess.pop();
-                const buildingMesh = this.polygonToMesh(b.lotScreen, b.height);
-                this.buildingsGeometry.merge(buildingMesh.geometry as THREE.Geometry, this.groundMesh.matrix);
-                break;
-            }
+    // Define `buildingMesh` here:
+    const b = this.buildingsToProcess.pop(); // Pop a building model from the queue
+    const buildingMesh = this.polygonToMesh(b.lotScreen, b.height); // Create a mesh from the building model
+    
+    // Merge the current `buildingMesh` into `buildingsGeometry`
+    this.buildingsGeometry = BufferGeometryUtils.mergeBufferGeometries([
+        this.buildingsGeometry,
+        buildingMesh.geometry as THREE.BufferGeometry,
+    ]);
+    break;
+}
             case ModelGeneratorStates.CREATE_ZIP: {
                 this.zip.generateAsync({type:"blob"}).then((blob: any) => this.resolve(blob));
                 this.setState(ModelGeneratorStates.WAITING);
