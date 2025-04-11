@@ -6,7 +6,6 @@ import FieldIntegrator from '../impl/integrator';
 import {StreamlineParams} from '../impl/streamlines';
 import StreamlineGenerator from '../impl/streamlines';
 import Vector from '../vector';
-import { generateBridgeMesh } from '../model_generator';
 
 /**
  * Handles creation of roads
@@ -44,20 +43,8 @@ export default class RoadGUI {
                 this.redraw();
             },
         };
-        
-/**
- * Detects if a bridge is required between two road points based on water presence.
- * @param roadStart - Starting point of the road segment.
- * @param roadEnd - Ending point of the road segment.
- * @param waterArea - Boundary or area of water.
- * @returns True if a bridge is required, false otherwise.
- */
-   private detectBridgeCondition(roadStart: Vector, roadEnd: Vector, waterArea: any): boolean {
-       // Example logic: Check if the midpoint of the road segment intersects the water area
-       const midPoint = roadStart.clone().add(roadEnd).multiplyScalar(0.5);
-       return waterArea.containsPoint(midPoint); // Ensure `containsPoint` exists for your waterArea object
-   }     
-       const folder = this.guiFolder.addFolder(this.folderName);
+
+        const folder = this.guiFolder.addFolder(this.folderName);
         folder.add(roadGUI, 'Generate');
         // folder.add(roadGUI, 'JoinDangling');
         
