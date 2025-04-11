@@ -60,26 +60,27 @@ export default class ModelGenerator {
      * @param height - Height of the bridge above water.
      * @returns The generated THREE.js mesh for the bridge.
      */
-    private generateBridgeMesh(start: Vector, end: Vector, height: number): THREE.Mesh {
-        const bridgeShape = new THREE.Shape();
-        bridgeShape.moveTo(start.x, start.y);
-        bridgeShape.lineTo(end.x, end.y);
+    
+    export function generateBridgeMesh(start: Vector, end: Vector, height: number): THREE.Mesh {
+    const bridgeShape = new THREE.Shape();
+    bridgeShape.moveTo(start.x, start.y);
+    bridgeShape.lineTo(end.x, end.y);
 
-        const extrudeSettings = {
-            steps: 2,
-            depth: height,
-            bevelEnabled: false,
-        };
+    const extrudeSettings = {
+        steps: 2,
+        depth: height,
+        bevelEnabled: false,
+    };
 
-        const geometry = new THREE.ExtrudeGeometry(bridgeShape, extrudeSettings);
-        const material = new THREE.MeshStandardMaterial({
-            color: 0x8B4513, // Bridge color (e.g., brown)
-            metalness: 0.2,
-            roughness: 0.7,
-        });
+    const geometry = new THREE.ExtrudeGeometry(bridgeShape, extrudeSettings);
+    const material = new THREE.MeshStandardMaterial({
+        color: 0x8B4513, // Bridge color (e.g., brown)
+        metalness: 0.2,
+        roughness: 0.7,
+    });
 
-        const mesh = new THREE.Mesh(geometry, material);
-        return mesh;
+    const mesh = new THREE.Mesh(geometry, material);
+    return mesh;
     }
     
     constructor(
