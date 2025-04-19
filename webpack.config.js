@@ -44,6 +44,11 @@ module.exports = {
         'browserify': { singleton: true },
       },
     }),
+    new HtmlWebpackPlugin({
+      title: 'CityGenerator',
+      template: './src/html/index.html', // Path to your HTML template file
+      filename: 'index.html', // Output file name
+    }),
   ],
   devtool: 'inline-source-map',
   module: {
