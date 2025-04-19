@@ -43,7 +43,7 @@ module.exports = {
       exposes: {'./Module': './src/index',},
 
       shared: {
-        'lodash': { singleton: true },
+        'underscore': { singleton: true },
         'jszip':{singleton: true, eager: true},
         'cities.json':{singleton: true, eager: true},
         'convnetjs': { singleton: true },
