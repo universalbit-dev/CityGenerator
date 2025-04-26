@@ -1,49 +1,80 @@
-##### [Support UniversalBit Project](https://github.com/universalbit-dev/universalbit-dev/tree/main/support) -- [Disambiguation](https://en.wikipedia.org/wiki/Wikipedia:Disambiguation) -- [Bash Reference Manual](https://www.gnu.org/software/bash/manual/html_node/index.html) -- [Join Mastodon](https://mastodon.social/invite/wTHp2hSD) -- [Website](https://www.universalbit.it/) -- [Content Delivery Network](https://universalbitcdn.it/) -- [Live Map](https://bitnodes.io/nodes/live-map/) -- [Web3](https://github.com/freeCodeCamp/web3-curriculum?tab=readme-ov-file) --
+# Workers Documentation
+
+### [Support UniversalBit Project](https://github.com/universalbit-dev/universalbit-dev/tree/main/support) | [Disambiguation](https://en.wikipedia.org/wiki/Wikipedia:Disambiguation) | [Bash Reference](https://github.com/universalbit-dev/universalbit-dev/tree/main/bash)
 
 ---
 
-#### BlockChain Environment
+## Blockchain Environment
 
-#### Net-Node 
-* [Pruned BTC Node](https://github.com/universalbit-dev/universalbit-dev/tree/main/blockchain/bitcoin)
-#### BuySell Cryptocurrency
-* [Gekko-M4-Globular Cluster](https://github.com/universalbit-dev/gekko-m4-globular-cluster)
+### Net-Node  
+- [Pruned BTC Node](https://github.com/universalbit-dev/universalbit-dev/tree/main/blockchain/bitcoin)  
+  Set up and run a pruned Bitcoin node for reduced storage requirements while maintaining full network functionality.
 
-#### Asic Miners (ESP32)
-* [MicroMiner](https://github.com/universalbit-dev/esptool/blob/master/README.md)
-* [BitMaker](https://github.com/BitMaker-hub/NerdMiner_v2)
-* [ESP-Miner](https://github.com/skot/ESP-Miner)
+---
 
-#### [Cpu-mining](https://bitcoinwiki.org/wiki/cpu-mining)
-* [This is a multi-threaded CPU miner for Litecoin and Bitcoin](https://github.com/universalbit-dev/CityGenerator/tree/master/workers),
+## Buy/Sell Cryptocurrency
+- [Gekko-M4 Globular Cluster](https://github.com/universalbit-dev/gekko-m4-globular-cluster)  
+  A sustainable cryptocurrency model inspired by decentralized finance and ecological principles.
 
-##### Alternative:
-* [Downloads cpu miner from sourceforge.net](https://sourceforge.net/projects/cpuminer/files/)
-#### build cpu miner from source:
-```bash
-sudo apt install libcurl4-openssl-dev libjansson-dev build-essential
-./autogen.sh
-./configure CFLAGS="-O3" # make sure -O3 is an O and not a zero!
-make
-```
+---
 
-##### Note: setup folder permission before start [workers.js](https://github.com/universalbit-dev/CityGenerator/blob/master/workers/workers.js) script
+## ASIC Miners (ESP32)
+Explore lightweight and efficient mining solutions for ESP32 microcontrollers:
+- [MicroMiner](https://github.com/universalbit-dev/esptool/blob/master/README.md)  
+- [BitMaker](https://github.com/BitMaker-hub/NerdMiner_v2)  
+- [ESP-Miner](https://github.com/skot/ESP-Miner)
+
+---
+
+## CPU Mining
+- [CPU Mining Overview](https://bitcoinwiki.org/wiki/cpu-mining)  
+  Learn about multi-threaded CPU mining for Litecoin and Bitcoin.
+
+### How to Set Up CPU Mining
+1. **Clone the Repository**  
+   This project includes a multi-threaded CPU miner for Litecoin and Bitcoin:  
+   [CityGenerator Workers](https://github.com/universalbit-dev/CityGenerator/tree/master/workers)
+
+2. **Alternative CPU Miners**  
+   - [Download pre-built CPU miners from SourceForge](https://sourceforge.net/projects/cpuminer/files/)
+
+3. **Build CPU Miner from Source**  
+   Follow these steps to compile the miner from source:
+   ```bash
+   sudo apt install libcurl4-openssl-dev libjansson-dev build-essential
+   ./autogen.sh
+   ./configure CFLAGS="-O3" # Ensure -O3 is an uppercase "O"
+   make
+   ```
+
+### Setup Folder Permissions
+Before starting the worker script, set the necessary folder permissions:
 ```bash
 sudo chmod 744 -R ~/CityGenerator/workers
 ```
 
-#### start cpu mining process with [PM2](https://pm2.keymetrics.io/docs/usage/quick-start/)
+### Start the CPU Mining Process with PM2
+Use [PM2](https://pm2.keymetrics.io/docs/usage/quick-start/) for process management:
 ```bash
 cd ~/CityGenerator/workers
-npm i 
+npm i
 pm2 start workers.js
 ```
-![CityGenerator](https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/CityGenerator_Workers.png "citygenerator")
 
-* [How Bitcoin Mining really Works](https://www.freecodecamp.org/news/how-bitcoin-mining-really-works-38563ec38c87/)
-* [CPU Miner once again](https://github.com/universalbit-dev/CityGenerator/blob/master/workers/workers.md)
+![CityGenerator](https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/CityGenerator_Workers.png "CityGenerator Workers")
 
-#### Gpu Mining (Simplemining.net)
-* [GPU](https://github.com/universalbit-dev/universalbit-dev/tree/main/blockchain)
+---
 
+### Additional Resources
+- [How Bitcoin Mining Really Works](https://www.freecodecamp.org/news/how-bitcoin-mining-really-works-38563ec38c87/)  
+  A deep dive into the mechanics of Bitcoin mining.
+- [CPU Miner Overview](https://github.com/universalbit-dev/CityGenerator/blob/master/workers/workers.md)  
+  Learn more about the CPU mining process and its implementation.
 
+---
+
+## GPU Mining with Simplemining.net
+Leverage GPU power for mining:
+- [GPU Mining Setup](https://github.com/universalbit-dev/universalbit-dev/tree/main/blockchain)
+
+---
