@@ -6,8 +6,20 @@
 ##### [Support UniversalBit Project](https://github.com/universalbit-dev/universalbit-dev/tree/main/support) -- [Disambiguation](https://en.wikipedia.org/wiki/Wikipedia:Disambiguation) -- [Bash Reference Manual](https://www.gnu.org/software/bash/manual/html_node/index.html) -- [Join Mastodon](https://mastodon.social/invite/wTHp2hSD) -- [Website](https://www.universalbit.it/) -- [Content Delivery Network](https://www.universalbitcdn.it/) -- [Web3](https://github.com/freeCodeCamp/web3-curriculum?tab=readme-ov-file)
 
 ---
-### [CityGenerator]
-is an application designed to generate city model.the idea is to generate [fabcity](https://fab.city/resources/2022-fab-city-book/) models
+
+### [CityGenerator](https://github.com/universalbit-dev/CityGenerator)
+
+**Description**:  
+The **CityGenerator** project focuses on creating dynamic city models inspired by the principles outlined in the [Fab City: The Mass Distribution of (Almost) Everything](https://fablabbcn.org/wp-content/uploads/2020/09/Fab-City-The-Mass-Distribution-of-Almost-Everything.pdf) white paper. It aims to provide tools for simulating and visualizing sustainable, self-sufficient, and resilient urban environments.
+
+---
+
+**Key Objectives**:
+1. **Sustainability**: Promote local production and reduce dependency on external resources, aligning with the Fab City framework.
+2. **Resilience**: Envision cities capable of adapting to environmental, social, and economic changes.
+3. **Collaboration**: Create open-source tools and models to engage developers, urban planners, and researchers in building decentralized urban systems.
+
+---
 
 ### Clone the project
 ```bash
