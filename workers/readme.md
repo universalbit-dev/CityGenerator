@@ -70,7 +70,6 @@ pm2 start workers.js
   A deep dive into the mechanics of Bitcoin mining.
 - [CPU Miner Overview](https://github.com/universalbit-dev/CityGenerator/blob/master/workers/workers.md)  
   Learn more about the CPU mining process and its implementation.
-
 ---
 
 ## GPU Mining with Simplemining.net
@@ -78,3 +77,10 @@ Leverage GPU power for mining:
 - [GPU Mining Setup](https://github.com/universalbit-dev/universalbit-dev/tree/main/blockchain)
 
 ---
+
+## 📢 Support the UniversalBit Project
+Help us grow and continue innovating!  
+- [Support the UniversalBit Project](https://github.com/universalbit-dev/universalbit-dev/tree/main/support)  
+- [Learn about Disambiguation](https://en.wikipedia.org/wiki/Wikipedia:Disambiguation)  
+- [Bash Reference Manual](https://www.gnu.org/software/bash/manual/)
+
