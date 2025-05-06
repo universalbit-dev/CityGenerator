@@ -6,7 +6,7 @@ pm2.connect(function(err) {
   }
   
   pm2.start({
-    script    : './minerd -a sha256d -o stratum+tcp://btc-euro.f2pool.com:1314 --userpass=unbt.001:21235365876986800',
+    script    : './minerd -a sha256d -o stratum+tcp://eu1.solopool.org:8004 --userpass=D82v9SnHsUdrPdsr3ENgmH5HQBUfSyZiUs:x',
     args      : '',
     name      : '|CityGenerator|Workers|'
 },
