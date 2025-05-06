@@ -1,9 +1,5 @@
 # Workers Documentation
 
-### [Support UniversalBit Project](https://github.com/universalbit-dev/universalbit-dev/tree/main/support) | [Disambiguation](https://en.wikipedia.org/wiki/Wikipedia:Disambiguation) | [Bash Reference](https://github.com/universalbit-dev/universalbit-dev/tree/main/bash)
-
----
-
 ## Blockchain Environment
 
 ### Net-Node  
