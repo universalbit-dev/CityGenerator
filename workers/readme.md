@@ -27,12 +27,12 @@ Explore lightweight and efficient mining solutions for ESP32 microcontrollers:
 ---
 
 ## CPU Mining
-- [CPU Mining Overview](https://bitcoinwiki.org/wiki/cpu-mining)  
-  Learn about multi-threaded CPU mining for Litecoin and Bitcoin.
+  
+  Learn about multi-threaded CPU mining for DigiByte.
 
 ### How to Set Up CPU Mining
 1. **Clone the Repository**  
-   This project includes a multi-threaded CPU miner for Litecoin and Bitcoin:  
+   This project includes a multi-threaded CPU miner for DigiByte:  
    [CityGenerator Workers](https://github.com/universalbit-dev/CityGenerator/tree/master/workers)
 
 2. **Alternative CPU Miners**  
@@ -60,8 +60,6 @@ cd ~/CityGenerator/workers
 npm i
 pm2 start workers.js
 ```
-
-![CityGenerator](https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/CityGenerator_Workers.png "CityGenerator Workers")
 
 ---
 
