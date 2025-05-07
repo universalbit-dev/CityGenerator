@@ -29,7 +29,7 @@ cd CityGenerator
 ```
 ### Install packages with npm then generate your city model
 ```bash
-npm i 
+npm i && npm audit fix
 npm start
 ```
 
