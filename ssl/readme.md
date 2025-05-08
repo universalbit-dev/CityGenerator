@@ -8,24 +8,58 @@
    ```bash
    openssl req -nodes -new -x509 -keyout ssl/private-key.pem -out ssl/certificate.pem -days 365
    ```
----
-
-#### As an alternative to the given command, you can generate an SSL certificate using a configuration file (`distinguished.cnf`)
 
 ---
 
-   **Command to Use This File:**
-   
+#### Alternative: Generate an SSL Certificate Using a Configuration File (`distinguished.cnf`)
+
+---
+
+   **Command to Use This File**:
    ```bash
    openssl req -nodes -new -x509 \
    -keyout ssl/private-key.pem -out ssl/certificate.pem -days 365 \
    -config ssl/distinguished.cnf
    ```
 
-**[Developmet]**
+---
 
-1. **Update `server.js` to Use HTTP/2 with SSL**:
-   Modify the `server.js` file in the root directory to use `http2` instead of `http`. Load the SSL certificate and key to enable HTTPS.
+### Using `https_server.js` for HTTPS Integration
+
+1. **About `https_server.js`**:
+   - The `https_server.js` file is located in the root directory `/`.
+   - It uses the `https` module to create a secure HTTPS server.
+   - SSL certificates (key and certificate files) must be placed in the `/ssl` directory.
+
+   Example `https_server.js` content:
+   ```javascript
+   const express = require('express');
+   const https = require('https');
+   const fs = require('fs');
+   const path = require('path');
+
+   const app = express();
+
+   // Serve static files from the "dist" directory
+   app.use(express.static(path.join(__dirname, "dist/")));
+
+   // Example route
+   app.get('/', (req, res) => {
+       res.send('Noop');
+   });
+
+   // SSL Options
+   const sslOptions = {
+       key: fs.readFileSync(path.join(__dirname, 'ssl/private-key.pem')),
+       cert: fs.readFileSync(path.join(__dirname, 'ssl/certificate.pem')),
+   };
+
+   // Create HTTPS server
+   const port = process.env.PORT || 8000;
+   https.createServer(sslOptions, app).listen(port, () => {
+       console.log(`HTTPS server running at https://localhost:${port}`);
+   });
+   ```
 
 2. **Directory Structure**:
    Ensure your project has the following structure:
@@ -35,29 +69,38 @@
    ├── ssl/                    # SSL certificate and key directory
    │   ├── private-key.pem
    │   ├── certificate.pem
-   ├── server.js               # Main server file
+   ├── https_server.js         # Main HTTPS server file
    ```
 
-3. **Run the Server**:
+3. **Run the HTTPS Server**:
    Start the server using Node.js:
    ```bash
-   node server.js
+   node https_server.js
    ```
 
-4. **Test the Server**:
+4. **Test the HTTPS Server**:
    - Open your browser and navigate to `https://localhost:8000` (or the selected port).
    - You may need to accept the self-signed certificate warning in your browser (if using a self-signed certificate).
 
-   **Using curl for HTTP/2 testing**:
+   **Using curl for HTTPS testing**:
    ```bash
-   curl -k --http2 https://localhost:8000
+   curl -k https://localhost:8000
    ```
 
 ---
 
-### Benefits of HTTP/2 for CityGenerator [development]
-- **Faster Loading**: Multiplexing allows multiple assets (e.g., JavaScript, CSS) to be loaded simultaneously over a single connection.
-- **Reduced Overhead**: Header compression reduces the amount of data transmitted, especially for repetitive requests.
+### Benefits of Using HTTPS in `CityGenerator`
+
 - **Secure Communication**: HTTPS ensures data integrity and encryption.
+- **Browser Compatibility**: Modern browsers enforce HTTPS for many advanced features.
+- **Trust**: Trusted certificates provide better user confidence for production environments.
 
 ---
+
+### Notes:
+- Always ensure your SSL certificate and key files are kept secure, especially in production environments.
+- Use a trusted certificate authority (e.g., Let's Encrypt) for production deployments to avoid browser warnings.
+
+---
+
+
