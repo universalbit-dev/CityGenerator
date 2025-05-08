@@ -85,8 +85,6 @@ The `https_server.js` file is designed to run a secure HTTPS server using SSL/TL
 * [Buildify](https://paveloliva.gumroad.com/l/buildify) 
 ---
 
-[development]
-
 * [Compiler WebPack5 release](https://webpack.js.org/blog/2020-10-10-webpack-5-release/)
 * [TypeScript Note](https://webpack.js.org/guides/typescript/)
 
@@ -94,7 +92,8 @@ The `https_server.js` file is designed to run a secure HTTPS server using SSL/TL
 ```bash
 npm run build
 ```
-* [WebPack Module Federarion](https://webpack.js.org/concepts/module-federation/)
+**[WebPack Module Federarion](https://webpack.js.org/concepts/module-federation/)**
+
 ---
 
 ##### Blockchain Integration: Information about integrating with DigiByte and other blockchain environments.
