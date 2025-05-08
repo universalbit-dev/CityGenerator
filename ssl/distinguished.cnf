@@ -4,22 +4,29 @@ DN                 = ca_dn
 DISTINGUISHED_NAME = ${ENV::DN}
 
 # certificate request configuration
-
 [ req ]
 default_bits       = 2048
 default_md         = sha256
 encrypt_key        = no
 prompt             = no
 string_mask        = utf8only
-distinguished_name = ca_dn
+distinguished_name = localhost
+
+[ localhost ]
+C  = IT
+ST = State
+L  = City
+O  = Organization
+OU = OrgUnit
+CN = localhost
 
 [ ca_dn ]
-C                      = IT
-ST                     = Rome 
-L                      = Rome
-O                      = UniversalBit
-OU                     = universalbit
-CN                     = localhost
+C  = IT
+ST = Rome 
+L  = Rome
+O  = UniversalBit
+OU = unbt
+CN = localhost
 
 # certificate authority configuration
 [ ca_ext ]
@@ -30,9 +37,10 @@ keyUsage               = critical, keyCertSign, cRLSign
 
 # another distinguished name
 [ other_dn ]
-C                      = SE
-ST                     = Stockholm 
-L                      = Stockholm
-O                      = Organization
-OU                     = Unit
-CN                     = Name 2
+C  = US
+ST = California
+L  = Los Angeles
+O  = Organization
+OU = Unit
+CN = Name 2
+
