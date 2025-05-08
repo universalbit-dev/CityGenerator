@@ -1,26 +1,19 @@
 const express = require('express');
 const path = require('path');
-const http2 = require('http2');
-const fs = require('fs');
+const http = require('http');
 
 const app = express();
 const defaultPort = 8000;
 let port = process.env.PORT || defaultPort;
 
-// Load SSL certificates
-const sslOptions = {
-    key: fs.readFileSync(path.join(__dirname, 'ssl', 'private-key.pem')),
-    cert: fs.readFileSync(path.join(__dirname, 'ssl', 'certificate.pem')),
-};
-
 // Serve static files from the "dist" directory
 app.use(express.static(path.join(__dirname, "dist/")));
 
 function startServer(currentPort) {
-    const server = http2.createSecureServer(sslOptions, app);
+    const server = http.createServer(app);
 
     server.listen(currentPort, () => {
-        console.log(`HTTP/2 server running at https://localhost:${currentPort}`);
+        console.log(`HTTP server running at http://localhost:${currentPort}`);
     });
 
     server.on('error', (err) => {
@@ -31,6 +24,7 @@ function startServer(currentPort) {
             });
         } else {
             console.error('Server error:', err);
+            process.exit(1); // Exit on unexpected server errors
         }
     });
 
@@ -41,6 +35,18 @@ function startServer(currentPort) {
             console.log('Server stopped.');
             process.exit();
         });
+    });
+
+    // Handle uncaught exceptions globally
+    process.on('uncaughtException', (err) => {
+        console.error('Uncaught Exception:', err);
+        process.exit(1); // Exit with failure
+    });
+
+    // Handle unhandled promise rejections globally
+    process.on('unhandledRejection', (reason, promise) => {
+        console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+        process.exit(1); // Exit with failure
     });
 }
 
