@@ -14,6 +14,7 @@
 - [Gekko-M4 Globular Cluster](https://github.com/universalbit-dev/gekko-m4-globular-cluster)  
   A sustainable cryptocurrency model inspired by decentralized finance and ecological principles.
 ---
+"One of the core ecological principles encourages the thoughtful repurposing of older or unused hardware. By using such hardware for CPU mining, you can contribute to maintaining network node functionality and validating hashes effectively, all while helping to reduce electronic waste in a sustainable way."
 
 
 ## ASIC Miners (ESP32)
