@@ -32,37 +32,17 @@ cd CityGenerator
 npm i && npm audit fix
 npm start
 ```
+**Automated Certificate Generation**:
+   - To simplify the process for users, the project is set up to automatically generate the SSL/TLS certificate and private key required for HTTPS during the npm install process. This eliminates the need for manual certificate creation, streamlining the setup of the HTTPS server.
 
-## Running the [HTTPS] Server
+**Fixing Issues**:
+   - If you encounter any issues with the HTTPS server or certificate generation, refer to the [SSL README](ssl/readme.md) for detailed instructions and troubleshooting tips.
 
-The `https_server.js` file is designed to run a secure HTTPS server using SSL/TLS certificates. Follow these steps to **get started**:
-
-### Quick Start
-
-1. **Generate SSL Certificate and Key**:
-   - Use the following command to generate a self-signed SSL certificate and key:
-     ```bash
-     openssl req -nodes -new -x509 -keyout ssl/private-key.pem -out ssl/certificate.pem -days 365
-     ```
-   - Alternatively, if you have a configuration file (`distinguished.cnf`), use:
-     ```bash
-     openssl req -nodes -new -x509 \
-     -keyout ssl/private-key.pem -out ssl/certificate.pem -days 365 \
-     -config ssl/distinguished.cnf
-     ```
-
-2. **Run the HTTPS Server**:
-   - Execute the following command in the root directory of your project:
-     ```bash
-     node https_server.js
-     ```
-     
-3. **Learn More**:
-   - For detailed instructions, refer to the [SSL README](ssl/readme.md).
-
-* [Docs](https://github.com/universalbit-dev/CityGenerator/tree/master/docs)
-* [CityGenerator -- STL Model View --](https://github.com/universalbit-dev/CityGenerator/blob/master/stl/nofullstack_model.stl)
-* [CityGenerator usage](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/usageguide.md)
+**Resources**
+- [Docs](https://github.com/universalbit-dev/CityGenerator/tree/master/docs)
+- [CityGenerator -- STL Model View --](https://github.com/universalbit-dev/CityGenerator/blob/master/stl/nofullstack_model.stl)
+- [CityGenerator usage](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/usageguide.md)
+---
 
 <img src="/docs/assets/images/%5Bmap%5D01.png" width="9%"></img> <img src="/docs/assets/images/%5Bmap%5D02.png" width="9%"></img> <img src="/docs/assets/images/%5Bmap%5D03.png" width="9%"></img> <img src="/docs/assets/images/%5Bmap%5D04.png" width="9%"></img> <img src="/docs/assets/images/%5Bmap%5D05.png" width="9%"></img> <img src="/docs/assets/images/%5Bmap%5D06.png" width="9%"></img> 
 
