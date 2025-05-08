@@ -11,7 +11,7 @@ default_md         = sha256
 encrypt_key        = no
 prompt             = no
 string_mask        = utf8only
-distinguished_name = localhost
+distinguished_name = ca_dn
 
 [ ca_dn ]
 C                      = IT
