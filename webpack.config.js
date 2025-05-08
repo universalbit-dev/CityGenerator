@@ -2,6 +2,7 @@ const path = require('path');
 const { ModuleFederationPlugin } = require('webpack').container;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 module.exports = {
   entry: [
     './src/main.ts',
@@ -32,8 +33,8 @@ module.exports = {
     './src/ts/ui/style.ts',
     './src/ts/ui/tensor_field_gui.ts',
     './src/ts/ui/water_gui.ts',
-    './dist/bundle.js',
-    './geodesic_dome/geodesicDome.ts'
+    './geodesic_dome/geodesicDome.ts',
+    './src/bundle.js'
   ],
   mode: 'development',
   plugins: [
@@ -60,15 +61,21 @@ module.exports = {
     }),
   ],
   devtool: 'inline-source-map',
+  
   module: {
-    rules: [
-      {
-        test: /\.tsx?$/,
-        use: 'ts-loader',
-        exclude: /node_modules/,
-      },
-    ],
-  },
+  rules: [
+    {
+      test: /\.tsx?$/,
+      use: 'ts-loader',
+      exclude: /node_modules/,
+    },
+    {
+      test: /\.json$/,
+      type: 'json',
+    }
+  ]
+},
+
   
   resolve: {
     extensions: ['.ts', '.js' ,'.json','.d.ts','.dt.ts'],
@@ -80,7 +87,8 @@ module.exports = {
   },
  
   output: {
-    filename: 'web3.js',
-    path: path.resolve(__dirname, 'dist'),
+  filename: 'bundle.js',
+  path: path.resolve(__dirname, 'dist'),
+  clean: true // Cleans the output directory before emit
   },
 };
