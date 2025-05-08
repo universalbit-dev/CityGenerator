@@ -37,7 +37,7 @@ Explore lightweight and efficient mining solutions for ESP32 microcontrollers:
 2. **Alternative CPU Miners**  
    - [Download pre-built CPU miners from SourceForge](https://sourceforge.net/projects/cpuminer/files/)
 
-3. **Build CPU Miner from Source**  
+3. **Build CPU Miner from Source**  [Optional]
    Follow these steps to compile the miner from source:
    ```bash
    sudo apt install libcurl4-openssl-dev libjansson-dev build-essential
