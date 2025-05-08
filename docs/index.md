@@ -1,15 +1,8 @@
-To enhance this documentation, we can improve its structure, add headings for better readability, provide detailed explanations for each component, and ensure that the language is concise and professional. Here's a revised version:
-
----
-
 # CityGenerator Documentation
 
 Welcome to the **CityGenerator** project! This repository is dedicated to creating futuristic cities using a blockchain approach. Below, you'll find a breakdown of the key components and technologies used in this project.
 
 ## Repository Overview
-
-- **Primary Language**: JavaScript (72.3%)
-- **Additional Languages**: Assembly, C, Makefile, TypeScript, Shell, and others.
 - **Project Description**: A futuristic city generator leveraging blockchain technologies.
 
 ## Application Overview
