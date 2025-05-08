@@ -3,16 +3,18 @@
 ## Blockchain Environment
 
 ### Net-Node  
-- [Pruned BTC Node](https://github.com/universalbit-dev/universalbit-dev/tree/main/blockchain/bitcoin)  
-  Set up and run a pruned Bitcoin node for reduced storage requirements while maintaining full network functionality.
+- [Pruned BTC Node](https://github.com/universalbit-dev/universalbit-dev/tree/main/blockchain/bitcoin)    
+- [Pruned DGB Node](https://github.com/universalbit-dev/universalbit-dev/tree/main/blockchain/digibyte)
 
+ **Setup and run  Net node for maintaining full network functionality.**
+ 
 ---
 
 ## Buy/Sell Cryptocurrency
 - [Gekko-M4 Globular Cluster](https://github.com/universalbit-dev/gekko-m4-globular-cluster)  
   A sustainable cryptocurrency model inspired by decentralized finance and ecological principles.
-
 ---
+
 
 ## ASIC Miners (ESP32)
 Explore lightweight and efficient mining solutions for ESP32 microcontrollers:
