@@ -8,14 +8,26 @@
    ```bash
    openssl req -nodes -new -x509 -keyout ssl/private-key.pem -out ssl/certificate.pem -days 365
    ```
-   - This will create two files in the `ssl/` directory:
-     - `private-key.pem`: The private key.
-     - `certificate.pem`: The public certificate.
+---
 
-2. **Update `server.js` to Use HTTP/2 with SSL**:
+#### As an alternative to the given command, you can generate an SSL certificate using a configuration file (`distinguished.cnf`)
+
+---
+
+   **Command to Use This File:**
+   
+   ```bash
+   openssl req -nodes -new -x509 \
+   -keyout ssl/private-key.pem -out ssl/certificate.pem -days 365 \
+   -config ssl/distinguished.cnf
+   ```
+
+**[Developmet]**
+
+1. **Update `server.js` to Use HTTP/2 with SSL**:
    Modify the `server.js` file in the root directory to use `http2` instead of `http`. Load the SSL certificate and key to enable HTTPS.
 
-3. **Directory Structure**:
+2. **Directory Structure**:
    Ensure your project has the following structure:
    ```
    CityGenerator/
@@ -26,13 +38,13 @@
    ├── server.js               # Main server file
    ```
 
-4. **Run the Server**:
+3. **Run the Server**:
    Start the server using Node.js:
    ```bash
    node server.js
    ```
 
-5. **Test the Server**:
+4. **Test the Server**:
    - Open your browser and navigate to `https://localhost:8000` (or the selected port).
    - You may need to accept the self-signed certificate warning in your browser (if using a self-signed certificate).
 
@@ -43,7 +55,7 @@
 
 ---
 
-### Benefits of HTTP/2 for CityGenerator
+### Benefits of HTTP/2 for CityGenerator [development]
 - **Faster Loading**: Multiplexing allows multiple assets (e.g., JavaScript, CSS) to be loaded simultaneously over a single connection.
 - **Reduced Overhead**: Header compression reduces the amount of data transmitted, especially for repetitive requests.
 - **Secure Communication**: HTTPS ensures data integrity and encryption.
