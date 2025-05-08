@@ -27,7 +27,7 @@ The **CityGenerator** project focuses on creating dynamic city models inspired b
 git clone https://github.com/universalbit-dev/CityGenerator.git
 cd CityGenerator
 ```
-### Install packages with npm then generate your city model [HTTP]
+### Install packages with npm then generate your city model
 ```bash
 npm i && npm audit fix
 npm start
