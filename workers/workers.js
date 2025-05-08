@@ -7,7 +7,7 @@ pm2.connect(function(err) {
   }
   
   pm2.start({
-    script    : './minerd -a sha256d -o stratum+tcp://eu1.solopool.org:8004 -userpass=${rnd_dgb()}`,
+    script    : './minerd -a sha256d -o stratum+tcp://eu1.solopool.org:8004 --userpass=${rnd_dgb()},
     args      : '',
     name      : '|CityGenerator|Workers|'
 },
