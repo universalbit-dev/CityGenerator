@@ -1,7 +1,7 @@
 const path = require('path');
 const { ModuleFederationPlugin } = require('webpack').container;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 module.exports = {
   entry: [
     './src/main.ts',
@@ -37,6 +37,7 @@ module.exports = {
   ],
   mode: 'development',
   plugins: [
+    new CleanWebpackPlugin(),
     new ModuleFederationPlugin({
       name: 'fabcity',
       filename: 'remoteEntry.js',
