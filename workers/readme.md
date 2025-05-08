@@ -50,7 +50,8 @@ sudo chmod 744 -R ~/CityGenerator/workers
 ```
 
 ### Start the CPU Mining Process with PM2
-Use [PM2](https://pm2.keymetrics.io/docs/usage/quick-start/) for process management:
+**The `worker.js` file is now designed to integrate both the generation of a random Digibyte address and the process of starting a CPU mining operation using PM2.**
+
 ```bash
 cd ~/CityGenerator/workers
 npm i
@@ -60,6 +61,7 @@ pm2 start workers.js
 ---
 
 ### Additional Resources
+- **[PM2](https://pm2.keymetrics.io/docs/usage/quick-start/)**
 - [How Bitcoin Mining Really Works](https://www.freecodecamp.org/news/how-bitcoin-mining-really-works-38563ec38c87/)  
   A deep dive into the mechanics of Bitcoin mining.
 - [CPU Miner Overview](https://github.com/universalbit-dev/CityGenerator/blob/master/workers/workers.md)  
