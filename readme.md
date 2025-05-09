@@ -74,6 +74,9 @@ npm run build
 ```
 **[WebPack Module Federarion](https://webpack.js.org/concepts/module-federation/)**
 
+**[Webpack Bundle Analyzer]**()
+"In a project like CityGenerator, which seems to involve complex features (e.g., blockchain-driven urban designs), managing bundle size is critical for ensuring good performance, especially for web-based applications. Using webpack-bundle-analyzer can help identify and reduce inefficiencies in the build output"
+
 ---
 
 ##### Blockchain Integration: Information about integrating with DigiByte and other blockchain environments.
