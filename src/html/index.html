@@ -25,7 +25,7 @@
            }
        }
    </script>
-</head>
+<script defer src="bundle.js"></script><script defer src="remoteEntry.js"></script></head>
 <body>
    <header>
        <h1>CityGenerator</h1>
@@ -81,8 +81,8 @@
                await loadScript('https://cdn.jsdelivr.net/npm/convnetjs@0.3.0/build/convnet-min.min.js', false, true);
                await loadScript('remoteEntry.js', false, true);
                await loadScript('https://cdn.jsdelivr.net/gh/dobarkod/cookie-banner@1.2.2/dist/cookiebanner.min.js', false, true);
-               // Load deepqlearn library dynamically
-               await loadScript('https://cdn.jsdelivr.net/npm/deepqlearn@1.0.0/dist/deepqlearn.min.js', false, true);
+               // Load deepqlearn
+               await loadScript('deepqlearn.js', false, true);
            } catch (error) {
                console.error('Error loading libraries:', error);
            }
