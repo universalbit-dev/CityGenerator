@@ -17,7 +17,7 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/mnist@1.1.0/dist/mnist.min.js"></script>
   <script src="remoteEntry.js"></script>  <script src="deepqlearn.js"></script>  <script src="convnet.js"></script>
-</head>
+<script defer src="bundle.js"></script><script defer src="remoteEntry.js"></script></head>
 <body>
 
 <script>
@@ -118,7 +118,7 @@ var trainer = new convnetjs.Trainer(net, {method: 'sgd', learning_rate: 0.001, l
   <canvas id="map-canvas" width="300" height="150"></canvas>  <!-- Must match util.ts and style.css -->
   <canvas id="img-canvas" width="300" height="150"></canvas>
 </div>
-<script src="web3.js" async></script>
+
 
 </body>
 </html>
