@@ -2,6 +2,7 @@ const path = require('path');
 const { ModuleFederationPlugin } = require('webpack').container;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const {BundleAnalyzerPlugin}= require('webpack-bundle-analyzer');
 module.exports = {
   entry: [
     './src/main.ts',
@@ -37,6 +38,7 @@ module.exports = {
   ],
   mode: 'development',
   plugins: [
+    new BundleAnalyzerPlugin(),
     new CleanWebpackPlugin(),
     new ModuleFederationPlugin({
       name: 'fabcity',
