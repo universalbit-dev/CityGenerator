@@ -1,3 +1,17 @@
+/* --copilot explain
+The deepqlearn.js file is part of a JavaScript library for implementing Deep Q-Learning, a reinforcement learning algorithm. Here are the main components:
+
+    Experience: Stores information about the state, action, reward, and next state.
+    Brain: The core of the Q-Learning algorithm. It handles the following:
+        Initialization: Sets up the neural network, experience replay memory, and training parameters.
+        Forward Pass: Determines the action to take based on the current state.
+        Backward Pass: Updates the neural network based on the received reward.
+        Experience Replay: Stores and samples experiences to stabilize training.
+    Utility Functions: Various helper functions for mathematical operations, array handling, and layer definitions for neural networks.
+
+Overall, this file provides the necessary functionality to implement and train a Deep Q-Learning agent.
+*/
+
 var convnetjs = convnetjs || { REVISION: 'ALPHA' };
 (function(global) {
   "use strict";
