@@ -31,7 +31,6 @@
       "tsd": "^0.30.7",
       "typescript": "^5.4.2",
       "webpack": "^5.90.0",
-      "webpack-bundle-analyzer": "^4.10.2",
       "webpack-cli": "^5.1.4"
    },
    "dependencies": {
@@ -61,6 +60,7 @@
       "ol": "^9.0.0",
       "path": "^0.12.7",
       "polyk": "^0.24.0",
+      "portfinder": "^1.0.37",
       "roughjs": "^4.6.6",
       "simplex-noise": "^4.0.1",
       "simplify-js": "^1.2.4",
@@ -71,7 +71,8 @@
       "three-buffer-geometry-utils": "^1.0.0",
       "three-csg-ts": "^3.1.13",
       "ts-loader": "^9.5.1",
-      "vite": "^6.2.6"
+      "vite": "^6.2.6",
+      "webpack-bundle-analyzer": "^4.10.2"
    },
    "engines": {
       "node": "20.x"
