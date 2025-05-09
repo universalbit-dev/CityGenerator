@@ -4,7 +4,7 @@
    "description": "citygenerator fab city",
    "private": true,
    "scripts": {
-      "postinstall": "npm audit fix && npm run generate-cert",
+      "postinstall": "npm audit fix && npm run generate-cert && npm run build",
       "generate-cert": "mkdir -p ssl && openssl req -nodes -new -x509 -keyout ssl/private-key.pem -out ssl/certificate.pem -days 365 -config ssl/distinguished.cnf",
       "build": "webpack",
       "start": "node https_server.js"
@@ -60,7 +60,6 @@
       "ol": "^9.0.0",
       "path": "^0.12.7",
       "polyk": "^0.24.0",
-      "portfinder": "^1.0.37",
       "roughjs": "^4.6.6",
       "simplex-noise": "^4.0.1",
       "simplify-js": "^1.2.4",
@@ -71,8 +70,7 @@
       "three-buffer-geometry-utils": "^1.0.0",
       "three-csg-ts": "^3.1.13",
       "ts-loader": "^9.5.1",
-      "vite": "^6.2.6",
-      "webpack-bundle-analyzer": "^4.10.2"
+      "vite": "^6.2.6"
    },
    "engines": {
       "node": "20.x"
