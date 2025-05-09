@@ -71,11 +71,14 @@ module.exports = {
     {
       test: /\.json$/,
       type: 'json',
+    },
+    {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
     }
   ]
 },
 
-  
   resolve: {
     extensions: ['.ts', '.js' ,'.json','.d.ts','.dt.ts'],
     byDependency: {
