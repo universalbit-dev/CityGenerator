@@ -74,7 +74,9 @@ npm run build
 ```
 **[WebPack Module Federarion](https://webpack.js.org/concepts/module-federation/)**
 
-**[Webpack Bundle Analyzer]**()
+### Interactive treemap visualization of the contents
+![Webpack Bundle Analyzer](https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/webpack_bundle_analyzer.png)
+
 "In a project like CityGenerator, which seems to involve complex features (e.g., blockchain-driven urban designs), managing bundle size is critical for ensuring good performance, especially for web-based applications. Using webpack-bundle-analyzer can help identify and reduce inefficiencies in the build output"
 
 ---
