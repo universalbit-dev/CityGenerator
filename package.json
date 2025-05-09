@@ -4,7 +4,7 @@
    "description": "citygenerator fab city",
    "private": true,
    "scripts": {
-      "postinstall": "npm audit fix && npm run generate-cert && npm run build",
+      "postinstall": "npm audit fix && npm run generate-cert",
       "generate-cert": "mkdir -p ssl && openssl req -nodes -new -x509 -keyout ssl/private-key.pem -out ssl/certificate.pem -days 365 -config ssl/distinguished.cnf",
       "build": "webpack",
       "start": "node https_server.js"
