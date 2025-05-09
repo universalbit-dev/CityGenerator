@@ -73,6 +73,10 @@ npm start
 npm run build
 ```
 **[WebPack Module Federarion](https://webpack.js.org/concepts/module-federation/)**
+---
+
+**[Webpack Bundle Analyzer](https://www.npmjs.com/package/webpack-bundle-analyzer)**
+
 
 ### Interactive treemap visualization of the contents
 ![Webpack Bundle Analyzer](https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/webpack_bundle_analyzer.png)
