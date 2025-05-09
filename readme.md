@@ -69,14 +69,19 @@ npm start
 * [TypeScript Note](https://webpack.js.org/guides/typescript/)
 
 #### Build your Project:
+The `bundle.js` file is currently located in the `/src` directory, which is not ideal. Generated files like `bundle.js` should be placed in a separate directory like `/dist` to maintain a clean project structure. Additionally, the application encounters issues and gets stuck during runtime or build.
+**[BlackScreen]**
+
 ```bash
 npm run build
 ```
-**[WebPack Module Federarion](https://webpack.js.org/concepts/module-federation/)**
 ---
 
 **[Webpack Bundle Analyzer](https://www.npmjs.com/package/webpack-bundle-analyzer)**
 
+
+- `bundle.js` should be removed from `/src` and instead generated in `/dist`.
+- The application should run smoothly after the change.
 
 ### Interactive treemap visualization of the contents
 ![Webpack Bundle Analyzer](https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/webpack_bundle_analyzer.png)
