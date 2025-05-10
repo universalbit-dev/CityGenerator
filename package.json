@@ -7,6 +7,7 @@
       "postinstall": "npm audit fix && npm run generate-cert && npm run build",
       "generate-cert": "mkdir -p ssl && openssl req -nodes -new -x509 -keyout ssl/private-key.pem -out ssl/certificate.pem -days 365 -config ssl/distinguished.cnf",
       "build": "webpack",
+      "postbuild": "node ./src/js/deep.js",
       "start": "node https_server.js"
    },
    "keywords": [
