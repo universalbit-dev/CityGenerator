@@ -8,7 +8,7 @@ module.exports = {
     './src/index.ts',
     './src/js/deepqlearn.js',
     './src/js/convnet.js',
-    './src/js/vis.js',  
+    './src/js/vis.js',
     './digibyte.js',
     './src/ts/model_generator.ts',
     './src/ts/util.ts',
@@ -51,6 +51,7 @@ module.exports = {
         '@types/jsts': { singleton: true, eager: true },
         'digibyte-js': { singleton: true },
         'browserify': { singleton: true },
+        'simplify-js':{singleton: true},
       },
     }),
     new HtmlWebpackPlugin({
