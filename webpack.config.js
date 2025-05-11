@@ -50,8 +50,7 @@ module.exports = {
         'convnetjs': { singleton: true },
         '@types/jsts': { singleton: true, eager: true },
         'digibyte-js': { singleton: true },
-        'browserify': { singleton: true },
-        'simplify-js':{singleton: true},
+        'browserify': { singleton: true }        
       },
     }),
     new HtmlWebpackPlugin({
