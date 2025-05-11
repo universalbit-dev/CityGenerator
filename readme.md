@@ -48,11 +48,11 @@ npm start
 
 | City Generator                        | [Images](https://github.com/universalbit-dev/CityGenerator/tree/master/docs/assets/images)                             |
 | ----------------------------------- | ----------------------------------- |
-| ![map01](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/assets/images/%5Bmap%5D17.png) | ![map_16](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/assets/images/%5Bmap%5D16.png) |
+| ![map01](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/assets/images/%5Bmap%5D17.png) | ![map_20](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/assets/images/%5Bmap%5D20.png) |
 
 |                             |                             |
 | ----------------------------------- | ----------------------------------- |
-| ![map_13](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/assets/images/%5Bmap%5D13.png)  |
+| ![map_21](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/assets/images/%5Bmap%5D21.png)  |
 
 
 ##### About Author of City Map Generator: [@probabletrain](https://github.com/ProbableTrain/MapGenerator)
