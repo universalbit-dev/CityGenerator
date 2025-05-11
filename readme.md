@@ -71,6 +71,7 @@ npm start
 #### Build your Project:
 The `bundle.js` file is currently located in the `/src` directory, which is not ideal. Generated files like `bundle.js` should be placed in a separate directory like `/dist` to maintain a clean project structure. Additionally, the application encounters issues and gets stuck during runtime or build.
 **[BlackScreen]**
+[Community Help Request](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/community_help_request.md)
 
 ```bash
 npm run build
