@@ -1,5 +1,5 @@
 import * as log from 'loglevel';
-import * as simplify from 'simplify-js';
+import simplify = require('simplify-js');
 import Vector from '../vector';
 import GridStorage from './grid_storage';
 import FieldIntegrator from './integrator';
