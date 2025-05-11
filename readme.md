@@ -44,7 +44,7 @@ npm start
 - [CityGenerator usage](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/usageguide.md)
 ---
 
-<img src="/docs/assets/images/%5Bmap%5D01.png" width="9%"></img> <img src="/docs/assets/images/%5Bmap%5D02.png" width="9%"></img> <img src="/docs/assets/images/%5Bmap%5D03.png" width="9%"></img> <img src="/docs/assets/images/%5Bmap%5D04.png" width="9%"></img> <img src="/docs/assets/images/%5Bmap%5D05.png" width="9%"></img> <img src="/docs/assets/images/%5Bmap%5D06.png" width="9%"></img> 
+<img src="/docs/assets/images/%5Bmap%5D19.png" width="9%"></img> <img src="/docs/assets/images/%5Bmap%5D18.png" width="9%"></img> <img src="/docs/assets/images/%5Bmap%5D16.png" width="9%"></img> <img src="/docs/assets/images/%5Bmap%5D11.png" width="9%"></img> <img src="/docs/assets/images/%5Bmap%5D05.png" width="9%"></img> <img src="/docs/assets/images/%5Bmap%5D06.png" width="9%"></img> 
 
 | City Generator                        | [Images](https://github.com/universalbit-dev/CityGenerator/tree/master/docs/assets/images)                             |
 | ----------------------------------- | ----------------------------------- |
