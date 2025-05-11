@@ -47,7 +47,7 @@
       "express": "^5.1.0",
       "file-saver": "^2.0.5",
       "fs-extra": "^11.3.0",
-      "http2": "^3.3.6",
+      "http2": "^3.3.7",
       "http2-express": "^1.0.1",
       "install": "^0.13.0",
       "interactjs": "^1.10.26",
