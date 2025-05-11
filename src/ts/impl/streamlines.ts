@@ -246,13 +246,13 @@ export default class StreamlineGenerator {
         }).then(() => this.joinDanglingStreamlines());
     }
 
-    protected simplifyStreamline(streamline: Vector[]): Vector[] {
-        const simplified = [];
-        for (const point of simplify(streamline, this.params.simplifyTolerance)) {
-            simplified.push(new Vector(point.x, point.y));
-        }
-        return simplified;
+    protected simplifyStreamline(streamline: { x: number; y: number }[]): Vector[] {
+    const simplified: Vector[] = [];
+    for (const point of simplify(streamline, this.params.simplifyTolerance)) {
+        simplified.push(new Vector(point.x, point.y));
     }
+    return simplified;
+}
 
     /**
      * Finds seed and creates a streamline from that point
