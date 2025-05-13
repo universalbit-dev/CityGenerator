@@ -40,7 +40,6 @@ npm start
 
 **Resources**
 - [Docs](https://github.com/universalbit-dev/CityGenerator/tree/master/docs)
-- [CityGenerator -- STL Model View --](https://github.com/universalbit-dev/CityGenerator/blob/master/stl/nofullstack_model.stl)
 - [CityGenerator usage](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/usageguide.md)
 ---
 
