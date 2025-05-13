@@ -1,5 +1,8 @@
 ### Community Help Request: Improving Project Build Structure and Resolving Runtime Issues
 
+### Interactive treemap visualization of the contents
+![Webpack Bundle Analyzer](https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/webpack_bundle_analyzer.png)
+
 #### Overview
 The `CityGenerator` project is an exciting initiative aimed at creating futuristic urban designs with a blockchain-driven approach. However, we are facing several challenges in the build process and runtime, and we would greatly appreciate the community's assistance to resolve these issues.
 
