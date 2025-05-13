@@ -60,34 +60,19 @@ npm start
   
 ##### Thanks!
 ---
-...this is something of amazing
-* [Buildify](https://paveloliva.gumroad.com/l/buildify) 
----
+
 
 * [Compiler WebPack5 release](https://webpack.js.org/blog/2020-10-10-webpack-5-release/)
 * [TypeScript Note](https://webpack.js.org/guides/typescript/)
 
 #### Build your Project:
-The `bundle.js` file is currently located in the `/src` directory, which is not ideal. Generated files like `bundle.js` should be placed in a separate directory like `/dist` to maintain a clean project structure. Additionally, the application encounters issues and gets stuck during runtime or build.
-**[BlackScreen]**
-[Community Help Request](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/community_help_request.md)
+* [Community Help Request](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/community_help_request.md)
+---
+"In a project like CityGenerator, which seems to involve complex features (e.g., blockchain-driven urban designs), managing bundle size is critical for ensuring good performance, especially for web-based applications. Using webpack-bundle-analyzer can help identify and reduce inefficiencies in the build output"
 
 ```bash
 npm run build
 ```
----
-
-**[Webpack Bundle Analyzer](https://www.npmjs.com/package/webpack-bundle-analyzer)**
-
-
-- `bundle.js` should be removed from `/src` and instead generated in `/dist`.
-- The application should run smoothly after the change.
-
-### Interactive treemap visualization of the contents
-![Webpack Bundle Analyzer](https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/webpack_bundle_analyzer.png)
-
-"In a project like CityGenerator, which seems to involve complex features (e.g., blockchain-driven urban designs), managing bundle size is critical for ensuring good performance, especially for web-based applications. Using webpack-bundle-analyzer can help identify and reduce inefficiencies in the build output"
-
 ---
 
 ##### Blockchain Integration: Information about integrating with DigiByte and other blockchain environments.
