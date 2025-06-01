@@ -9,7 +9,7 @@
 ---
 
 ### [CityGenerator](https://github.com/universalbit-dev/CityGenerator)
-
+[![Wrecking Ball Truck](https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/wrecking-ball-truck.png?raw=true)](https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/wrecking-ball-truck.png)
 **Description**:  
 The **CityGenerator** project focuses on creating dynamic city models inspired by the principles outlined in the [Fab City: The Mass Distribution of (Almost) Everything](https://fablabbcn.org/wp-content/uploads/2020/09/Fab-City-The-Mass-Distribution-of-Almost-Everything.pdf) white paper. It aims to provide tools for simulating and visualizing sustainable, self-sufficient, and resilient urban environments.
 
