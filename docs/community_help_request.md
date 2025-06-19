@@ -1,4 +1,15 @@
 ### Community Help Request: Improving Project Build Structure and Resolving Runtime Issues
+---
+🛠️ **Why Community Help Matters**
+
+Getting involved in community help is key! By supporting and contributing to this project, you enable more than just using the app I’ve already set up for you. You unlock the power to customize and build the project yourself—with your own ideas and code. This means:
+
+- 🚀 **Personalization:** You can adapt features to fit your needs.
+- 🧩 **Innovation:** Add new tools, fix bugs, or improve existing parts.
+- 🏗️ **Learning:** Gain hands-on experience in customizing and compiling real projects.
+- 🌱 **Growth:** The project becomes better and more useful for everyone.
+
+Don’t just use what’s given—help shape what comes next!
 
 ### Interactive treemap visualization of the contents
 ![Webpack Bundle Analyzer](https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/webpack_bundle_analyzer.png)
