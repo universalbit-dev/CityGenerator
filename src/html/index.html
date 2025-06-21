@@ -1,125 +1,22 @@
 <!DOCTYPE html>
+<!--
+  CityGenerator Index.html
+
+  Loads UI and starts the application. All neural and training logic is in src/js/index.js.
+  The bundled code is loaded as dist/bundle.js.
+-->
 <html lang="en">
 <head>
-  <link rel="stylesheet" href="style.css">
   <meta charset="utf-8">
   <title>CityGenerator</title>
-  <script type="importmap">
-    {
-      "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.js",
-        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/",
-        "jsts": "https://cdn.jsdelivr.net/npm/jsts@2.11.3/dist/jsts.min.js"
-      }
-    }
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/mnist@1.1.0/dist/mnist.min.js"></script>
-  <script src="convnet.js"></script>
-  <script src="deepqlearn.js"></script>
-  
-
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<script>
-//Copilot Enhanced function to remove cookies
-function removeCookies() {
-  try {
-    const cookies = document.cookie.split("; ");
-    for (let c = 0; c < cookies.length; c++) {
-      const d = window.location.hostname.split(".");
-      while (d.length > 0) {
-        const cookieBase = encodeURIComponent(cookies[c].split(";")[0].split("=")[0]) + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; domain=' + d.join('.') + ' ;path=';
-        const p = location.pathname.split('/');
-        document.cookie = cookieBase + '/';
-        while (p.length > 0) {
-          document.cookie = cookieBase + p.join('/');
-          p.pop();
-        }
-        d.shift();
-      }
-    }
-    console.log('All cookies removed successfully');
-  } catch (error) {
-    console.error('Error removing cookies:', error);
-  }
-}
-
-//Copilot enhance -- Clear local storage and session storage
-localStorage.clear();
-sessionStorage.clear();
-
-// Execute cookie removal function
-removeCookies();
-</script>
-
-<script type="text/javascript" id="cookiebanner"
-    src="https://cdn.jsdelivr.net/gh/dobarkod/cookie-banner@1.2.2/dist/cookiebanner.min.js"
-    data-height="20px" data-position="top"
-    data-message="CookieLess Experiment"
-    data-moreinfo=""
->
-</script>
-
-<script>
-// deepqlearn neural network  --Copilot Enhanced  --
-var num_inputs = 27; // 9 eyes, each sees 3 numbers (wall, green, red thing proximity)
-var num_actions = 5; // 5 possible angles agent can turn
-var temporal_window = 1; // amount of temporal memory. 0 = agent lives in-the-moment :)
-var network_size = num_inputs*temporal_window + num_actions*temporal_window + num_inputs;
-
-// the value function network computes a value of taking any of the possible actions
-// given an input state. Here we specify one explicitly the hard way
-// but user could also equivalently instead use opt.hidden_layer_sizes = [20,20]
-// to just insert simple relu hidden layers.
-var layer_defs = [];
-layer_defs.push({type:'input', out_sx:1, out_sy:1, out_depth:network_size});
-layer_defs.push({type:'fc', num_neurons: 100, activation:'relu'}); // Increased neurons
-layer_defs.push({type:'fc', num_neurons: 100, activation:'relu'}); // Increased neurons
-layer_defs.push({type:'fc', num_neurons: 50, activation:'relu'}); // Added an extra layer
-layer_defs.push({type:'regression', num_neurons:num_actions});
-
-// options for the Temporal Difference learner that trains the above net
-// by backpropping the temporal difference learning rule.
-var tdtrainer_options = {learning_rate:0.01, momentum:0.1, batch_size:32, l2_decay:0.001}; // Changed parameters
-
-var opt = {};
-opt.temporal_window = temporal_window;
-opt.experience_size = 50000; // Increased experience size
-opt.start_learn_threshold = 500;
-opt.gamma = 0.9; // Changed gamma
-opt.learning_steps_total = 300000; // Increased learning steps
-opt.learning_steps_burnin = 1000; // Decreased burnin steps
-opt.epsilon_min = 0.01; // Decreased epsilon
-opt.epsilon_test_time = 0.01; // Decreased epsilon
-opt.layer_defs = layer_defs;
-opt.tdtrainer_options = tdtrainer_options;
-
-var brain = new deepqlearn.Brain(num_inputs, num_actions, opt); // woohoo
-</script>
-
-<script>
-//Copilot Enhanced convnetjs neural network -- AI generated Check for mistakes --
-layer_defs = [];
-layer_defs.push({type:'input', out_sx:24, out_sy:24, out_depth:1});
-layer_defs.push({type:'conv', sx:5, filters:16, stride:1, pad:2, activation:'relu'}); // Increased filters
-layer_defs.push({type:'pool', sx:2, stride:2});
-layer_defs.push({type:'conv', sx:5, filters:32, stride:1, pad:2, activation:'relu'}); // Increased filters
-layer_defs.push({type:'pool', sx:3, stride:3});
-layer_defs.push({type:'fc', num_neurons: 100, activation:'relu'}); // Added a fully connected layer
-layer_defs.push({type:'softmax', num_classes:10});
-
-net = new convnetjs.Net();
-net.makeLayers(layer_defs);
-var trainer = new convnetjs.Trainer(net, {method: 'sgd', learning_rate: 0.001, l2_decay: 0.0001, momentum: 0.9, batch_size: 20, l1_decay: 0.0001}); // Changed parameters
-</script>
-
-<svg id="map-svg"></svg>
-<div>
-  <canvas id="map-canvas" width="300" height="150"></canvas>  <!-- Must match util.ts and style.css -->
-  <canvas id="img-canvas" width="300" height="150"></canvas>
-</div>
-
-
+  <svg id="map-svg"></svg>
+  <div>
+    <canvas id="map-canvas" width="300" height="150"></canvas>
+    <canvas id="img-canvas" width="300" height="150"></canvas>
+  </div>
+  <script src="dist/bundle.js"></script>
 </body>
 </html>
