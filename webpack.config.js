@@ -60,4 +60,17 @@ module.exports = {
       },
     }),
   ],
+
+  devServer: {
+    static: {
+      directory: path.join(__dirname, 'dist'),
+    },
+    port: 8002,
+    open: true,
+    hot: true,
+    compress: true,
+    historyApiFallback: {
+      index: '/index.html', // Always serve dist/index.html (useful for SPAs)
+    },
+  },
 };
