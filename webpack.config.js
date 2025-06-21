@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
-  entry: ['./src/main.ts', './src/bundle.js'],
+  entry: ['./src/main.ts', './src/bundle.js','./src/js/index.js'],
   mode: 'development',
   devtool: 'inline-source-map',
 
