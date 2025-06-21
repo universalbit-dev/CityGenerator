@@ -2240,3 +2240,5 @@ var convnetjs = convnetjs || { REVISION: 'ALPHA' };
     module.exports = lib; // in nodejs
   }
 })(convnetjs);
+
+window.convnetjs = convnetjs;

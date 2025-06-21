@@ -2541,3 +2541,5 @@ var deepqlearn = deepqlearn || { REVISION: 'ALPHA' };
     module.exports = lib; // in nodejs
   }
 })(deepqlearn);
+
+window.deepqlearn = deepqlearn;
