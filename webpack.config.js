@@ -9,7 +9,7 @@ module.exports = {
   devtool: 'inline-source-map',
 
   output: {
-    filename: 'bundle.js',
+    filename: 'wohoo.js',
     path: path.resolve(__dirname, 'dist'),
     clean: true,
   },
