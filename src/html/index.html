@@ -12,10 +12,15 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <svg id="map-svg"></svg>
+  <svg id="map-svg" width="300" height="150"></svg>
   <div>
     <canvas id="map-canvas" width="300" height="150"></canvas>
-    <canvas id="img-canvas" width="300" height="150"></canvas>
+    <canvas id="img-canvas" width="300" height="150" style="display: none"></canvas>
+  </div>
+  <div id="controls">
+    <button id="pause-btn">Pause Training</button>
+    <button id="resume-btn">Resume Training</button>
+    <div id="reward-log"></div>
   </div>
 </body>
 </html>
