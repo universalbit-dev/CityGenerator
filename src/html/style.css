@@ -1,39 +1,29 @@
-html, body {
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow: hidden;
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
 }
 
-/* Must match util.ts and index.html */
-#map-canvas {
-    position:fixed;
-    left:0;
-    top:0;
-    width:100%;
-    height:100%;
-}
-
-#map-svg {
-    position:fixed;
-    left:0;
-    top:0;
-    width:100%;
-    height:100%;
-}
-
+#map-svg,
+#map-canvas,
 #img-canvas {
-    display: none;
+  display: inline-block;
+  vertical-align: top;
+  margin: 8px;
+  border: 1px solid #ccc;
+  background: #fafafa;
+}
+#map-svg {
+  display: none;
 }
 
-.ac .dg li.cr, .ac .dg li.folder {
-    margin-left: 10px;
+#controls {
+  margin: 16px 8px;
 }
 
-.ac .dg li.title {
-    /*border-left: 3px solid #FF6C00;*/
-    border-left: 3px solid #FFFFFF;
-}
-
-.ac .dg .c input[type="text"] {
-    width: 80px;
+button {
+  margin-right: 8px;
+  font-size: 1em;
+  padding: 6px 14px;
+  cursor: pointer;
 }
