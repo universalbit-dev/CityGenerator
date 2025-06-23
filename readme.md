@@ -56,7 +56,7 @@ npm start
 
 |                             |                             |
 | ----------------------------------- | ----------------------------------- |
-| ![map_21](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/assets/images/%5Bmap%5D21.png)  |
+| ![map_21](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/assets/images/%5Bmap%5D21.png)  | ![map_22](https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/smart_city.png)  |
 
 
 ##### About Author of City Map Generator: [@probabletrain](https://github.com/ProbableTrain/MapGenerator)
