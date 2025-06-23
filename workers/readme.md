@@ -59,27 +59,29 @@ make
 
 ---
 
-#### **Setup Folder Permissions**
-
-Before starting the worker script, ensure the necessary folder permissions are set:
-
-```bash
-sudo chmod 744 -R ~/CityGenerator/workers
-```
+> **Quick Setup Before You Start Mining**
+>
+> ✅ Make sure you have everything ready:
+>
+> - 🛠️ Install system requirement:  
+>   `sudo apt install cpulimit`
+>
+> - 📦 Install PM2 globally:  
+>   `npm i pm2 -g`
+>
+> - 🔒 Set script permissions:  
+>   `chmod 755 workers/workers.js`
+>
+> The `workers.js` script will:
+> - Generate a random DigiByte address for mining payouts.
+> - Run the miner at about 2% CPU usage using `cpulimit`.
+> - Use just one CPU thread for demonstration and safety.
+> - Support clean shutdowns and easy management with PM2.
 
 ---
 
-#### **Start the CPU Mining Process with PM2**
-
-The `worker.js` script is designed to:
-1. Generate a random Digibyte address.
-2. Initiate a CPU mining operation using **PM2** for process management.
-
-Steps to start the mining process:
-
+**Start the mining process:**
 ```bash
-cd ~/CityGenerator/workers
-npm install
 pm2 start workers.js
 ```
 
