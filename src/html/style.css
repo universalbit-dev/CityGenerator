@@ -1,29 +1,18 @@
 body {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-
-#map-svg,
-#map-canvas,
-#img-canvas {
-  display: inline-block;
-  vertical-align: top;
-  margin: 8px;
-  border: 1px solid #ccc;
-  background: #fafafa;
+#stats-canvas {
+  background: #f7fafd;
+  margin-bottom: 1rem;
+  width: 100% !important;
+  height: auto !important;
 }
-#map-svg {
-  display: none;
+#reward-log {
+  font-size: 0.95rem;
+  color: #212529;
+  background: #f9f9f9;
 }
-
-#controls {
-  margin: 16px 8px;
-}
-
-button {
-  margin-right: 8px;
-  font-size: 1em;
-  padding: 6px 14px;
-  cursor: pointer;
+canvas {
+  max-width: 100%;
+  height: auto;
 }

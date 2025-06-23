@@ -1,26 +1,36 @@
 <!DOCTYPE html>
-<!--
-  CityGenerator Index.html
-
-  Loads UI and starts the application. All neural and training logic is in src/js/index.js.
-  The bundled code is loaded as wohoo.js.
--->
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <title>CityGenerator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <svg id="map-svg" width="300" height="150"></svg>
-  <div>
-    <canvas id="map-canvas" width="300" height="150"></canvas>
-    <canvas id="img-canvas" width="300" height="150" style="display: none"></canvas>
-  </div>
-  <div id="controls">
-    <button id="pause-btn">Pause Training</button>
-    <button id="resume-btn">Resume Training</button>
-    <div id="reward-log"></div>
+<body class="bg-light">
+  <div class="container py-4">
+    <h1>
+      CityGenerator <span class="badge bg-secondary">Deep Q-Learning</span>
+    </h1>
+
+    <div class="mb-4 text-center">
+      <canvas id="map-canvas" width="420" height="200" class="rounded border shadow"></canvas>
+    </div>
+    <div class="row mb-4">
+      <div class="col-md-8">
+        <canvas id="stats-canvas" width="480" height="120" class="rounded border shadow-sm"></canvas>
+      </div>
+      <div class="col-md-4">
+        <button id="pause-btn" class="btn btn-warning btn-sm w-100 mb-2">Pause Training</button>
+<button id="resume-btn" class="btn btn-success btn-sm w-100 mb-2">Resume Training</button>
+        <pre id="reward-log" class="bg-white rounded p-2 border small" style="height:90px;overflow:auto"></pre>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 d-none">
+        <canvas id="img-canvas" width="300" height="150"></canvas>
+      </div>
+    </div>
   </div>
 </body>
 </html>
+
