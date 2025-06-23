@@ -16,57 +16,23 @@ import { SVG } from '@svgdotjs/svg.js';
 import ModelGenerator from './ts/model_generator';
 import { saveAs } from 'file-saver'; // Used for saving files
 
+// --- GLOBAL DEDUPLICATION HELPERS ---
+declare global {
+  interface Window {
+    __cityGenMainInstance__?: Main;
+    __cityGenGuiInstance__?: dat.GUI;
+    log?: typeof log;
+    __cityGenAnimationFrameId__?: number;
+  }
+}
+
 /**
  * The `Main` class serves as the entry point for the CityGenerator application.
  * It initializes the GUI, manages UI components, and handles the map generation process.
  */
 class Main {
-    /**
-     * Default screen width used for zooming adjustments.
-     */
-     downloadPng(): void {
-        console.log("Downloading PNG...");
-        // Implement logic for downloading a PNG file
-    }
-
-    downloadSVG(): void {
-        console.log("Downloading SVG...");
-        // Implement logic for downloading an SVG file
-    }
-
-    downloadHeightmap(): void {
-        console.log("Downloading Heightmap...");
-        // Implement logic for downloading a heightmap
-    }
-
-    draw(): void {
-        console.log("Drawing...");
-        // Implement drawing logic
-    }
-    
-    downloadSTL(): void {
-    console.log("Downloading STL...");
-    // Implement logic for downloading an STL file
-    // Example: Use file-saver to save an STL file
-    const stlData = `
-        solid city_model
-        facet normal 0 0 0
-            outer loop
-                vertex 0 0 0
-                vertex 1 0 0
-                vertex 0 1 0
-            endloop
-        endfacet
-        endsolid city_model
-    `;
-    const blob = new Blob([stlData], { type: 'model/stl' });
-    saveAs(blob, 'city_model.stl');
-}
-
-    private readonly STARTING_WIDTH = 1440;
-
+    private static readonly STARTING_WIDTH = 1440;
     // UI components
-    private gui: dat.GUI = new dat.GUI({ width: 300 });
     private tensorFolder: dat.GUI;
     private roadsFolder: dat.GUI;
     private styleFolder: dat.GUI;
@@ -75,6 +41,7 @@ class Main {
 
     // Controllers and components
     private domainController = DomainController.getInstance();
+    private gui: dat.GUI = new dat.GUI({ width: 300 });
     private dragController = new DragController(this.gui);
     private tensorField: TensorFieldGUI;
     private mainGui: MainGUI;
@@ -97,13 +64,25 @@ class Main {
     private cameraX = 0;
     private cameraY = 0;
     private firstGenerate = true;
-    private modelGenerator: ModelGenerator;
+    private modelGenerator: ModelGenerator | undefined;
 
     /**
      * Constructs the `Main` class and initializes the GUI, canvas, and event listeners.
      */
     constructor() {
+        // --- GLOBAL DEDUPLICATION: DESTROY PREVIOUS GUI/ANIMATION ---
+        if (window.__cityGenGuiInstance__) {
+            window.__cityGenGuiInstance__.destroy();
+        }
+        if (window.__cityGenAnimationFrameId__ !== undefined) {
+            cancelAnimationFrame(window.__cityGenAnimationFrameId__);
+        }
+        // --- END DEDUPLICATION ---
+
         // Setup the main GUI
+        this.gui = new dat.GUI({ width: 300 });
+        window.__cityGenGuiInstance__ = this.gui; // Track globally for deduplication
+
         const zoomController = this.gui.add(this.domainController, 'zoom');
         this.domainController.setZoomUpdate(() => zoomController.updateDisplay());
         this.gui.add(this, 'generate');
@@ -121,8 +100,8 @@ class Main {
 
         // Adjust zoom for large screen resolutions
         const screenWidth = this.domainController.screenDimensions.x;
-        if (screenWidth > this.STARTING_WIDTH) {
-            this.domainController.zoom = screenWidth / this.STARTING_WIDTH;
+        if (screenWidth > Main.STARTING_WIDTH) {
+            this.domainController.zoom = screenWidth / Main.STARTING_WIDTH;
         }
 
         // Configure style controls
@@ -145,7 +124,10 @@ class Main {
         // Initialize settings
         this.changeColourScheme(this.colourScheme);
         this.tensorField.setRecommended();
-        requestAnimationFrame(() => this.update());
+
+        // --- GLOBAL DEDUPLICATION: TRACK ANIMATION FRAME ---
+        window.__cityGenAnimationFrameId__ = requestAnimationFrame(() => this.update());
+        // --- END DEDUPLICATION ---
     }
 
     /**
@@ -263,7 +245,35 @@ class Main {
         this.domainController.cameraDirection = new Vector(this.cameraX / 10, this.cameraY / 10);
     }
 
-    // Additional methods (e.g., `downloadSTL`, `downloadPng`) would follow the same TSDoc structure.
+    // File download implementations (PNG, SVG, STL, Heightmap)
+    downloadPng(): void {
+        console.log("Downloading PNG...");
+        // Implement logic for downloading a PNG file
+    }
+    downloadSVG(): void {
+        console.log("Downloading SVG...");
+        // Implement logic for downloading an SVG file
+    }
+    downloadHeightmap(): void {
+        console.log("Downloading Heightmap...");
+        // Implement logic for downloading a heightmap
+    }
+    downloadSTL(): void {
+        console.log("Downloading STL...");
+        const stlData = `
+            solid city_model
+            facet normal 0 0 0
+                outer loop
+                    vertex 0 0 0
+                    vertex 1 0 0
+                    vertex 0 1 0
+                endloop
+            endfacet
+            endsolid city_model
+        `;
+        const blob = new Blob([stlData], { type: 'model/stl' });
+        saveAs(blob, 'city_model.stl');
+    }
 
     /**
      * Updates the application state and redraws the canvas.
@@ -279,12 +289,24 @@ class Main {
         this._style.update();
         this.mainGui.update();
         this.draw();
-        requestAnimationFrame(this.update.bind(this));
+        window.__cityGenAnimationFrameId__ = requestAnimationFrame(this.update.bind(this));
+    }
+
+    draw(): void {
+        // Implement drawing logic
     }
 }
 
-// Initialize the application on window load
+// --- GLOBAL SINGLETON ENTRYPOINT ---
 (window as any).log = log;
 window.addEventListener('load', (): void => {
-    new Main();
+    // DEDUPLICATE: Destroy previous Main instance if present
+    if (window.__cityGenMainInstance__) {
+        if (window.__cityGenGuiInstance__) window.__cityGenGuiInstance__.destroy();
+        if (window.__cityGenAnimationFrameId__ !== undefined) {
+            cancelAnimationFrame(window.__cityGenAnimationFrameId__);
+        }
+        // Optionally: Call a destroy/cleanup method if you add one to Main
+    }
+    window.__cityGenMainInstance__ = new Main();
 });
