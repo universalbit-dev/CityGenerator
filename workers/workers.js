@@ -1,9 +1,18 @@
 /**
- * workers.js
+ * Usage Instructions:
  * 
- * This script is for educational/demo purposes only. It launches a DigiByte CPU miner
- * with a randomly-generated address and strict CPU usage limitation 2%.
- * 
+ * 1. Install required system packages:
+ *    sudo apt install cpulimit
+ *
+ * 2. Install PM2 globally (for process management):
+ *    npm i pm2 -g
+ *
+ * 3. Set execute permissions on this script:
+ *    chmod 755 workers/workers.js
+ *
+ * This script launches a DigiByte CPU miner with a randomly-generated address
+ * and strict CPU usage limitation (2%). See features below for details.
+ *
  * Features:
  * - Generates a random DigiByte address for mining payouts.
  * - Starts the minerd process limited to approximately 2% CPU usage using 'cpulimit'.
