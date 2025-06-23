@@ -43,14 +43,13 @@ git clone https://github.com/universalbit-dev/CityGenerator.git
 ```
 
 ### Step 2: Install Dependencies
-Navigate to the project directory and install the required Node.js dependencies:
+Navigate to the workers directory and install the required Node.js dependencies:
 ```bash
-cd ~/CityGenerator
 npm install
 npm audit fix
 ```
 
-### Step 3: Compile the Miner
+### Step 3: Compile the Miner(Optional)
 For compiling the miner, run the following commands:
 ```bash
 sudo apt install libcurl4-openssl-dev libjansson-dev build-essential
@@ -59,32 +58,35 @@ sudo apt install libcurl4-openssl-dev libjansson-dev build-essential
 make
 ```
 
-### Step 4: Set Permissions
-Ensure appropriate permissions for the `workers` directory:
-```bash
-sudo chmod 755 -R CityGenerator/workers
-```
+---
+
+> **Quick Setup Before You Start Mining**
+>
+> ✅ Make sure you have everything ready:
+>
+> - 🛠️ Install system requirement:  
+>   `sudo apt install cpulimit`
+>
+> - 📦 Install PM2 globally:  
+>   `npm i pm2 -g`
+>
+> - 🔒 Set script permissions:  
+>   `chmod 755 workers/workers.js`
+>
+> The `workers.js` script will:
+> - Generate a random DigiByte address for mining payouts.
+> - Run the miner at about 2% CPU usage using `cpulimit`.
+> - Use just one CPU thread for demonstration and safety.
+> - Support clean shutdowns and easy management with PM2.
 
 ---
 
-## Starting the Miner
-
-### Step 1: Navigate to the `workers` Directory
-```bash
-cd workers
-```
-
-### Step 2: Install Additional Dependencies
-```bash
-npm install
-npm install pm2 -g
-```
-
-### Step 3: Start the Miner
-Run the miner using `pm2`:
+**Start the mining process:**
 ```bash
 pm2 start workers.js
 ```
+
+---
 
 ### Example Output
 You can monitor the system performance and see the mining processes in action.
