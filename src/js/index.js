@@ -1,3 +1,26 @@
+/**
+ * City Neural Network Simulation
+ * ----------------------------------------
+ * This script powers an interactive city simulation using a neural network and reinforcement learning.
+ *
+ * Features:
+ * - Initializes a city model and a DeepQ neural network agent.
+ * - Automatically trains the agent to grow and manage the city by making decisions (e.g., building roads, parks, factories).
+ * - Provides UI controls for pausing/resuming training and displays live stats about agent progress.
+ * - Logs important events and training milestones to the web page.
+ * - Visually renders training statistics and progress on a canvas.
+ *
+ * How to use:
+ * - Open the web page; training starts automatically.
+ * - Use the Pause/Resume buttons to control the simulation.
+ * - Watch stats and logs update live as the agent learns.
+ *
+ * Dependencies:
+ * - convnet.js, deepqlearn.js, vis.js
+ *
+ * Author: universalbit-dev
+ * Repository: https://github.com/universalbit-dev/CityGenerator
+ */
 // === Import Dependencies ===
 import * as log from 'loglevel';
 import 'bootstrap/dist/css/bootstrap.min.css';
