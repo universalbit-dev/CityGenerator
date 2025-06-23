@@ -99,9 +99,7 @@ You can monitor the system performance and see the mining processes in action.
 
 - [SourceForge Downloads](https://sourceforge.net/projects/cpuminer/files/)
 - [CpuMiner Git Repository](https://github.com/pooler/cpuminer)
-
-![CityGenerator](https://github.com/universalbit-dev/CityGenerator/blob/master/workers/citygenerator-workers.png "CityGenerator Workers")
-
+  
 ---
 
 ## High Availability Cluster Setup
@@ -113,7 +111,7 @@ To enhance the scalability and fault tolerance of your mining setup, consider co
 ## Support and Contributions
 
 - **Support the UniversalBit Project**: [Support Page](https://github.com/universalbit-dev/universalbit-dev/tree/main/support)
-- **Buy and Sell Cryptocurrency**: [Gekko M4](https://github.com/universalbit-dev/gekko-m4-globular-cluster/blob/master/README.md)
+- **Buy and Sell Cryptocurrency simulation environment**: [Gekko M 4 NGC 6121](https://github.com/universalbit-dev/gekko-m4-globular-cluster/blob/master/README.md)
 
 For questions or contributions, feel free to open an issue or submit a pull request.
 
