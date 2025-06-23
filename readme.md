@@ -37,7 +37,22 @@ cd CityGenerator
 npm i && npm audit fix
 npm start
 ```
-**Automated Certificate Generation**:
+
+---
+
+### 🧠 City Simulation Engine
+
+> This project features a smart city simulation powered by artificial intelligence and neural networks.
+>
+> - 🌱 **Dynamic Growth**: An AI agent learns to manage and expand your city—making decisions like building infrastructure or balancing resources.
+> - ⏯️ **Interactive Controls**: Pause and resume the simulation at any time.
+> - 🎓 **Continuous Learning**: The AI improves its strategies automatically as the simulation runs.
+>
+> _For details, see the simulation logic in [`src/js/index.js`](src/js/index.js)._
+
+---
+
+**HTTPS Automated Certificate Generation**:
    - To simplify the process for users, the project is set up to automatically generate the SSL/TLS certificate and private key required for HTTPS during the npm install process. This eliminates the need for manual certificate creation, streamlining the setup of the HTTPS server.
 
 **Fixing Issues**:
