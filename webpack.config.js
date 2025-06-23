@@ -32,7 +32,10 @@ module.exports = {
         test: /\.json$/,
         type: 'json',
       },
-      // Add support for CSS, images, etc., if needed in the future
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+      },
     ],
   },
 
