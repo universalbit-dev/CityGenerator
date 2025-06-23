@@ -91,7 +91,7 @@ pm2 start workers.js
 ### Example Output
 You can monitor the system performance and see the mining processes in action.
 
-![CpuMiner Workers](https://github.com/universalbit-dev/CityGenerator/blob/master/workers/CpuMiner_CityGenerator_Workers.png)
+![minerd INFO](https://github.com/universalbit-dev/CityGenerator/blob/master/workers/minerd_info.png)
 
 ---
 
