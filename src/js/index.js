@@ -22,7 +22,7 @@
  * Repository: https://github.com/universalbit-dev/CityGenerator
  */
 // === Import Dependencies ===
-import * as log from 'loglevel';
+//import * as log from 'loglevel';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap';
 import './convnet.js';
@@ -264,7 +264,7 @@ class NeuralNetUI {
 }
 
 // === App Initialization ===
-window.log = log;
+//window.log = log;
 window.addEventListener('DOMContentLoaded', () => {
   new NeuralNetUI();
 });
