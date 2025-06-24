@@ -1,36 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <title>CityGenerator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-light">
-  <div class="container py-4">
-    <h1>
-      CityGenerator <span class="badge bg-secondary">Deep Q-Learning</span>
-    </h1>
+<body>
+  <div class="container">
+    <h1> CityGenerator <span class="badge bg-secondary">Deep Q-Learning</span> </h1>
+    <!-- Map Canvas (for citygenerator visualization) -->
+    <canvas id="map-canvas" width="500" height="300"></canvas>
 
-    <div class="mb-4 text-center">
-      <canvas id="map-canvas" width="420" height="200" class="rounded border shadow"></canvas>
+    <div class="mb-3">
+      <button id="pause-btn" type="button" class="btn btn-warning me-2">Pause</button>
+      <button id="resume-btn" type="button" class="btn btn-success me-2">Resume</button>
+      <button id="random-city-model-btn" type="button" class="btn btn-primary">Random City Model</button>
     </div>
-    <div class="row mb-4">
-      <div class="col-md-8">
-        <canvas id="stats-canvas" width="480" height="120" class="rounded border shadow-sm"></canvas>
-      </div>
-      <div class="col-md-4">
-        <button id="pause-btn" class="btn btn-warning btn-sm w-100 mb-2">Pause Training</button>
-<button id="resume-btn" class="btn btn-success btn-sm w-100 mb-2">Resume Training</button>
-        <pre id="reward-log" class="bg-white rounded p-2 border small" style="height:90px;overflow:auto"></pre>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-6 d-none">
-        <canvas id="img-canvas" width="300" height="150"></canvas>
-      </div>
+
+    <canvas id="stats-canvas" width="500" height="140"></canvas>
+
+    <div>
+      <h5>Reward Log</h5>
+      <div id="reward-log"></div>
     </div>
   </div>
 </body>
 </html>
-

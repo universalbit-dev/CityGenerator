@@ -1,18 +1,95 @@
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f8fafc;
+  min-height: 100vh;
 }
+
+/* Responsive container: fluid by default, capped at 650px on lg+ screens */
+.container {
+  width: 100%;
+  max-width: 100%;
+  margin-top: 40px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+@media (min-width: 992px) {
+  .container {
+    max-width: 650px;
+  }
+}
+
+/* Heading and Badge */
+h1 {
+  text-align: center;
+  font-size: 2.2rem;
+  margin-bottom: 2rem;
+}
+h1 .badge {
+  font-size: 1rem;
+  vertical-align: middle;
+}
+
+/* Map Canvas */
+#map-canvas {
+  display: block;
+  margin: 0 auto 1.5rem auto;
+  width: 100%;
+  max-width: 500px;
+  height: 300px;
+  border: 2px solid #0d6efd;
+  background: #e9ecef;
+  border-radius: 0.5rem;
+  box-sizing: border-box;
+}
+
+/* Stats Canvas */
 #stats-canvas {
-  background: #f7fafd;
-  margin-bottom: 1rem;
-  width: 100% !important;
-  height: auto !important;
+  display: block;
+  margin: 0 auto 1rem auto;
+  width: 100%;
+  max-width: 500px;
+  height: 140px;
+  border: 1px solid #ced4da;
+  background: #f8f9fa;
+  border-radius: 0.5rem;
+  box-sizing: border-box;
 }
+
+/* Reward Log */
 #reward-log {
-  font-size: 0.95rem;
-  color: #212529;
+  height: 200px;
+  overflow-y: auto;
   background: #f9f9f9;
+  border: 1px solid #dee2e6;
+  font-family: monospace;
+  font-size: 0.97rem;
+  color: #212529;
+  padding: 0.5rem 0.75rem;
+  white-space: pre-wrap;
+  margin-bottom: 2rem;
+  border-radius: 0.3rem;
+  max-width: 100%;
+  box-sizing: border-box;
 }
+
+/* Responsive Buttons Row */
+.mb-3 {
+  text-align: center;
+}
+
+/* Responsive Canvas */
 canvas {
   max-width: 100%;
   height: auto;
+}
+
+/* For consistent h5 spacing */
+h5 {
+  margin-top: 2rem;
+  margin-bottom: 0.7rem;
+  font-weight: 600;
+  text-align: center;
+  color: #495057;
 }
