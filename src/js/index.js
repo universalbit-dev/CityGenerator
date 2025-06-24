@@ -9,28 +9,49 @@
  * - Provides UI controls for pausing/resuming training and displays live stats about agent progress.
  * - Logs important events and training milestones to the web page.
  * - Visually renders training statistics and progress on a canvas.
+ * - Supports plug-and-play paradigms through modular City Manager files in /src/js/cityManagers/.
  *
  * How to use:
  * - Open the web page; training starts automatically.
  * - Use the Pause/Resume buttons to control the simulation.
+ * - Use the "Random City Model" button to instantly switch to a new random city paradigm.
  * - Watch stats and logs update live as the agent learns.
  *
  * Dependencies:
  * - convnet.js, deepqlearn.js, vis.js
+ * - Modular City Managers: see /src/js/cityManagers/ for alternative city models.
  *
  * Author: universalbit-dev
  * Repository: https://github.com/universalbit-dev/CityGenerator
  */
-// === Import Dependencies ===
-//import * as log from 'loglevel';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap';
 import './convnet.js';
 import './deepqlearn.js';
 import './vis.js';
 
-// === Neural Net Config ===
-const NUM_INPUTS = 7;
+// ====== City Managers ======
+import UrbanFabricManager from './cityManagers/UrbanFabricManager.js';
+import CivicEcosystemManager from './cityManagers/CivicEcosystemManager.js';
+import CircularCityManager from './cityManagers/CircularCityManager.js';
+import SmartCityStateManager from './cityManagers/SmartCityStateManager.js';
+import ResilientCityModelManager from './cityManagers/ResilientCityModelManager.js';
+import CommunityCommonsManager from './cityManagers/CommunityCommonsManager.js';
+
+const MANAGER_CLASSES = [
+  UrbanFabricManager,
+  CivicEcosystemManager,
+  CircularCityManager,
+  SmartCityStateManager,
+  ResilientCityModelManager,
+  CommunityCommonsManager
+];
+
+// Default to a random manager at load
+let CityManager = MANAGER_CLASSES[Math.floor(Math.random() * MANAGER_CLASSES.length)];
+
+const NUM_INPUTS = 6; // Adjust if your managers have a different state vector length
 const NUM_ACTIONS = 3;
 const TEMPORAL_WINDOW = 1;
 const NETWORK_SIZE = NUM_INPUTS * TEMPORAL_WINDOW + NUM_ACTIONS * TEMPORAL_WINDOW + NUM_INPUTS;
@@ -60,32 +81,21 @@ const OPT = {
   tdtrainer_options: TDTRAINER_OPTIONS
 };
 
-// === City State Model ===
-function createInitialCity() {
-  return {
-    population: 50000, maxPopulation: 100000,
-    roadDensity: 0.42,
-    avgBuildingHeight: 15, maxHeight: 50,
-    resourceLevel: 1200, maxResource: 5000,
-    pollution: 30, maxPollution: 100,
-    greenSpaceRatio: 0.18,
-    riverCount: 1
-  };
-}
-
-// === Main NeuralNet Class ===
 class NeuralNetUI {
   constructor() {
-    this.city = createInitialCity();
+    this.init();
+    this.setupUI();
+  }
+
+  // (Re)initialize city, brain, and training loop
+  init() {
+    this.city = new CityManager();
     this.brain = new window.deepqlearn.Brain(NUM_INPUTS, NUM_ACTIONS, OPT);
     this.paused = false;
     this.currentStep = 1;
     this.trainingRuns = 0;
     this.trainStepRewardSum = 0;
-
-    this.setupUI();
-
-    this.logMessage(`=== Training Run ===`);
+    this.logMessage(`=== Training Run (${CityManager.name}) ===`);
     this.renderStatsOnCanvas({
       runNumber: 1,
       step: 0,
@@ -94,9 +104,9 @@ class NeuralNetUI {
       learningRate: TDTRAINER_OPTIONS.learning_rate
     });
     this.trainStep(1);
+    // If displaying the model name somewhere else in your UI, you could update it here too.
   }
 
-  // --- UI Setup (pause/resume binding) ---
   setupUI() {
     const pauseBtn = document.getElementById('pause-btn');
     const resumeBtn = document.getElementById('resume-btn');
@@ -107,9 +117,18 @@ class NeuralNetUI {
         this.trainStep(this.currentStep);
       }
     };
+
+    // Random City Model Button functionality
+    const randomBtn = document.getElementById('random-city-model-btn');
+    if (randomBtn) {
+      randomBtn.onclick = () => {
+        CityManager = MANAGER_CLASSES[Math.floor(Math.random() * MANAGER_CLASSES.length)];
+        this.logMessage(`\n--- Switched to random model: ${CityManager.name} ---\n`);
+        this.init(); // restart everything with the new paradigm
+      };
+    }
   }
 
-  // --- Logging ---
   logMessage(msg) {
     const rewardDiv = document.getElementById('reward-log');
     if (rewardDiv) {
@@ -118,24 +137,33 @@ class NeuralNetUI {
     }
   }
 
-  // --- Stats Canvas Rendering ---
   renderStatsOnCanvas({ runNumber, step, totalSteps, avgReward, learningRate }) {
     const canvas = document.getElementById('stats-canvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Main title
     ctx.font = 'bold 20px Segoe UI, monospace';
     ctx.fillStyle = '#0d6efd';
     ctx.fillText(`Training Run #${runNumber}`, 20, 32);
+
+    // Manager name just below
+    ctx.font = 'italic 14px monospace';
+    ctx.fillStyle = '#6c757d';
+    ctx.fillText(`(${CityManager.name})`, 22, 52);
+
+    // Restore font for stats
     ctx.font = '16px monospace';
     ctx.fillStyle = '#212529';
-    ctx.fillText(`Step: ${step} / ${totalSteps}`, 20, 66);
+    ctx.fillText(`Step: ${step} / ${totalSteps}`, 20, 76);
     ctx.fillStyle = '#198754';
-    ctx.fillText(`Avg Reward: ${avgReward.toFixed(4)}`, 220, 66);
+    ctx.fillText(`Avg Reward: ${avgReward.toFixed(4)}`, 220, 76);
     ctx.fillStyle = '#fd7e14';
-    ctx.fillText(`LR: ${learningRate}`, 20, 98);
+    ctx.fillText(`LR: ${learningRate}`, 20, 106);
+
     // Progress bar
-    let barX = 150, barY = 80, barW = 300, barH = 14;
+    let barX = 150, barY = 90, barW = 300, barH = 14;
     ctx.fillStyle = '#e9ecef';
     ctx.fillRect(barX, barY, barW, barH);
     ctx.fillStyle = '#0d6efd';
@@ -144,56 +172,19 @@ class NeuralNetUI {
     ctx.strokeRect(barX, barY, barW, barH);
   }
 
-  // --- State Calculation ---
   getCurrentState() {
-    const city = this.city;
-    return [
-      city.population / city.maxPopulation,
-      city.roadDensity,
-      city.avgBuildingHeight / city.maxHeight,
-      city.resourceLevel / city.maxResource,
-      city.pollution / city.maxPollution,
-      city.greenSpaceRatio,
-      city.riverCount / 5
-    ];
+    return this.city.getStateArray();
   }
 
-  // --- Environment Update ---
   applyAction(action) {
-    const city = this.city;
-    switch (action) {
-      case 0: // Build road
-        city.roadDensity = Math.min(1, city.roadDensity + 0.01);
-        city.population = Math.min(city.maxPopulation, city.population + 60);
-        city.pollution = Math.min(city.maxPollution, city.pollution + 0.3);
-        city.resourceLevel = Math.max(0, city.resourceLevel - 10);
-        break;
-      case 1: // Build park
-        city.greenSpaceRatio = Math.min(1, city.greenSpaceRatio + 0.01);
-        city.pollution = Math.max(0, city.pollution - 0.8);
-        city.population = Math.min(city.maxPopulation, city.population + 20);
-        city.resourceLevel = Math.max(0, city.resourceLevel - 5);
-        break;
-      case 2: // Build factory
-        city.resourceLevel = Math.min(city.maxResource, city.resourceLevel + 50);
-        city.pollution = Math.min(city.maxPollution, city.pollution + 1.2);
-        city.population = Math.min(city.maxPopulation, city.population + 80);
-        break;
-    }
+    this.city.update(action);
   }
 
-  // --- Reward Calculation ---
   getReward(state) {
-    const [pop, road, height, res, pollution, green, rivers] = state;
-    return (
-      (pop * 2) +
-      (green * 1.5) -
-      (pollution * 3) +
-      (res * 0.5)
-    );
+    // Simple: sum of all normalized values (customize per paradigm if desired)
+    return state.reduce((sum, v) => sum + v, 0);
   }
 
-  // --- Training Loop ---
   trainStep(step) {
     if (this.paused) {
       this.currentStep = step;
@@ -231,40 +222,14 @@ class NeuralNetUI {
       this.logMessage("Training complete!");
       this.trainingRuns++;
       this.logMessage(`\n=== Restarting Training (#${this.trainingRuns + 1}) ===`);
-      this.city = createInitialCity();
+      this.city = new CityManager();
       this.brain = new window.deepqlearn.Brain(NUM_INPUTS, NUM_ACTIONS, OPT);
       this.currentStep = 1;
       setTimeout(() => this.trainStep(1), 1000);
     }
   }
-
-  // --- (Optional) ConvNetJS Demo Setup ---
-  setupConvNetDemo() {
-    const CONV_LAYERS = [
-      { type: 'input', out_sx: 24, out_sy: 24, out_depth: 1 },
-      { type: 'conv', sx: 5, filters: 16, stride: 1, pad: 2, activation: 'relu' },
-      { type: 'pool', sx: 2, stride: 2 },
-      { type: 'conv', sx: 5, filters: 32, stride: 1, pad: 2, activation: 'relu' },
-      { type: 'pool', sx: 3, stride: 3 },
-      { type: 'fc', num_neurons: 100, activation: 'relu' },
-      { type: 'softmax', num_classes: 10 }
-    ];
-    const net = new window.convnetjs.Net();
-    net.makeLayers(CONV_LAYERS);
-    const trainer = new window.convnetjs.Trainer(net, {
-      method: 'sgd',
-      learning_rate: 0.001,
-      l2_decay: 0.0001,
-      momentum: 0.9,
-      batch_size: 20,
-      l1_decay: 0.0001
-    });
-    // For future: add UI for convnet demo if needed
-  }
 }
 
-// === App Initialization ===
-//window.log = log;
 window.addEventListener('DOMContentLoaded', () => {
-  new NeuralNetUI();
+  window.ui = new NeuralNetUI();
 });
