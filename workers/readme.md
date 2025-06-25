@@ -80,8 +80,9 @@ make
 
 ---
 
-**Start the mining process:**
+**Install packages and Start the mining process:**
 ```bash
+npm i
 pm2 start workers.js
 ```
 
