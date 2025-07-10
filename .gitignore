@@ -1,1 +1,92 @@
+# Node.js & JavaScript (npm, Yarn, pnpm)
 node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# TypeScript
+*.tsbuildinfo
+
+# Build output
+dist/
+build/
+out/
+coverage/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+Desktop.ini
+
+# IDEs & editors
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Misc
+.env
+.env.*
+*.local
+*.cache/
+tmp/
+temp/
+*.swp
+*.bak
+
+# C/C++ & Assembly
+*.o
+*.obj
+*.elf
+*.a
+*.so
+*.dll
+*.exe
+*.out
+*.gch
+*.dSYM/
+*.map
+
+# Makefile
+Makefile.in
+Makefile~
+.deps/
+.libs/
+*.d
+
+# Shell
+*.sh~
+*.bash_history
+
+# Test & reports
+*.lcov
+*.test.js
+
+# npm
+.npm/
+
+# TypeScript
+*.d.ts
+
+# Others (optional, remove if not used)
+*.sqlite
+*.sqlite3
+*.db
+*.tgz
+
+# macOS
+.AppleDouble/
+.LSOverride
+
+# Windows
+$RECYCLE.BIN/
+
+# Linux
+*~
