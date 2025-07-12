@@ -32,6 +32,7 @@ The **CityGenerator** project focuses on creating dynamic city models inspired b
 git clone https://github.com/universalbit-dev/CityGenerator.git
 cd CityGenerator
 ```
+<img src="https://nodejs.org/static/images/logo.svg" alt="Node.js Logo" height="30"/> Node.js 22 LTS supported
 ### Install packages with npm then generate your city model
 ```bash
 npm i && npm audit fix
