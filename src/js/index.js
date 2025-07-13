@@ -9,49 +9,66 @@
  * - Provides UI controls for pausing/resuming training and displays live stats about agent progress.
  * - Logs important events and training milestones to the web page.
  * - Visually renders training statistics and progress on a canvas.
- * - Supports plug-and-play paradigms through modular City Manager files in /src/js/cityManagers/.
- *
- * How to use:
- * - Open the web page; training starts automatically.
- * - Use the Pause/Resume buttons to control the simulation.
- * - Use the "Random City Model" button to instantly switch to a new random city paradigm.
- * - Watch stats and logs update live as the agent learns.
+ * - Supports modular City Manager files.
+ * - Enhanced UI: Manager info, state chart, action/reward log.
  *
  * Dependencies:
- * - convnet.js, deepqlearn.js, vis.js
- * - Modular City Managers: see /src/js/cityManagers/ for alternative city models.
+ * - convnet.js, deepqlearn.js, vis.js, chart.js
+ * - Modular City Managers: see /src/js/cityManagers/
  *
  * Author: universalbit-dev
  * Repository: https://github.com/universalbit-dev/CityGenerator
  */
 
+// Import styles and dependencies
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap';
 import './convnet.js';
 import './deepqlearn.js';
 import './vis.js';
+import Chart from 'chart.js/auto';
 
-// ====== City Managers ======
+// City Managers
 import UrbanFabricManager from './cityManagers/UrbanFabricManager.js';
 import CivicEcosystemManager from './cityManagers/CivicEcosystemManager.js';
 import CircularCityManager from './cityManagers/CircularCityManager.js';
 import SmartCityStateManager from './cityManagers/SmartCityStateManager.js';
 import ResilientCityModelManager from './cityManagers/ResilientCityModelManager.js';
 import CommunityCommonsManager from './cityManagers/CommunityCommonsManager.js';
+import CookielessCityAgent from './cityManagers/CookielessCityAgent.js';
 
+// Privacy: Remove cookies
+function removeAllCookies() {
+  if (document.cookie) {
+    document.cookie.split(";").forEach(cookie => {
+      document.cookie = cookie.split("=")[0] + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+    });
+  }
+}
+removeAllCookies();
+
+// Manager registry and descriptions
 const MANAGER_CLASSES = [
   UrbanFabricManager,
   CivicEcosystemManager,
   CircularCityManager,
   SmartCityStateManager,
   ResilientCityModelManager,
-  CommunityCommonsManager
+  CommunityCommonsManager,
+  CookielessCityAgent
 ];
+const managerTips = {
+  'CookielessCityAgent': 'Privacy-first agent! Your choices boost digital safety.',
+  'CircularCityManager': 'Sustainable choices for a greener city.',
+  'UrbanFabricManager': 'Shape the flow and growth of your urban landscape.',
+  'CivicEcosystemManager': 'Balance wellbeing, participation, and resources.',
+  'SmartCityStateManager': 'Build a connected, smart, tech-savvy city.',
+  'ResilientCityModelManager': 'Prepare your city for challenges and thrive.',
+  'CommunityCommonsManager': 'Share, collaborate, and prosper together!',
+};
 
-// Default to a random manager at load
-let CityManager = MANAGER_CLASSES[Math.floor(Math.random() * MANAGER_CLASSES.length)];
-
-const NUM_INPUTS = 6; // Adjust if your managers have a different state vector length
+// Neural Network Parameters
+const NUM_INPUTS = 6;
 const NUM_ACTIONS = 3;
 const TEMPORAL_WINDOW = 1;
 const NETWORK_SIZE = NUM_INPUTS * TEMPORAL_WINDOW + NUM_ACTIONS * TEMPORAL_WINDOW + NUM_INPUTS;
@@ -81,155 +98,235 @@ const OPT = {
   tdtrainer_options: TDTRAINER_OPTIONS
 };
 
-class NeuralNetUI {
-  constructor() {
-    this.init();
-    this.setupUI();
-  }
+// UI State
+let CityManager = MANAGER_CLASSES[Math.floor(Math.random() * MANAGER_CLASSES.length)];
+let actionHistory = [];
+let chartInstance = null;
+let rewardHistory = [];
+let isPaused = false;
 
-  // (Re)initialize city, brain, and training loop
-  init() {
-    this.city = new CityManager();
-    this.brain = new window.deepqlearn.Brain(NUM_INPUTS, NUM_ACTIONS, OPT);
-    this.paused = false;
-    this.currentStep = 1;
-    this.trainingRuns = 0;
-    this.trainStepRewardSum = 0;
-    this.logMessage(`=== Training Run (${CityManager.name}) ===`);
-    this.renderStatsOnCanvas({
-      runNumber: 1,
-      step: 0,
-      totalSteps: OPT.learning_steps_total,
-      avgReward: 0,
-      learningRate: TDTRAINER_OPTIONS.learning_rate
-    });
-    this.trainStep(1);
-    // If displaying the model name somewhere else in your UI, you could update it here too.
-  }
+// === UI Functions ===
 
-  setupUI() {
-    const pauseBtn = document.getElementById('pause-btn');
-    const resumeBtn = document.getElementById('resume-btn');
-    if (pauseBtn) pauseBtn.onclick = () => { this.paused = true; };
-    if (resumeBtn) resumeBtn.onclick = () => {
-      if (this.paused) {
-        this.paused = false;
-        this.trainStep(this.currentStep);
-      }
-    };
-
-    // Random City Model Button functionality
-    const randomBtn = document.getElementById('random-city-model-btn');
-    if (randomBtn) {
-      randomBtn.onclick = () => {
-        CityManager = MANAGER_CLASSES[Math.floor(Math.random() * MANAGER_CLASSES.length)];
-        this.logMessage(`\n--- Switched to random model: ${CityManager.name} ---\n`);
-        this.init(); // restart everything with the new paradigm
-      };
-    }
-  }
-
-  logMessage(msg) {
-    const rewardDiv = document.getElementById('reward-log');
-    if (rewardDiv) {
-      rewardDiv.textContent += (rewardDiv.textContent ? "\n" : "") + msg;
-      rewardDiv.scrollTop = rewardDiv.scrollHeight;
-    }
-  }
-
-  renderStatsOnCanvas({ runNumber, step, totalSteps, avgReward, learningRate }) {
-    const canvas = document.getElementById('stats-canvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Main title
-    ctx.font = 'bold 20px Segoe UI, monospace';
-    ctx.fillStyle = '#0d6efd';
-    ctx.fillText(`Training Run #${runNumber}`, 20, 32);
-
-    // Manager name just below
-    ctx.font = 'italic 14px monospace';
-    ctx.fillStyle = '#6c757d';
-    ctx.fillText(`(${CityManager.name})`, 22, 52);
-
-    // Restore font for stats
-    ctx.font = '16px monospace';
-    ctx.fillStyle = '#212529';
-    ctx.fillText(`Step: ${step} / ${totalSteps}`, 20, 76);
-    ctx.fillStyle = '#198754';
-    ctx.fillText(`Avg Reward: ${avgReward.toFixed(4)}`, 220, 76);
-    ctx.fillStyle = '#fd7e14';
-    ctx.fillText(`LR: ${learningRate}`, 20, 106);
-
-    // Progress bar
-    let barX = 150, barY = 90, barW = 300, barH = 14;
-    ctx.fillStyle = '#e9ecef';
-    ctx.fillRect(barX, barY, barW, barH);
-    ctx.fillStyle = '#0d6efd';
-    ctx.fillRect(barX, barY, barW * (step / totalSteps), barH);
-    ctx.strokeStyle = '#adb5bd';
-    ctx.strokeRect(barX, barY, barW, barH);
-  }
-
-  getCurrentState() {
-    return this.city.getStateArray();
-  }
-
-  applyAction(action) {
-    this.city.update(action);
-  }
-
-  getReward(state) {
-    // Simple: sum of all normalized values (customize per paradigm if desired)
-    return state.reduce((sum, v) => sum + v, 0);
-  }
-
-  trainStep(step) {
-    if (this.paused) {
-      this.currentStep = step;
-      return;
-    }
-    const state = this.getCurrentState();
-    const action = this.brain.forward(state);
-    this.applyAction(action);
-    const reward = this.getReward(this.getCurrentState(), action);
-    this.brain.backward(reward);
-
-    const totalSteps = OPT.learning_steps_total;
-    const logInterval = Math.max(1, Math.floor(totalSteps / 20));
-    this.trainStepRewardSum += reward;
-
-    if (step % logInterval === 0 || step === totalSteps) {
-      const avgReward = this.trainStepRewardSum / logInterval;
-      const msg = `Step ${step} / ${totalSteps} | Avg Reward: ${avgReward.toFixed(4)}`;
-      console.log(msg);
-      this.logMessage(msg);
-      this.renderStatsOnCanvas({
-        runNumber: this.trainingRuns + 1,
-        step,
-        totalSteps,
-        avgReward,
-        learningRate: TDTRAINER_OPTIONS.learning_rate
-      });
-      this.trainStepRewardSum = 0;
-    }
-
-    if (step < totalSteps) {
-      setTimeout(() => this.trainStep(step + 1), 0);
-    } else {
-      console.log("Training complete!");
-      this.logMessage("Training complete!");
-      this.trainingRuns++;
-      this.logMessage(`\n=== Restarting Training (#${this.trainingRuns + 1}) ===`);
-      this.city = new CityManager();
-      this.brain = new window.deepqlearn.Brain(NUM_INPUTS, NUM_ACTIONS, OPT);
-      this.currentStep = 1;
-      setTimeout(() => this.trainStep(1), 1000);
-    }
+/**
+ * Render manager info and tip in the UI.
+ */
+function renderManagerInfo(manager) {
+  const name = manager.constructor.name;
+  const infoDiv = document.getElementById('manager-info');
+  if (infoDiv) {
+    infoDiv.innerHTML =
+      `<b>Current Simulation Model:</b> <span style="color:#007bff">${name}</span><br>
+       <small>${managerTips[name] || ''}</small>`;
   }
 }
 
+/**
+ * Render the manager's current state as a user-friendly bar chart using Chart.js.
+ * This chart is smoothly animated and updated in place.
+ */
+function renderStateChart(manager) {
+  const labels = Object.keys(manager.state);
+  const data = manager.getStateArray();
+  const ctx = document.getElementById('state-chart').getContext('2d');
+
+  if (!chartInstance) {
+    chartInstance = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels.map(lbl => lbl.charAt(0).toUpperCase() + lbl.slice(1)),
+        datasets: [{
+          label: 'City Features',
+          data: data,
+          backgroundColor: [
+            '#0d6efd', '#20c997', '#ffc107', '#6f42c1', '#fd7e14', '#198754'
+          ],
+          borderRadius: 6,
+          barPercentage: 0.6
+        }]
+      },
+      options: {
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: true }
+        },
+        scales: {
+          x: {
+            title: { display: false },
+            ticks: { color: '#333' }
+          },
+          y: {
+            beginAtZero: true,
+            max: 1,
+            title: { display: false },
+            ticks: { stepSize: 0.2, color: '#333' }
+          }
+        },
+        animation: {
+          duration: 700, // slightly slower for smoother effect
+          easing: 'easeOutQuart'
+        }
+      }
+    });
+  } else {
+    // Update only data for smooth animation
+    chartInstance.data.datasets[0].data = data;
+    chartInstance.update('active');
+  }
+}
+
+/**
+ * Log actions and rewards to the UI.
+ */
+function logAction(action, reward) {
+  actionHistory.push({manager: CityManager.name, action, reward});
+  if (actionHistory.length > 20) actionHistory.shift();
+  const logDiv = document.getElementById('action-log');
+  if (logDiv) {
+    logDiv.innerHTML =
+      actionHistory.map(h =>
+        `<div><span style="color:#20c997;">${h.manager}</span>: <b>Action</b> ${h.action}, <b>Reward</b> ${h.reward.toFixed(2)}</div>`
+      ).join('');
+  }
+}
+
+/**
+ * Update and display the reward log.
+ */
+function logReward(reward) {
+  rewardHistory.push(reward);
+  if (rewardHistory.length > 50) rewardHistory.shift();
+  const rewardLog = document.getElementById('reward-log');
+  if (rewardLog) {
+    rewardLog.innerHTML = rewardHistory.map((r, i) =>
+      `Step ${i + 1}: <span style="color:#0d6efd;">${r.toFixed(3)}</span>`
+    ).join('<br>');
+  }
+}
+
+/**
+ * Update all simulation UI elements.
+ */
+function updateSimulationUI(manager) {
+  renderManagerInfo(manager);
+  renderStateChart(manager);
+}
+
+/**
+ * Select and instantiate a manager by index or random.
+ */
+function chooseManager(idx = null) {
+  CityManager = idx !== null ?
+    MANAGER_CLASSES[idx] :
+    MANAGER_CLASSES[Math.floor(Math.random() * MANAGER_CLASSES.length)];
+  window.city = new CityManager();
+  actionHistory = [];
+  rewardHistory = [];
+  chartInstance = null; // force re-create chart for new manager
+  updateSimulationUI(window.city);
+  logReward(0); // Reset reward log visually
+}
+
+/**
+ * Simulate one step (random action for demo).
+ * Replace with agent logic for real training.
+ */
+function simulateStep() {
+  if (!window.city || isPaused) return; // skip if paused
+  const action = Math.floor(Math.random() * NUM_ACTIONS);
+  window.city.update(action);
+  const state = window.city.getStateArray();
+  const reward = state.reduce((sum, v) => sum + v, 0);
+  logAction(action, reward);
+  logReward(reward);
+  updateSimulationUI(window.city);
+}
+
+/**
+ * Setup UI controls for manager switching and Pause/Resume feedback.
+ */
+function setupUI() {
+  // Manager Dropdown for direct selection
+  const container = document.getElementById('manager-info');
+  if (container && !container.querySelector('select')) {
+    const select = document.createElement('select');
+    select.style.margin = "8px 0";
+    select.className = "form-select form-select-sm";
+    MANAGER_CLASSES.forEach((cls, i) => {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.text = cls.name;
+      select.appendChild(opt);
+    });
+    select.onchange = (e) => chooseManager(Number(e.target.value));
+    container.appendChild(select);
+  }
+
+  // Random Model Button
+  const randomBtn = document.getElementById('random-city-model-btn');
+  if (randomBtn) randomBtn.onclick = () => chooseManager();
+
+  // Pause/Resume Button logic and feedback
+  const pauseBtn = document.getElementById('pause-btn');
+  const resumeBtn = document.getElementById('resume-btn');
+  if (pauseBtn && resumeBtn) {
+    pauseBtn.onclick = () => {
+      isPaused = true;
+      pauseBtn.classList.add('active');
+      resumeBtn.classList.remove('active');
+      pauseBtn.disabled = true;
+      resumeBtn.disabled = false;
+    };
+    resumeBtn.onclick = () => {
+      isPaused = false;
+      resumeBtn.classList.add('active');
+      pauseBtn.classList.remove('active');
+      resumeBtn.disabled = true;
+      pauseBtn.disabled = false;
+    };
+    // Default state: simulation running, Pause enabled, Resume disabled
+    pauseBtn.classList.remove('active');
+    resumeBtn.classList.add('active');
+    pauseBtn.disabled = false;
+    resumeBtn.disabled = true;
+  }
+}
+
+// === Entry Point ===
 window.addEventListener('DOMContentLoaded', () => {
-  window.ui = new NeuralNetUI();
+  setupUI();
+  chooseManager(); // Pick one at start
+
+  // Example: simulate step every 2 seconds
+  setInterval(simulateStep, 2000);
 });
+
+/**
+ * === HTML additions required ===
+ * Add these to your src/html/index.html body:
+ * 
+ * <div class="container py-3">
+ *   <div class="mb-3">
+ *     <button id="pause-btn" type="button" class="btn btn-warning me-2">Pause</button>
+ *     <button id="resume-btn" type="button" class="btn btn-success me-2">Resume</button>
+ *     <button id="random-city-model-btn" type="button" class="btn btn-primary">Random City Model</button>
+ *   </div>
+ *   <hr class="my-4">
+ *   <div id="manager-info" class="mb-3"></div>
+ *   <div>
+ *     <h5 class="mt-3">City Features Overview</h5>
+ *     <canvas id="state-chart" width="440" height="180"></canvas>
+ *   </div>
+ *   <div>
+ *     <h5 class="mt-3">Recent Actions</h5>
+ *     <div id="action-log" style="margin-top:10px;background:#e9ecef;border-radius:4px;padding:8px;min-height:48px;font-family:monospace;"></div>
+ *   </div>
+ *   <div>
+ *     <h5>Reward Log</h5>
+ *     <div id="reward-log" style="background:#f8f9fa;border:1px solid #ccc;padding:8px;height:100px;overflow-y:auto;font-family:monospace;"></div>
+ *   </div>
+ * </div>
+ * 
+ * All UI is user-friendly and welcoming, with no gov-centric language!
+ * To extend: add more manager features, more chart types, or more interactive UI (sliders, tooltips, etc).
+ */
+
