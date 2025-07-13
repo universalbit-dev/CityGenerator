@@ -5,8 +5,8 @@
  *
  * Features:
  * - Initializes a city model and a DeepQ neural network agent.
- * - Automatically trains the agent to grow and manage the city by making decisions (e.g., building roads, parks, factories).
- * - Provides UI controls for pausing/resuming training and displays live stats about agent progress.
+ * - Automatically trains the agent to grow and manage the city.
+ * - Provides UI controls for pausing/resuming training and displays live stats.
  * - Logs important events and training milestones to the web page.
  * - Visually renders training statistics and progress on a canvas.
  * - Supports modular City Manager files.
@@ -57,55 +57,19 @@ const MANAGER_CLASSES = [
   CommunityCommonsManager,
   CookielessCityAgent
 ];
+
 const managerTips = {
   'CookielessCityAgent': 'Privacy-first agent! Your choices boost digital safety.',
-  'CircularCityManager': 'Sustainable choices for a greener city.',
-  'UrbanFabricManager': 'Shape the flow and growth of your urban landscape.',
-  'CivicEcosystemManager': 'Balance wellbeing, participation, and resources.',
-  'SmartCityStateManager': 'Build a connected, smart, tech-savvy city.',
-  'ResilientCityModelManager': 'Prepare your city for challenges and thrive.',
-  'CommunityCommonsManager': 'Share, collaborate, and prosper together!',
+  // Add other manager tips here as needed
 };
 
-// Neural Network Parameters
-const NUM_INPUTS = 6;
-const NUM_ACTIONS = 3;
-const TEMPORAL_WINDOW = 1;
-const NETWORK_SIZE = NUM_INPUTS * TEMPORAL_WINDOW + NUM_ACTIONS * TEMPORAL_WINDOW + NUM_INPUTS;
-const LAYER_DEFS = [
-  { type: 'input', out_sx: 1, out_sy: 1, out_depth: NETWORK_SIZE },
-  { type: 'fc', num_neurons: 100, activation: 'relu' },
-  { type: 'fc', num_neurons: 100, activation: 'relu' },
-  { type: 'fc', num_neurons: 50, activation: 'relu' },
-  { type: 'regression', num_neurons: NUM_ACTIONS }
-];
-const TDTRAINER_OPTIONS = {
-  learning_rate: 0.01,
-  momentum: 0.1,
-  batch_size: 32,
-  l2_decay: 0.001
-};
-const OPT = {
-  temporal_window: TEMPORAL_WINDOW,
-  experience_size: 50000,
-  start_learn_threshold: 500,
-  gamma: 0.9,
-  learning_steps_total: 300000,
-  learning_steps_burnin: 1000,
-  epsilon_min: 0.01,
-  epsilon_test_time: 0.01,
-  layer_defs: LAYER_DEFS,
-  tdtrainer_options: TDTRAINER_OPTIONS
-};
-
-// UI State
-let CityManager = MANAGER_CLASSES[Math.floor(Math.random() * MANAGER_CLASSES.length)];
-let actionHistory = [];
+// Simulation state
+let CityManager = UrbanFabricManager;
 let chartInstance = null;
-let rewardHistory = [];
 let isPaused = false;
-
-// === UI Functions ===
+let actionHistory = [];
+let rewardHistory = [];
+const NUM_ACTIONS = 3;
 
 /**
  * Render manager info and tip in the UI.
@@ -123,11 +87,18 @@ function renderManagerInfo(manager) {
 /**
  * Render the manager's current state as a user-friendly bar chart using Chart.js.
  * This chart is smoothly animated and updated in place.
+ * Chart instance is re-created if the manager model changes.
  */
-function renderStateChart(manager) {
+function renderStateChart(manager, forceNewChart = false) {
   const labels = Object.keys(manager.state);
   const data = manager.getStateArray();
   const ctx = document.getElementById('state-chart').getContext('2d');
+
+  // If model changed or force requested, destroy and re-create chart for fresh animation
+  if (forceNewChart && chartInstance) {
+    chartInstance.destroy();
+    chartInstance = null;
+  }
 
   if (!chartInstance) {
     chartInstance = new Chart(ctx, {
@@ -162,7 +133,7 @@ function renderStateChart(manager) {
           }
         },
         animation: {
-          duration: 700, // slightly slower for smoother effect
+          duration: 700,
           easing: 'easeOutQuart'
         }
       }
@@ -206,9 +177,9 @@ function logReward(reward) {
 /**
  * Update all simulation UI elements.
  */
-function updateSimulationUI(manager) {
+function updateSimulationUI(manager, forceNewChart = false) {
   renderManagerInfo(manager);
-  renderStateChart(manager);
+  renderStateChart(manager, forceNewChart);
 }
 
 /**
@@ -221,8 +192,8 @@ function chooseManager(idx = null) {
   window.city = new CityManager();
   actionHistory = [];
   rewardHistory = [];
-  chartInstance = null; // force re-create chart for new manager
-  updateSimulationUI(window.city);
+  // Force a new chart creation to re-animate with new model
+  updateSimulationUI(window.city, true);
   logReward(0); // Reset reward log visually
 }
 
@@ -243,6 +214,7 @@ function simulateStep() {
 
 /**
  * Setup UI controls for manager switching and Pause/Resume feedback.
+ * Button events now properly trigger Chart.js animation and UI refresh.
  */
 function setupUI() {
   // Manager Dropdown for direct selection
@@ -257,13 +229,17 @@ function setupUI() {
       opt.text = cls.name;
       select.appendChild(opt);
     });
-    select.onchange = (e) => chooseManager(Number(e.target.value));
+    select.onchange = (e) => {
+      chooseManager(Number(e.target.value));
+    };
     container.appendChild(select);
   }
 
   // Random Model Button
   const randomBtn = document.getElementById('random-city-model-btn');
-  if (randomBtn) randomBtn.onclick = () => chooseManager();
+  if (randomBtn) randomBtn.onclick = () => {
+    chooseManager();
+  };
 
   // Pause/Resume Button logic and feedback
   const pauseBtn = document.getElementById('pause-btn');
@@ -275,6 +251,8 @@ function setupUI() {
       resumeBtn.classList.remove('active');
       pauseBtn.disabled = true;
       resumeBtn.disabled = false;
+      // Chart should animate current state when paused
+      updateSimulationUI(window.city);
     };
     resumeBtn.onclick = () => {
       isPaused = false;
@@ -282,6 +260,8 @@ function setupUI() {
       pauseBtn.classList.remove('active');
       resumeBtn.disabled = true;
       pauseBtn.disabled = false;
+      // Chart should animate current state when resumed
+      updateSimulationUI(window.city);
     };
     // Default state: simulation running, Pause enabled, Resume disabled
     pauseBtn.classList.remove('active');
@@ -294,10 +274,14 @@ function setupUI() {
 // === Entry Point ===
 window.addEventListener('DOMContentLoaded', () => {
   setupUI();
-  chooseManager(); // Pick one at start
 
-  // Example: simulate step every 2 seconds
-  setInterval(simulateStep, 2000);
+  // Initial manager setup
+  chooseManager(0);
+
+  // Simulation loop
+  setInterval(() => {
+    simulateStep();
+  }, 1100); // Adjust step interval as needed
 });
 
-
+/* End of file: src/js/index.js */
