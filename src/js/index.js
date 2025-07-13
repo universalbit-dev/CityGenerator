@@ -300,33 +300,4 @@ window.addEventListener('DOMContentLoaded', () => {
   setInterval(simulateStep, 2000);
 });
 
-/**
- * === HTML additions required ===
- * Add these to your src/html/index.html body:
- * 
- * <div class="container py-3">
- *   <div class="mb-3">
- *     <button id="pause-btn" type="button" class="btn btn-warning me-2">Pause</button>
- *     <button id="resume-btn" type="button" class="btn btn-success me-2">Resume</button>
- *     <button id="random-city-model-btn" type="button" class="btn btn-primary">Random City Model</button>
- *   </div>
- *   <hr class="my-4">
- *   <div id="manager-info" class="mb-3"></div>
- *   <div>
- *     <h5 class="mt-3">City Features Overview</h5>
- *     <canvas id="state-chart" width="440" height="180"></canvas>
- *   </div>
- *   <div>
- *     <h5 class="mt-3">Recent Actions</h5>
- *     <div id="action-log" style="margin-top:10px;background:#e9ecef;border-radius:4px;padding:8px;min-height:48px;font-family:monospace;"></div>
- *   </div>
- *   <div>
- *     <h5>Reward Log</h5>
- *     <div id="reward-log" style="background:#f8f9fa;border:1px solid #ccc;padding:8px;height:100px;overflow-y:auto;font-family:monospace;"></div>
- *   </div>
- * </div>
- * 
- * All UI is user-friendly and welcoming, with no gov-centric language!
- * To extend: add more manager features, more chart types, or more interactive UI (sliders, tooltips, etc).
- */
 
