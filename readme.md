@@ -68,7 +68,7 @@ npm start
 
 | City Generator                        | [Images](https://github.com/universalbit-dev/CityGenerator/tree/master/docs/assets/images)                             |
 | ----------------------------------- | ----------------------------------- |
-| ![map01](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/assets/images/%5Bmap%5D17.png) | ![map_20](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/assets/images/%5Bmap%5D20.png) |
+| ![map01](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/assets/images/%5Bmap%5D17.png) | ![map_20](https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/civic_ecosystem.png) |
 
 |                             |                             |
 | ----------------------------------- | ----------------------------------- |
