@@ -27,7 +27,7 @@
     "ecpair": "^3.0.0",
     "fs-extra": "^11.1.0",
     "humanize-duration": "^3.20.1",
-    "tiny-secp256k1": "^2.2.3",
+    "tiny-secp256k1": "^2.2.4",
     "underscore": "^1.13.7"
   },
   "bugs": {
