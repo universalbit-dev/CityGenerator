@@ -198,6 +198,40 @@ function chooseManager(idx = null) {
 }
 
 /**
+ * ==== BEGIN: STAGNATION DETECTION AND AUTO-SWITCH ====
+ * When the reward value is unchanged for N steps, auto-switch the city manager.
+ */
+const STAGNANT_THRESHOLD = 10; // Number of steps before switching
+let stagnantCount = 0;
+let lastReward = null;
+
+function autoSwitchIfStagnant(currentReward) {
+  if (lastReward !== null && Math.abs(currentReward - lastReward) < 1e-6) {
+    stagnantCount++;
+  } else {
+    stagnantCount = 0;
+  }
+  lastReward = currentReward;
+
+  if (stagnantCount >= STAGNANT_THRESHOLD) {
+    // Choose a random manager different from current
+    let currentIndex = MANAGER_CLASSES.findIndex(cls => cls === CityManager);
+    let nextIndexes = MANAGER_CLASSES.map((cls, i) => i).filter(i => i !== currentIndex);
+    let nextIndex = nextIndexes[Math.floor(Math.random() * nextIndexes.length)];
+    chooseManager(nextIndex);
+    stagnantCount = 0;
+    // Optionally log this event for UI/analytics
+    const logDiv = document.getElementById('action-log');
+    if (logDiv) {
+      logDiv.innerHTML += `<div style="color:#fd7e14;"><b>Auto-switched manager due to stagnation.</b></div>`;
+    }
+  }
+}
+/**
+ * ==== END: STAGNATION DETECTION AND AUTO-SWITCH ====
+ */
+
+/**
  * Simulate one step (random action for demo).
  * Replace with agent logic for real training.
  */
@@ -210,6 +244,9 @@ function simulateStep() {
   logAction(action, reward);
   logReward(reward);
   updateSimulationUI(window.city);
+
+  // Check for stagnation and auto-switch if needed
+  autoSwitchIfStagnant(reward);
 }
 
 /**
