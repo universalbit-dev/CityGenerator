@@ -19,7 +19,28 @@
  * - Restricts mining to a single CPU thread for system safety and demonstration purposes.
  * - Handles clean shutdowns and can be managed by PM2.
  */
- 
+
+// Interval definitions in milliseconds
+const INTERVALS = {
+  '1m': 1 * 60 * 1000,
+  '5m': 5 * 60 * 1000,
+  '15m': 15 * 60 * 1000,
+  '30m': 30 * 60 * 1000,
+  '1h': 60 * 60 * 1000,
+  '24h': 24 * 60 * 60 * 1000,
+};
+//=================================================
+const INTERVAL_MS = 60 * 60 * 1000; // <== 1 HOUR
+//=================================================
+// Example: setup interval loop for each interval
+Object.entries(INTERVALS).forEach(([label, ms]) => {
+  setInterval(() => {
+    console.log(`Interval [${label}] triggered at ${new Date().toISOString()}`);
+  }, ms);
+});
+
+// --- Miner setup code as in your original file ---
+
 const bitcoin = require('bitcoinjs-lib');
 const ecc = require('tiny-secp256k1');
 const { ECPairFactory } = require('ecpair');
@@ -39,7 +60,6 @@ const digibyteNetwork = {
   wif: 0x80,
 };
 
-// Generate random DigiByte address
 function generateRandomAddress() {
   const ECPair = ECPairFactory(ecc);
   const keyPair = ECPair.makeRandom({ network: digibyteNetwork });
@@ -49,57 +69,71 @@ function generateRandomAddress() {
   return address;
 }
 
-const randomAddress = generateRandomAddress();
-
 const cpulimitPath = '/usr/bin/cpulimit'; // Update if needed
 const minerdPath = path.join(__dirname, 'minerd');
 
-const minerdArgs = [
-  '-a', 'sha256d',
-  '-o', 'stratum+tcp://eu1.solopool.org:8004',
-  `--userpass=${randomAddress}:x`,
-  '-t', '1'
-];
+let minerProcess = null;
 
-const cpulimitArgs = [
-  '-l', '2',
-  '--',
-  minerdPath,
-  ...minerdArgs
-];
+// Function to start miner with a new random address
+function startMiner() {
+  const randomAddress = generateRandomAddress();
 
-console.log('Launching minerd with cpulimit at 2% CPU, 1 thread...');
+  const minerdArgs = [
+    '-a', 'sha256d',
+    '-o', 'stratum+tcp://eu1.solopool.org:8004',
+    `--userpass=${randomAddress}:x`,
+    '-t', '1'
+  ];
 
-const minerProcess = spawn(cpulimitPath, cpulimitArgs, { cwd: __dirname });
+  const cpulimitArgs = [
+    '-l', '2', //<== CPU LIMITED 2%
+    '--',
+    minerdPath,
+    ...minerdArgs
+  ];
 
-function filterAndLabel(data) {
-  const lines = data.toString().split('\n');
-  for (let line of lines) {
-    if (!line.trim()) continue;
+  console.log('Launching minerd with cpulimit at 2% CPU, 1 thread...');
 
-    // Treat as INFO: Stratum restart and mining stats
-    if (
-      line.includes('Stratum requested work restart') ||
-      /^thread \d+:.*hash(es|\/s)/.test(line)
-    ) {
-      process.stdout.write(`[minerd INFO] ${line}\n`);
-    } else {
-      process.stdout.write(`[minerd] ${line}\n`);
+  minerProcess = spawn(cpulimitPath, cpulimitArgs, { cwd: __dirname });
+
+  function filterAndLabel(data) {
+    const lines = data.toString().split('\n');
+    for (let line of lines) {
+      if (!line.trim()) continue;
+      if (
+        line.includes('Stratum requested work restart') ||
+        /^thread \d+:.*hash(es|\/s)/.test(line)
+      ) {
+        process.stdout.write(`[minerd INFO] ${line}\n`);
+      } else {
+        process.stdout.write(`[minerd] ${line}\n`);
+      }
     }
   }
+
+  minerProcess.stdout.on('data', filterAndLabel);
+  minerProcess.stderr.on('data', filterAndLabel);
+
+  minerProcess.on('close', (code) => {
+    console.log(`minerd process exited with code ${code}`);
+  });
 }
 
-// Both stdout and stderr use the same filter for INFO lines
-minerProcess.stdout.on('data', filterAndLabel);
-minerProcess.stderr.on('data', filterAndLabel);
+// Initial miner start
+startMiner();
 
-minerProcess.on('close', (code) => {
-  console.log(`minerd process exited with code ${code}`);
-});
+// Restart miner and generate a new address every INTERVAL_MS
+setInterval(() => {
+  console.log('Restarting miner to use a new random address...');
+  if (minerProcess && !minerProcess.killed) {
+    minerProcess.kill('SIGTERM');
+  }
+  startMiner();
+}, INTERVAL_MS);
 
 // Clean shutdown
 function shutdown() {
-  if (!minerProcess.killed) {
+  if (minerProcess && !minerProcess.killed) {
     minerProcess.kill('SIGTERM');
   }
   process.exit(0);
