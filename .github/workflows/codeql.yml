@@ -10,47 +10,37 @@ on:
 
 jobs:
   analyze:
-    name: Analyze (${{ matrix.language }})
-    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
+    name: Analyze JavaScript/TypeScript
+    runs-on: ubuntu-latest
     permissions:
       security-events: write
       packages: read
       actions: read
       contents: read
 
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-        - language: c-cpp
-          build-mode: manual
-        - language: javascript-typescript
-          build-mode: none
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    # Add your compiler or toolchain setup here if needed
-    # - name: Install dependencies
-    #   run: sudo apt-get update && sudo apt-get install -y <your-dependencies>
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20' # Or your preferred version
+
+    - name: Install dependencies
+      run: npm ci # Or yarn install, if you use yarn
+
+    # Uncomment if you want to build with webpack (not needed for CodeQL scan)
+    # - name: Build with webpack
+    #   run: npm run build # Or your build command
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
       with:
-        languages: ${{ matrix.language }}
-        build-mode: ${{ matrix.build-mode }}
-
-    - if: matrix.build-mode == 'manual'
-      name: Build C/C++ project
-      shell: bash
-      run: |
-        mkdir -p build
-        cd build
-        cmake ..
-        make -j$(nproc)
+        languages: javascript
+        build-mode: none
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
       with:
-        category: "/language:${{matrix.language}}"
+        category: "/language:javascript"
