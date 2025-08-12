@@ -29,5 +29,8 @@ jobs:
       - name: Build with webpack
         run: npm run build
 
-      - name: Start CityGenerator app
-        run: npm start
+      - name: Install pm2 globally
+        run: npm install -g pm2
+
+      - name: Start app with pm2
+        run: pm2 start citygenerator.config.js
