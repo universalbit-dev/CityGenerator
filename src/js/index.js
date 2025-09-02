@@ -1,16 +1,16 @@
 /**
  * City Neural Network Simulation
  * ----------------------------------------
- * This script powers an interactive city simulation using a neural network and reinforcement learning.
+ * Interactive city simulation powered by neural network and reinforcement learning.
  *
  * Features:
- * - Initializes a city model and a DeepQ neural network agent.
- * - Automatically trains the agent to grow and manage the city.
- * - Provides UI controls for pausing/resuming training and displays live stats.
- * - Logs important events and training milestones to the web page.
- * - Visually renders training statistics and progress on a canvas.
- * - Supports modular City Manager files.
- * - Enhanced UI: Manager info, state chart, action/reward log.
+ * - Initializes city models and DeepQ neural agent.
+ * - Trains agent to grow/manage the city.
+ * - UI controls for pause/resume and manager switching.
+ * - Action/reward logging and live state chart.
+ * - Stagnation detection with auto-manager switching.
+ * - Modular City Managers, including permaculture design.
+ * - Enhanced UI: manager info, state chart, action/reward logs.
  *
  * Dependencies:
  * - convnet.js, deepqlearn.js, vis.js, chart.js
@@ -35,6 +35,7 @@ import CircularCityManager from './cityManagers/CircularCityManager.js';
 import SmartCityStateManager from './cityManagers/SmartCityStateManager.js';
 import ResilientCityModelManager from './cityManagers/ResilientCityModelManager.js';
 import CommunityCommonsManager from './cityManagers/CommunityCommonsManager.js';
+import PermacultureDesignManager from './cityManagers/PermacultureDesign.js';
 import CookielessCityAgent from './cityManagers/CookielessCityAgent.js';
 
 // Privacy: Remove cookies
@@ -55,11 +56,13 @@ const MANAGER_CLASSES = [
   SmartCityStateManager,
   ResilientCityModelManager,
   CommunityCommonsManager,
+  PermacultureDesignManager,
   CookielessCityAgent
 ];
 
 const managerTips = {
   'CookielessCityAgent': 'Privacy-first agent! Your choices boost digital safety.',
+  'PermacultureDesignManager': 'Learn regenerative city planning and permaculture for a resilient urban future.',
   // Add other manager tips here as needed
 };
 
@@ -69,7 +72,7 @@ let chartInstance = null;
 let isPaused = false;
 let actionHistory = [];
 let rewardHistory = [];
-const NUM_ACTIONS = 3;
+const NUM_ACTIONS = 6; // Updated to match PermacultureDesignManager actions
 
 /**
  * Render manager info and tip in the UI.
@@ -86,15 +89,12 @@ function renderManagerInfo(manager) {
 
 /**
  * Render the manager's current state as a user-friendly bar chart using Chart.js.
- * This chart is smoothly animated and updated in place.
- * Chart instance is re-created if the manager model changes.
  */
 function renderStateChart(manager, forceNewChart = false) {
   const labels = Object.keys(manager.state);
   const data = manager.getStateArray();
   const ctx = document.getElementById('state-chart').getContext('2d');
 
-  // If model changed or force requested, destroy and re-create chart for fresh animation
   if (forceNewChart && chartInstance) {
     chartInstance.destroy();
     chartInstance = null;
@@ -109,7 +109,7 @@ function renderStateChart(manager, forceNewChart = false) {
           label: 'City Features',
           data: data,
           backgroundColor: [
-            '#0d6efd', '#20c997', '#ffc107', '#6f42c1', '#fd7e14', '#198754'
+            '#0d6efd', '#20c997', '#ffc107', '#6f42c1', '#fd7e14', '#198754', '#4bc0c0'
           ],
           borderRadius: 6,
           barPercentage: 0.6
@@ -139,7 +139,6 @@ function renderStateChart(manager, forceNewChart = false) {
       }
     });
   } else {
-    // Update only data for smooth animation
     chartInstance.data.datasets[0].data = data;
     chartInstance.update('active');
   }
@@ -192,16 +191,14 @@ function chooseManager(idx = null) {
   window.city = new CityManager();
   actionHistory = [];
   rewardHistory = [];
-  // Force a new chart creation to re-animate with new model
   updateSimulationUI(window.city, true);
-  logReward(0); // Reset reward log visually
+  logReward(0);
 }
 
 /**
  * ==== BEGIN: STAGNATION DETECTION AND AUTO-SWITCH ====
- * When the reward value is unchanged for N steps, auto-switch the city manager.
  */
-const STAGNANT_THRESHOLD = 10; // Number of steps before switching
+const STAGNANT_THRESHOLD = 10;
 let stagnantCount = 0;
 let lastReward = null;
 
@@ -214,13 +211,11 @@ function autoSwitchIfStagnant(currentReward) {
   lastReward = currentReward;
 
   if (stagnantCount >= STAGNANT_THRESHOLD) {
-    // Choose a random manager different from current
     let currentIndex = MANAGER_CLASSES.findIndex(cls => cls === CityManager);
     let nextIndexes = MANAGER_CLASSES.map((cls, i) => i).filter(i => i !== currentIndex);
     let nextIndex = nextIndexes[Math.floor(Math.random() * nextIndexes.length)];
     chooseManager(nextIndex);
     stagnantCount = 0;
-    // Optionally log this event for UI/analytics
     const logDiv = document.getElementById('action-log');
     if (logDiv) {
       logDiv.innerHTML += `<div style="color:#fd7e14;"><b>Auto-switched manager due to stagnation.</b></div>`;
@@ -233,11 +228,12 @@ function autoSwitchIfStagnant(currentReward) {
 
 /**
  * Simulate one step (random action for demo).
- * Replace with agent logic for real training.
  */
 function simulateStep() {
-  if (!window.city || isPaused) return; // skip if paused
-  const action = Math.floor(Math.random() * NUM_ACTIONS);
+  if (!window.city || isPaused) return;
+  // Use manager's own action space if available
+  const actionSpace = window.city.getStateArray().length;
+  const action = Math.floor(Math.random() * actionSpace);
   window.city.update(action);
   const state = window.city.getStateArray();
   const reward = state.reduce((sum, v) => sum + v, 0);
@@ -245,16 +241,13 @@ function simulateStep() {
   logReward(reward);
   updateSimulationUI(window.city);
 
-  // Check for stagnation and auto-switch if needed
   autoSwitchIfStagnant(reward);
 }
 
 /**
- * Setup UI controls for manager switching and Pause/Resume feedback.
- * Button events now properly trigger Chart.js animation and UI refresh.
+ * Setup UI controls for manager selection and Pause/Resume.
  */
 function setupUI() {
-  // Manager Dropdown for direct selection
   const container = document.getElementById('manager-info');
   if (container && !container.querySelector('select')) {
     const select = document.createElement('select');
@@ -272,13 +265,11 @@ function setupUI() {
     container.appendChild(select);
   }
 
-  // Random Model Button
   const randomBtn = document.getElementById('random-city-model-btn');
   if (randomBtn) randomBtn.onclick = () => {
     chooseManager();
   };
 
-  // Pause/Resume Button logic and feedback
   const pauseBtn = document.getElementById('pause-btn');
   const resumeBtn = document.getElementById('resume-btn');
   if (pauseBtn && resumeBtn) {
@@ -288,7 +279,6 @@ function setupUI() {
       resumeBtn.classList.remove('active');
       pauseBtn.disabled = true;
       resumeBtn.disabled = false;
-      // Chart should animate current state when paused
       updateSimulationUI(window.city);
     };
     resumeBtn.onclick = () => {
@@ -297,10 +287,8 @@ function setupUI() {
       pauseBtn.classList.remove('active');
       resumeBtn.disabled = true;
       pauseBtn.disabled = false;
-      // Chart should animate current state when resumed
       updateSimulationUI(window.city);
     };
-    // Default state: simulation running, Pause enabled, Resume disabled
     pauseBtn.classList.remove('active');
     resumeBtn.classList.add('active');
     pauseBtn.disabled = false;
@@ -311,14 +299,10 @@ function setupUI() {
 // === Entry Point ===
 window.addEventListener('DOMContentLoaded', () => {
   setupUI();
-
-  // Initial manager setup
   chooseManager(0);
-
-  // Simulation loop
   setInterval(() => {
     simulateStep();
-  }, 1100); // Adjust step interval as needed
+  }, 1100);
 });
 
 /* End of file: src/js/index.js */
