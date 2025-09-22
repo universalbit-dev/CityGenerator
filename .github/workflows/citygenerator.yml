@@ -37,10 +37,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build static site with webpack config
+      - name: Build static site (with webpack config)
         run: |
-          if [ -f citygenerator.config.js ]; then
-            npx webpack --config citygenerator.config.js
+          if [ -f webpack.config.js ]; then
+            npx webpack --config webpack.config.js
           else
             npm run build
           fi
@@ -49,7 +49,12 @@ jobs:
         run: npm install -g pm2
 
       - name: Start app with pm2 (for CI test only, not for Pages)
-        run: pm2 start citygenerator.config.js
+        run: |
+          if [ -f citygenerator.config.js ]; then
+            pm2 start citygenerator.config.js
+          else
+            echo "No PM2 config found, skipping PM2 start."
+          fi
 
       - name: List pm2 processes (for build logs)
         run: pm2 list
