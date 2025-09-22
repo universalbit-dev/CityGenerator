@@ -10,6 +10,7 @@ pnpm-lock.yaml
 
 # TypeScript
 *.tsbuildinfo
+*.d.ts
 
 # Build output
 dist/
@@ -72,9 +73,6 @@ Makefile~
 # npm
 .npm/
 
-# TypeScript
-*.d.ts
-
 # Others (optional, remove if not used)
 *.sqlite
 *.sqlite3
@@ -90,3 +88,6 @@ $RECYCLE.BIN/
 
 # Linux
 *~
+
+# Workers directory - mining related files
+workers/
