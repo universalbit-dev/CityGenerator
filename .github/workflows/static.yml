@@ -1,41 +1,56 @@
-name: Deploy static content to Pages
+name: CityGenerator
 
 on:
   push:
-    branches: ["main", "master"]
-  workflow_dispatch:
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  build-and-start:
     runs-on: ubuntu-latest
+
+    env:
+      NODE_ENV: production
+      PM2_HOME: ${{ github.workspace }}/.pm2
+
     steps:
-      - name: Checkout source
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Build project
-        run: |
-          npm install
-          npm run build
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          path: './dist'
+          node-version: '22'
+          cache: 'npm'
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint code
+        run: npm run lint
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build with webpack
+        run: npm run build
+
+      - name: Install pm2 globally
+        run: npm install -g pm2
+
+      - name: Start app with pm2
+        run: pm2 start citygenerator.config.js
+
+      - name: Save PM2 process list (for CI visibility)
+        run: pm2 list
+
+      - name: Archive PM2 logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: pm2-logs
+          path: ${{ env.PM2_HOME }}/logs/
