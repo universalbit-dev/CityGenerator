@@ -73,6 +73,7 @@ npm start
 |                             |                             |
 | ----------------------------------- | ----------------------------------- |
 | ![map_21](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/assets/images/%5Bmap%5D21.png)  | ![map_22](https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/community__commons.png)  |
+| ![ai_map_26](https://files.mastodon.social/media_attachments/files/115/254/430/337/217/165/original/2506d6f15022f983.png)  | ![ai_map_28](https://files.mastodon.social/media_attachments/files/115/254/387/168/075/633/original/0ffbf3461ce36545.png)  |
 
 
 ##### About Author of City Map Generator: [@probabletrain](https://github.com/ProbableTrain/MapGenerator)
