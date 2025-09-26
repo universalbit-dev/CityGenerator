@@ -9,10 +9,7 @@
 ---
 
 ### [CityGenerator](https://github.com/universalbit-dev/CityGenerator)
-![Wrecking Ball Truck](assets/images/wrecking-ball-truck.png)
-<p align="right">
-  <a href="https://pixabay.com/it/users/davidswidjaja-16742487/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=6024005">David Stephanus</a> from <a href="https://pixabay.com/it//?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=6024005">Pixabay</a>
-</p>
+<img src="https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/ai_wrecking%20ball%20truck.png?raw=true" width="50%" />
 
 
 **Description**:  
