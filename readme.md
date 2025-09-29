@@ -49,6 +49,90 @@ npm start
 > _For details, see the simulation logic in [`src/js/index.js`](src/js/index.js)._
 
 ---
+```mermaid
+flowchart TD
+    %% UI subgraph
+    subgraph UI["User Interface"]
+      UIControls["UI Controls (Pause/Resume, Manager Switch)"]
+      ManagerInfo["Manager Info Display"]
+      StateChart["State Chart (Chart.js)"]
+      ActionLog["Action/Reward Log"]
+      RewardLog["Reward Log"]
+    end
+
+    %% Managers subgraph
+    subgraph Managers["City Managers (Modular)"]
+      UrbanFabric["UrbanFabricManager"]
+      CivicEco["CivicEcosystemManager"]
+      Circular["CircularCityManager"]
+      SmartCity["SmartCityStateManager"]
+      Resilient["ResilientCityModelManager"]
+      Commons["CommunityCommonsManager"]
+      Permaculture["PermacultureDesignManager"]
+      Cookieless["CookielessCityAgent"]
+    end
+
+    %% Engine subgraph
+    subgraph Engine["Simulation Engine"]
+      Init["Initialize City & Agent"]
+      DeepQ["DeepQ Neural Agent (deepqlearn.js, convnet.js)"]
+      SimStep["Simulate Step (Random/Agent Action)"]
+      Update["Manager.update(action)"]
+      Stagnation["Stagnation Detection"]
+      AutoSwitch["Auto-Manager Switch"]
+      RemoveCookies["Remove All Cookies"]
+    end
+
+    %% State subgraph
+    subgraph State["Simulation State"]
+      CityManager["Current CityManager"]
+      IsPaused["isPaused"]
+      ActionHistory["actionHistory"]
+      RewardHistory["rewardHistory"]
+    end
+
+    %% UI triggers
+    UIControls -- "User selects or triggers" --> Init
+    UIControls -- "Switch Manager" --> CityManager
+    UIControls -- "Pause/Resume" --> IsPaused
+
+    %% Engine logic
+    Init --> DeepQ
+    Init --> CityManager
+    CityManager --> UrbanFabric
+    CityManager --> CivicEco
+    CityManager --> Circular
+    CityManager --> SmartCity
+    CityManager --> Resilient
+    CityManager --> Commons
+    CityManager --> Permaculture
+    CityManager --> Cookieless
+    SimStep --> Update
+    Update --> StateChart
+    Update --> ActionLog
+    Update --> RewardLog
+    SimStep --> Stagnation
+    Stagnation --> AutoSwitch
+    AutoSwitch --> CityManager
+    RemoveCookies --> UIControls
+
+    %% State updates
+    Update --> ActionHistory
+    Update --> RewardHistory
+
+    %% UI updates
+    StateChart --> State
+    ManagerInfo --> State
+    ActionLog --> State
+    RewardLog --> State
+
+    %% Dependencies (dotted arrows)
+    DeepQ -.-> convnet["convnet.js"]
+    DeepQ -.-> deepqlearn["deepqlearn.js"]
+    StateChart -.-> chartjs["chart.js"]
+    UIControls -.-> bootstrap["bootstrap, CSS"]
+    UIControls -.-> vis["vis.js"]
+```
 
 **HTTPS Automated Certificate Generation**:
    - To simplify the process for users, the project is set up to automatically generate the SSL/TLS certificate and private key required for HTTPS during the npm install process. This eliminates the need for manual certificate creation, streamlining the setup of the HTTPS server.
