@@ -4,12 +4,14 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
-  entry: ['./src/main.ts', './src/bundle.js','./src/js/index.js'],
+  entry: ['./src/main.ts', './src/js/index.js'], // removed './src/bundle.js'
   mode: 'development',
-  devtool: 'inline-source-map',
+
+  // Enable proper source maps for debugging (creates bundle.js.map)
+  devtool: 'source-map',
 
   output: {
-    filename: 'wohoo.js',
+    filename: 'bundle.js', // use the classic name for clarity
     path: path.resolve(__dirname, 'dist'),
     clean: true,
   },
@@ -73,7 +75,7 @@ module.exports = {
     hot: true,
     compress: true,
     historyApiFallback: {
-      index: '/index.html', // Always serve dist/index.html (useful for SPAs)
+      index: '/index.html',
     },
   },
 };
