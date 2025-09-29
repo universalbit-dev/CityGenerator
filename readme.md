@@ -136,6 +136,7 @@ flowchart TD
 
 **HTTPS Automated Certificate Generation**:
    - To simplify the process for users, the project is set up to automatically generate the SSL/TLS certificate and private key required for HTTPS during the npm install process. This eliminates the need for manual certificate creation, streamlining the setup of the HTTPS server.
+     
 **Fixing Issues**:
    - If you encounter any issues with the HTTPS server or certificate generation, refer to the [SSL README](ssl/readme.md) for detailed instructions and troubleshooting tips.
 
