@@ -136,36 +136,19 @@ flowchart TD
 
 **HTTPS Automated Certificate Generation**:
    - To simplify the process for users, the project is set up to automatically generate the SSL/TLS certificate and private key required for HTTPS during the npm install process. This eliminates the need for manual certificate creation, streamlining the setup of the HTTPS server.
-
 **Fixing Issues**:
    - If you encounter any issues with the HTTPS server or certificate generation, refer to the [SSL README](ssl/readme.md) for detailed instructions and troubleshooting tips.
 
+---
+
+##### Draw City
+![CityGenerator Header](https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/draw_city.png)
+
+> **Note:** generated using **Google Gemini AI**.
+
 **Resources**
-- [Docs](https://github.com/universalbit-dev/CityGenerator/tree/master/docs)
-- [CityGenerator usage](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/usageguide.md)
----
-
-<img src="/docs/assets/images/%5Bmap%5D19.png" width="9%"></img> <img src="/docs/assets/images/%5Bmap%5D18.png" width="9%"></img> <img src="/docs/assets/images/%5Bmap%5D16.png" width="9%"></img> <img src="/docs/assets/images/%5Bmap%5D11.png" width="9%"></img> <img src="/docs/assets/images/%5Bmap%5D05.png" width="9%"></img> <img src="/docs/assets/images/%5Bmap%5D06.png" width="9%"></img> 
-
-| City Generator                        | [Images](https://github.com/universalbit-dev/CityGenerator/tree/master/docs/assets/images)                             |
-| ----------------------------------- | ----------------------------------- |
-| ![map01](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/assets/images/%5Bmap%5D17.png) | ![map_20](https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/civic_ecosystem.png) |
-
-|                             |                             |
-| ----------------------------------- | ----------------------------------- |
-| ![map_21](https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/ai_map_citygenerator-03.png)  | ![map_22](https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/community__commons.png)  |
-| ![ai_map_26](https://files.mastodon.social/media_attachments/files/115/254/430/337/217/165/original/2506d6f15022f983.png)  | ![ai_map_28](https://files.mastodon.social/media_attachments/files/115/254/387/168/075/633/original/0ffbf3461ce36545.png)  |
-
-> **Note:** Images marked with `ai_map_*` were generated using **Google Gemini AI**.
-
-##### About Author of City Map Generator: [@probabletrain](https://github.com/ProbableTrain/MapGenerator)
-* [WebSite](https://maps.probabletrain.com/#/)
-* [Support City Map Generator](https://ko-fi.com/probabletrain)
-  
-##### Thanks!
----
-
-
+* [Docs](https://github.com/universalbit-dev/CityGenerator/tree/master/docs)
+* [CityGenerator usage](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/usageguide.md)
 * [Compiler WebPack5 release](https://webpack.js.org/blog/2020-10-10-webpack-5-release/)
 * [TypeScript Note](https://webpack.js.org/guides/typescript/)
 
@@ -179,11 +162,21 @@ npm run build
 ```
 ---
 
+##### About Author of City Map Generator: [@probabletrain](https://github.com/ProbableTrain/MapGenerator)
+* [WebSite](https://maps.probabletrain.com/#/)
+* [Support City Map Generator](https://ko-fi.com/probabletrain)
+  
+##### Thanks!
+---
+
+
 ##### Blockchain Integration: Information about integrating with DigiByte and other blockchain environments.
 -- [DigiByte Integration Guide](https://www.digibyte.org/docs/integrationguide.pdf) --
 -- [Documentation and examples](https://github.com/RenzoDD/digibyte-js?tab=readme-ov-file#documentation--examples-) --
 #### Blockchain Environment
 -- [Workers](https://github.com/universalbit-dev/CityGenerator/blob/master/workers/readme.md)
+
+
 
 ##### Contributing: feel free to make something of amazing.
 ## 📢 Support the UniversalBit Project
