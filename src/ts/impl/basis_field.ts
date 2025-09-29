@@ -17,8 +17,14 @@ export abstract class BasisField {
     protected folder: dat.GUI;
     protected _centre: Vector;
 
-    constructor(centre: Vector, protected _size: number, protected _decay: number) {
+    // --- Make size and decay public for dat.GUI (fixes dat.GUI binding errors) ---
+    public size: number;
+    public decay: number;
+
+    constructor(centre: Vector, size: number, decay: number) {
         this._centre = centre.clone();
+        this.size = size;
+        this.decay = decay;
     }
 
     set centre(centre: Vector) {
@@ -29,12 +35,12 @@ export abstract class BasisField {
         return this._centre.clone();
     }
 
-    set decay(decay: number) {
-        this._decay = decay;
+    set decayValue(value: number) {
+        this.decay = value;
     }
 
-    set size(size: number) {
-        this._size = size;
+    set sizeValue(value: number) {
+        this.size = value;
     }
 
     dragStartListener(): void {
@@ -53,7 +59,7 @@ export abstract class BasisField {
     }
 
     setFolder(): void {
-        if (this.parentFolder.__folders) {
+        if (this.parentFolder?.__folders) {
             for (const folderName in this.parentFolder.__folders) {
                 this.parentFolder.__folders[folderName].close();
             }
@@ -62,13 +68,14 @@ export abstract class BasisField {
     }
 
     removeFolderFromParent(): void {
-        if (this.parentFolder.__folders && Object.values(this.parentFolder.__folders).indexOf(this.folder) >= 0) {
+        if (this.parentFolder?.__folders && Object.values(this.parentFolder.__folders).indexOf(this.folder) >= 0) {
             this.parentFolder.removeFolder(this.folder);
         }
     }
 
     /**
      * Creates a folder and adds it to the GUI to control params
+     * Only bind to public properties!
      */
     setGui(parent: dat.GUI, folder: dat.GUI): void {
         this.parentFolder = parent;
@@ -83,12 +90,12 @@ export abstract class BasisField {
      * Interpolates between (0 and 1)^decay
      */
     protected getTensorWeight(point: Vector, smooth: boolean): number {
-        const normDistanceToCentre = point.clone().sub(this._centre).length() / this._size;
+        const normDistanceToCentre = point.clone().sub(this._centre).length() / this.size;
         if (smooth) {
-            return normDistanceToCentre ** -this._decay;
+            return normDistanceToCentre ** -this.decay;
         }
         // Stop (** 0) turning weight into 1, filling screen even when outside 'size'
-        if (this._decay === 0 && normDistanceToCentre >= 1) {
+        if (this.decay === 0 && normDistanceToCentre >= 1) {
             return 0;
         }
         return Math.max(0, (1 - normDistanceToCentre)) ** this.decay;
@@ -99,8 +106,11 @@ export class Grid extends BasisField {
     readonly FOLDER_NAME = `Grid ${Grid.folderNameIndex++}`;
     readonly FIELD_TYPE = FIELD_TYPE.Grid;
 
-    constructor(centre: Vector, size: number, decay: number, private _theta: number) {
+    private _theta: number;
+
+    constructor(centre: Vector, size: number, decay: number, theta: number) {
         super(centre, size, decay);
+        this._theta = theta;
     }
 
     set theta(theta: number) {
@@ -133,7 +143,7 @@ export class Radial extends BasisField {
 
     getTensor(point: Vector): Tensor {
         const t = point.clone().sub(this._centre);
-        const t1 = t.y**2 - t.x**2;
+        const t1 = t.y ** 2 - t.x ** 2;
         const t2 = -2 * t.x * t.y;
         return new Tensor(1, [t1, t2]);
     }
