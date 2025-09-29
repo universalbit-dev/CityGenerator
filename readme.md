@@ -170,7 +170,7 @@ flowchart TD
 * [TypeScript Note](https://webpack.js.org/guides/typescript/)
 
 #### Build your Project:
-* [Community Help Request](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/community_help_request.md)
+* [Community Help Request](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/community_help_request.md)## ✅ This community help request has been resolved!
 ---
 "In a project like CityGenerator, which seems to involve complex features (e.g., blockchain-driven urban designs), managing bundle size is critical for ensuring good performance, especially for web-based applications. Using webpack-bundle-analyzer can help identify and reduce inefficiencies in the build output"
 
