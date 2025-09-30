@@ -7,10 +7,9 @@
  * - Initializes city models and DeepQ neural agent.
  * - Trains agent to grow/manage the city.
  * - UI controls for pause/resume and manager switching.
- * - Action/reward logging and live state chart.
+ * - State chart and reward trend visualization.
  * - Stagnation detection with auto-manager switching.
  * - Modular City Managers, including permaculture design.
- * - Enhanced UI: manager info, state chart, action/reward logs.
  *
  * Dependencies:
  * - convnet.js, deepqlearn.js, vis.js, chart.js
@@ -68,9 +67,9 @@ const managerTips = {
 
 // Simulation state
 let CityManager = UrbanFabricManager;
-let chartInstance = null;
+let stateChartInstance = null;
+let rewardTrendChartInstance = null;
 let isPaused = false;
-let actionHistory = [];
 let rewardHistory = [];
 const NUM_ACTIONS = 6; // Updated to match PermacultureDesignManager actions
 
@@ -95,13 +94,13 @@ function renderStateChart(manager, forceNewChart = false) {
   const data = manager.getStateArray();
   const ctx = document.getElementById('state-chart').getContext('2d');
 
-  if (forceNewChart && chartInstance) {
-    chartInstance.destroy();
-    chartInstance = null;
+  if (forceNewChart && stateChartInstance) {
+    stateChartInstance.destroy();
+    stateChartInstance = null;
   }
 
-  if (!chartInstance) {
-    chartInstance = new Chart(ctx, {
+  if (!stateChartInstance) {
+    stateChartInstance = new Chart(ctx, {
       type: 'bar',
       data: {
         labels: labels.map(lbl => lbl.charAt(0).toUpperCase() + lbl.slice(1)),
@@ -139,38 +138,69 @@ function renderStateChart(manager, forceNewChart = false) {
       }
     });
   } else {
-    chartInstance.data.datasets[0].data = data;
-    chartInstance.update('active');
+    stateChartInstance.data.datasets[0].data = data;
+    stateChartInstance.update('active');
   }
 }
 
 /**
- * Log actions and rewards to the UI.
+ * Render the Reward Trend Chart using Chart.js.
+ * Now only updates data/labels instead of destroying and recreating chart.
  */
-function logAction(action, reward) {
-  actionHistory.push({manager: CityManager.name, action, reward});
-  if (actionHistory.length > 20) actionHistory.shift();
-  const logDiv = document.getElementById('action-log');
-  if (logDiv) {
-    logDiv.innerHTML =
-      actionHistory.map(h =>
-        `<div><span style="color:#20c997;">${h.manager}</span>: <b>Action</b> ${h.action}, <b>Reward</b> ${h.reward.toFixed(2)}</div>`
-      ).join('');
+function renderRewardTrendChart() {
+  const ctx = document.getElementById('rewardTrendChart').getContext('2d');
+  const rewards = rewardHistory.slice(-20);
+
+  // Only create the chart once, then update data/labels
+  if (!rewardTrendChartInstance) {
+    rewardTrendChartInstance = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: rewards.map((v, i) => `${i + 1}`),
+        datasets: [{
+          label: 'Reward',
+          data: rewards,
+          backgroundColor: 'rgba(32,201,151,0.13)',
+          borderColor: '#20c997',
+          borderWidth: 2,
+          pointRadius: 4,
+          pointBackgroundColor: '#0d6efd',
+          fill: true,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: true },
+          tooltip: { enabled: true }
+        },
+        scales: {
+          x: { 
+            title: { display: true, text: "Step" }, // More intuitive than Action Index
+            ticks: { color: '#333' } 
+          },
+          y: { 
+            title: { display: true, text: "Reward" }, 
+            min: Math.min(...rewards, 5) - 0.05, 
+            ticks: { color: '#333' } 
+          }
+        }
+      }
+    });
+  } else {
+    rewardTrendChartInstance.data.labels = rewards.map((v, i) => `${i + 1}`); // or ""
+    rewardTrendChartInstance.data.datasets[0].data = rewards;
+    rewardTrendChartInstance.update();
   }
 }
 
 /**
- * Update and display the reward log.
+ * Log rewards and update the Reward Trend chart.
  */
 function logReward(reward) {
   rewardHistory.push(reward);
   if (rewardHistory.length > 50) rewardHistory.shift();
-  const rewardLog = document.getElementById('reward-log');
-  if (rewardLog) {
-    rewardLog.innerHTML = rewardHistory.map((r, i) =>
-      `Step ${i + 1}: <span style="color:#0d6efd;">${r.toFixed(3)}</span>`
-    ).join('<br>');
-  }
+  renderRewardTrendChart();
 }
 
 /**
@@ -189,7 +219,6 @@ function chooseManager(idx = null) {
     MANAGER_CLASSES[idx] :
     MANAGER_CLASSES[Math.floor(Math.random() * MANAGER_CLASSES.length)];
   window.city = new CityManager();
-  actionHistory = [];
   rewardHistory = [];
   updateSimulationUI(window.city, true);
   logReward(0);
@@ -216,10 +245,6 @@ function autoSwitchIfStagnant(currentReward) {
     let nextIndex = nextIndexes[Math.floor(Math.random() * nextIndexes.length)];
     chooseManager(nextIndex);
     stagnantCount = 0;
-    const logDiv = document.getElementById('action-log');
-    if (logDiv) {
-      logDiv.innerHTML += `<div style="color:#fd7e14;"><b>Auto-switched manager due to stagnation.</b></div>`;
-    }
   }
 }
 /**
@@ -231,13 +256,11 @@ function autoSwitchIfStagnant(currentReward) {
  */
 function simulateStep() {
   if (!window.city || isPaused) return;
-  // Use manager's own action space if available
   const actionSpace = window.city.getStateArray().length;
   const action = Math.floor(Math.random() * actionSpace);
   window.city.update(action);
   const state = window.city.getStateArray();
   const reward = state.reduce((sum, v) => sum + v, 0);
-  logAction(action, reward);
   logReward(reward);
   updateSimulationUI(window.city);
 
