@@ -15,26 +15,26 @@ import { saveAs } from 'file-saver';
 
 // --- Use default colour scheme, no JSON ---
 const DEFAULT_COLOUR_SCHEME: ColourScheme = {
-    bgColour: "#ece5db",
-    bgColourIn: "#ece5db",
-    buildingColour: "#ece5db",
-    buildingStroke: "#ece5db",
-    seaColour: "#0055aa",
-    grassColour: "#ece5db",
-    minorRoadColour: "#666",
-    minorRoadOutline: "#666",
-    majorRoadColour: "#f8f8f8",
-    majorRoadOutline: "#020202",
-    mainRoadColour: "#f8f8f8",
-    mainRoadOutline: "#020202",
+    bgColour: "#f5f3ee",              // light background
+    bgColourIn: "#f5f3ee",
+    buildingColour: "#d9cfc3",        // light tan for buildings
+    buildingStroke: "#bba58d",        // subtle outline for buildings
+    seaColour: "#0055aa",             // blue for water
+    grassColour: "#c2e59c",           // soft green for parks/grass
+    minorRoadColour: "#a0a0a0",       // light gray for minor roads
+    minorRoadOutline: "#7a7a7a",      // darker outline for minor roads
+    majorRoadColour: "#ffd265",       // yellow/orange for major roads
+    majorRoadOutline: "#b58c00",      // gold/brown outline
+    mainRoadColour: "#ffffff",        // white for main roads
+    mainRoadOutline: "#0055aa",       // blue outline for main roads
     outlineSize: 1,
     minorWidth: 2,
     majorWidth: 4,
     mainWidth: 5,
     zoomBuildings: false,
     buildingModels: false,
-    frameColour: "#ece5db",
-    frameTextColour: "#020202",
+    frameColour: "#cccccc",           // frame color
+    frameTextColour: "#222222",       // frame text color
 };
 
 declare global {
