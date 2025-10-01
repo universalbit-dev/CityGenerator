@@ -153,6 +153,9 @@ flowchart TD
 * [Compiler WebPack5 release](https://webpack.js.org/blog/2020-10-10-webpack-5-release/)
 * [TypeScript Note](https://webpack.js.org/guides/typescript/)
 
+**Related Resources**
+- [Watabou Procedural Map Generators](https://watabou.github.io/index.html#)
+
 #### Build your Project:
 * [Community Help Request](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/community_help_request.md)## ✅ This community help request has been resolved!
 ---
