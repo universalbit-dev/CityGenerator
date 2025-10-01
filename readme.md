@@ -169,6 +169,7 @@ npm run build
 ##### About Author of City Map Generator: [@probabletrain](https://github.com/ProbableTrain/MapGenerator)
 * [WebSite](https://maps.probabletrain.com/#/)
 * [Support City Map Generator](https://ko-fi.com/probabletrain)
+* [Build & Compiler Tool Comparison](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/build_and_compiler_tool.md)
   
 ##### Thanks!
 ---
