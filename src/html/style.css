@@ -38,10 +38,11 @@ h1 .badge {
   width: 100%;
   max-width: 500px;
   height: 300px;
-  border: 2px solid #0d6efd;
-  background: #e9ecef;
-  border-radius: 0.5rem;
+  border: 3px solid #0d6efd;      /* Thicker, brighter blue border */
+  background: #fff;               /* Pure white background */
+  border-radius: 1rem;            /* Larger, smoother rounding */
   box-sizing: border-box;
+  box-shadow: 0 0 8px #0d6efd22; /* Optional: subtle blue shadow for pop */
 }
 
 /* Stats Canvas */
