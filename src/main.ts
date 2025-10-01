@@ -181,14 +181,16 @@ class Main {
     }
 
     private setupOptionsAndDownloads(): void {
-        // Only bind drawCentre to tensorField, not mainGui
-        this.optionsFolder.add(this.tensorField, 'drawCentre');
-        this.optionsFolder.add(this, 'highDPI').onChange((high: boolean) => this.changeCanvasScale(high));
-        this.downloadsFolder.add({ "PNG": () => this.downloadPng() }, 'PNG');
-        this.downloadsFolder.add({ "SVG": () => this.downloadSVG() }, 'SVG');
-        this.downloadsFolder.add({ "STL": () => this.downloadSTL() }, 'STL');
-        this.downloadsFolder.add({ "Heightmap": () => this.downloadHeightmap() }, 'Heightmap');
-    }
+    // Only bind drawCentre to tensorField, not mainGui
+    this.optionsFolder.add(this.tensorField, 'drawCentre');
+    this.optionsFolder.add(this, 'highDPI').onChange((high: boolean) => this.changeCanvasScale(high));
+
+    // Download actions disabled (void functions)
+    this.downloadsFolder.add({ "PNG": () => {} }, 'PNG');
+    this.downloadsFolder.add({ "SVG": () => {} }, 'SVG');
+    this.downloadsFolder.add({ "STL": () => {} }, 'STL');
+    this.downloadsFolder.add({ "Heightmap": () => {} }, 'Heightmap');
+}
 
     generate(): void {
         if (!this.firstGenerate) {
@@ -224,25 +226,10 @@ class Main {
         this.domainController.cameraDirection = new Vector(this.cameraX / 10, this.cameraY / 10);
     }
 
-    // File download implementations (PNG, SVG, STL, Heightmap)
-    downloadPng(): void { /* ... */ }
-    downloadSVG(): void { /* ... */ }
-    downloadHeightmap(): void { /* ... */ }
-    downloadSTL(): void {
-        const stlData = `
-            solid city_model
-            facet normal 0 0 0
-                outer loop
-                    vertex 0 0 0
-                    vertex 1 0 0
-                    vertex 0 1 0
-                endloop
-            endfacet
-            endsolid city_model
-        `;
-        const blob = new Blob([stlData], { type: 'model/stl' });
-        saveAs(blob, 'city_model.stl');
-    }
+    downloadPng(): void { /* Download PNG disabled */ }
+    downloadSVG(): void { /* Download SVG disabled */ }
+    downloadHeightmap(): void { /* Download Heightmap disabled */ }
+    downloadSTL(): void { /* Download STL disabled */ }
 
     update(): void {
         if (this.modelGenerator) {
