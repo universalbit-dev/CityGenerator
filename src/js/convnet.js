@@ -43,6 +43,49 @@ Overall, this file provides a comprehensive set of tools for building and traini
 */
 
 var convnetjs = convnetjs || { REVISION: 'ALPHA' };
+
+// Lodash integration shim
+// - If a global `_` exists (lodash/underscore loaded in browser), use it.
+// - Else if `require` exists (Node/CommonJS), try require('lodash').
+// - Attach the lodash reference to convnetjs._ for convenience.
+// - If lodash is not present, log a warning (non-fatal).
+(function(libGlobal) {
+  "use strict";
+  try {
+    var _lib = (typeof window !== 'undefined' && window._) ||
+               (typeof global !== 'undefined' && global._) ||
+               (typeof _ !== 'undefined' && _);
+    if(!_lib && typeof require === 'function') {
+      try {
+        _lib = require('lodash');
+      } catch(e) {
+        // require failed, probably not in Node or lodash not installed
+      }
+    }
+    if(_lib) {
+      // attach lodash to convnetjs namespace for internal use if needed
+      libGlobal._ = _lib;
+      // also ensure global `_` exists in non-strict environments if it wasn't set
+      try {
+        if(typeof window !== 'undefined' && !window._) window._ = _lib;
+        if(typeof global !== 'undefined' && !global._) global._ = _lib;
+      } catch(e) {
+        // ignore if we can't set globals (e.g., strict sandbox)
+      }
+    } else {
+      // Not fatal: convnet.js does not rely on lodash by default, but warn so the integrator knows.
+      if(typeof console !== 'undefined' && console.warn) {
+        console.warn('convnet.js: lodash not detected. If you need lodash features in convnet.js, include lodash and reload.');
+      }
+    }
+  } catch(e) {
+    // swallow all errors from this shim to avoid breaking convnet.js
+    if(typeof console !== 'undefined' && console.warn) {
+      console.warn('convnet.js: error while attempting to integrate lodash:', e);
+    }
+  }
+})(convnetjs);
+
 (function(global) {
   "use strict";
 
