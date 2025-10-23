@@ -19,7 +19,7 @@ export default class DomainController {
     private _screenDimensions = Vector.zeroVector();
 
     // Ratio of screen pixels to world pixels
-    private _zoom: number = 1;
+    private _zoom: number = 3;
     private zoomCallback: () => any = () => {};
     private lastScrolltime = -this.SCROLL_DELAY;
     private refreshedAfterScroll = false;
