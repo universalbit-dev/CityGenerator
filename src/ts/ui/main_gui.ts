@@ -20,8 +20,8 @@ import PolygonUtil from '../impl/polygon_util';
  */
 export default class MainGUI {
     // Properties exposed to dat.GUI and for external configuration
-    public numBigParks = 20;
-    public numSmallParks = 10;
+    public numBigParks = 100;
+    public numSmallParks = 50;
     public clusterBigParks = false;
     public animate = true;
     public animationSpeed = 30;
