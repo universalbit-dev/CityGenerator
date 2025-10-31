@@ -133,8 +133,8 @@ See the `workers/` directory for mining/block simulation and explore `digibyte.j
 ---
 
 ## 🧩 MICRO Miners (ESP32)
-Efficient mining solutions for ESP32 microcontrollers:
-- [MicroMiner](https://github.com/universalbit-dev/esptool/blob/master/README.md)
+micromining solutions for ESP32 microcontrollers: **ESP32 NodeMCU WiFi CP2102**
+- [MicroMiner](https://github.com/universalbit-dev/esptool_microminer)
 
 ---
 
