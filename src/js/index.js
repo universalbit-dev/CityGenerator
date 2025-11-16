@@ -3,20 +3,12 @@
  * ----------------------------------------
  * Interactive city simulation powered by neural network and reinforcement learning.
  *
- * Features:
- * - Initializes city models and DeepQ neural agent.
- * - Trains agent to grow/manage the city.
- * - UI controls for pause/resume and manager switching.
- * - State chart and reward trend visualization.
- * - Stagnation detection with auto-manager switching.
- * - Modular City Managers, including permaculture design.
- *
- * Dependencies:
- * - convnet.js, deepqlearn.js, vis.js, chart.js
- * - Modular City Managers: see /src/js/cityManagers/
+ * Enhancements:
+ * - Integrates an uploaded lodash.js (assumed at ./lodash.js) for robust, concise utilities.
+ * - Uses _.sum for reward calculation, _.shuffle/_.random for randomness, _.isEqual for stagnation detection,
+ *   _.cloneDeep to reset manager state if needed, and _.debounce to reduce chart re-render churn.
  *
  * Author: universalbit-dev
- * Repository: https://github.com/universalbit-dev/CityGenerator
  */
 
 // Import styles and dependencies
@@ -26,6 +18,9 @@ import './convnet.js';
 import './deepqlearn.js';
 import './vis.js';
 import Chart from 'chart.js/auto';
+
+// Lodash (uploaded to src/js/lodash.js)
+import _ from './lodash.js'; 
 
 // City Managers
 import UrbanFabricManager from './cityManagers/UrbanFabricManager.js';
@@ -71,6 +66,7 @@ let stateChartInstance = null;
 let rewardTrendChartInstance = null;
 let isPaused = false;
 let rewardHistory = [];
+let lastState = null; // use to detect state stagnation
 const NUM_ACTIONS = 6; // Updated to match PermacultureDesignManager actions
 
 /**
@@ -92,7 +88,9 @@ function renderManagerInfo(manager) {
 function renderStateChart(manager, forceNewChart = false) {
   const labels = Object.keys(manager.state);
   const data = manager.getStateArray();
-  const ctx = document.getElementById('state-chart').getContext('2d');
+  const ctxEl = document.getElementById('state-chart');
+  if (!ctxEl) return;
+  const ctx = ctxEl.getContext('2d');
 
   if (forceNewChart && stateChartInstance) {
     stateChartInstance.destroy();
@@ -148,7 +146,9 @@ function renderStateChart(manager, forceNewChart = false) {
  * Now only updates data/labels instead of destroying and recreating chart.
  */
 function renderRewardTrendChart() {
-  const ctx = document.getElementById('rewardTrendChart').getContext('2d');
+  const ctxEl = document.getElementById('rewardTrendChart');
+  if (!ctxEl) return;
+  const ctx = ctxEl.getContext('2d');
   const rewards = rewardHistory.slice(-20);
 
   // Only create the chart once, then update data/labels
@@ -176,23 +176,26 @@ function renderRewardTrendChart() {
         },
         scales: {
           x: { 
-            title: { display: true, text: "Step" }, // More intuitive than Action Index
+            title: { display: true, text: "Step" },
             ticks: { color: '#333' } 
           },
           y: { 
             title: { display: true, text: "Reward" }, 
-            min: Math.min(...rewards, 5) - 0.05, 
+            min: rewards.length ? Math.min(...rewards) - 0.05 : 0,
             ticks: { color: '#333' } 
           }
         }
       }
     });
   } else {
-    rewardTrendChartInstance.data.labels = rewards.map((v, i) => `${i + 1}`); // or ""
+    rewardTrendChartInstance.data.labels = rewards.map((v, i) => `${i + 1}`);
     rewardTrendChartInstance.data.datasets[0].data = rewards;
     rewardTrendChartInstance.update();
   }
 }
+
+// Debounced renderer to limit chart thrashing
+const debouncedRenderRewardTrendChart = _.debounce(renderRewardTrendChart, 180);
 
 /**
  * Log rewards and update the Reward Trend chart.
@@ -200,7 +203,7 @@ function renderRewardTrendChart() {
 function logReward(reward) {
   rewardHistory.push(reward);
   if (rewardHistory.length > 50) rewardHistory.shift();
-  renderRewardTrendChart();
+  debouncedRenderRewardTrendChart();
 }
 
 /**
@@ -215,11 +218,16 @@ function updateSimulationUI(manager, forceNewChart = false) {
  * Select and instantiate a manager by index or random.
  */
 function chooseManager(idx = null) {
-  CityManager = idx !== null ?
-    MANAGER_CLASSES[idx] :
-    MANAGER_CLASSES[Math.floor(Math.random() * MANAGER_CLASSES.length)];
+  const SelectedClass = idx !== null ? MANAGER_CLASSES[idx] : _.sample(MANAGER_CLASSES);
+  CityManager = SelectedClass;
+  // Make a fresh instance. Use cloneDeep if you want to copy a blueprint instead.
   window.city = new CityManager();
   rewardHistory = [];
+  lastState = null;
+  if (stateChartInstance) {
+    stateChartInstance.destroy();
+    stateChartInstance = null;
+  }
   updateSimulationUI(window.city, true);
   logReward(0);
 }
@@ -229,20 +237,20 @@ function chooseManager(idx = null) {
  */
 const STAGNANT_THRESHOLD = 10;
 let stagnantCount = 0;
-let lastReward = null;
 
-function autoSwitchIfStagnant(currentReward) {
-  if (lastReward !== null && Math.abs(currentReward - lastReward) < 1e-6) {
+function autoSwitchIfStagnant(currentState) {
+  if (lastState !== null && _.isEqual(currentState, lastState)) {
     stagnantCount++;
   } else {
     stagnantCount = 0;
   }
-  lastReward = currentReward;
+  lastState = _.cloneDeep(currentState);
 
   if (stagnantCount >= STAGNANT_THRESHOLD) {
-    let currentIndex = MANAGER_CLASSES.findIndex(cls => cls === CityManager);
-    let nextIndexes = MANAGER_CLASSES.map((cls, i) => i).filter(i => i !== currentIndex);
-    let nextIndex = nextIndexes[Math.floor(Math.random() * nextIndexes.length)];
+    // Choose a different manager randomly (shuffle then pick first different item)
+    const shuffled = _.shuffle(MANAGER_CLASSES);
+    const nextClass = shuffled.find(cls => cls !== CityManager) || _.sample(MANAGER_CLASSES);
+    const nextIndex = MANAGER_CLASSES.indexOf(nextClass);
     chooseManager(nextIndex);
     stagnantCount = 0;
   }
@@ -256,15 +264,24 @@ function autoSwitchIfStagnant(currentReward) {
  */
 function simulateStep() {
   if (!window.city || isPaused) return;
-  const actionSpace = window.city.getStateArray().length;
-  const action = Math.floor(Math.random() * actionSpace);
-  window.city.update(action);
+  const actionSpace = window.city.getStateArray().length || NUM_ACTIONS;
+  const action = _.random(0, Math.max(0, actionSpace - 1));
+  try {
+    window.city.update(action);
+  } catch (err) {
+    // If a manager throws, try to recover by switching manager
+    console.error('Manager update error, switching manager:', err);
+    chooseManager();
+    return;
+  }
+
   const state = window.city.getStateArray();
-  const reward = state.reduce((sum, v) => sum + v, 0);
+  // reward as sum of state values (use lodash sum for clarity)
+  const reward = _.sum(state);
   logReward(reward);
   updateSimulationUI(window.city);
 
-  autoSwitchIfStagnant(reward);
+  autoSwitchIfStagnant(state);
 }
 
 /**
@@ -327,5 +344,3 @@ window.addEventListener('DOMContentLoaded', () => {
     simulateStep();
   }, 1100);
 });
-
-/* End of file: src/js/index.js */
