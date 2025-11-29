@@ -4,22 +4,27 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
-  entry: ['./src/main.ts', './src/js/index.js'], // removed './src/bundle.js'
+  // Ensure index.js (CSS + UI wiring) runs before main.ts to avoid FOUC/layout races
+  entry: ['./src/js/index.js', './src/main.ts'],
   mode: 'development',
 
   // Enable proper source maps for debugging (creates bundle.js.map)
   devtool: 'source-map',
 
   output: {
-    filename: 'bundle.js', // use the classic name for clarity
+    filename: 'bundle.js', // classic name for clarity
     path: path.resolve(__dirname, 'dist'),
     clean: true,
+    // important for correct chunk/asset resolution in dev and MF
+    publicPath: '/',
   },
 
   resolve: {
-    extensions: ['.ts', '.js', '.json'],
+    extensions: ['.ts', '.tsx', '.js', '.json'],
     alias: {
-      // Optional: add alias for easier imports
+      // Optional aliases to simplify imports and guarantee resolution
+      '@cityManagers': path.resolve(__dirname, 'src/js/cityManagers'),
+      'lodash$': path.resolve(__dirname, 'src/js/lodash.js'),
     },
   },
 
@@ -38,6 +43,11 @@ module.exports = {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader'],
       },
+      // add loaders for images/fonts if your app uses them in CSS/HTML
+      {
+        test: /\.(png|jpg|jpeg|gif|svg|woff2?|eot|ttf)$/,
+        type: 'asset/resource',
+      },
     ],
   },
 
@@ -47,6 +57,7 @@ module.exports = {
       title: 'CityGenerator',
       template: './src/html/index.html',
       filename: 'index.html',
+      inject: 'body', // ensure scripts are injected at the end of body
     }),
     new ModuleFederationPlugin({
       name: 'fabcity',
@@ -62,6 +73,8 @@ module.exports = {
         'digibyte-js': { singleton: true },
         'browserify': { singleton: true },
         'flatbush': { singleton: true },
+        // share jdenticon only if you actually use Module Federation across remotes and hosts.
+        'jdenticon': { singleton: true, eager: false, requiredVersion: false },
       },
     }),
   ],
@@ -78,4 +91,11 @@ module.exports = {
       index: '/index.html',
     },
   },
+
+  // keep splitChunks conservative: only dynamic-imported modules are split
+  optimization: {
+    splitChunks: {
+      chunks: 'async'
+    }
+  }
 };
