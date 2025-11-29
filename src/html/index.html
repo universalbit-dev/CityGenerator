@@ -55,14 +55,33 @@
 
   <script>
     (function(){
+      // Compute a safe base path (avoid regex literals that sometimes break if file is transformed)
+      function getPageBase() {
+        try {
+          // window.location.pathname -> "/owner/repo/path/index.html" or "/path/"
+          let p = window.location.pathname || '/';
+          // remove any trailing filename (keep leading '/')
+          const lastSlash = p.lastIndexOf('/');
+          if (lastSlash <= 0) return '/';
+          // if path ends with slash (folder), use it directly
+          if (p.endsWith('/')) {
+            return p.slice(0, -1); // remove trailing slash for consistent concatenation below
+          }
+          // otherwise remove last segment to get parent folder
+          return p.slice(0, lastSlash);
+        } catch (e) {
+          return '';
+        }
+      }
+
+      const base = getPageBase();
       const candidates = [
         './main.js',                  
-        'main.js',                   
+        'main.js',                    
         './src/html/main.js',         
-        './docs/main.js',            
-        window.location.pathname.replace(/\\/[^/]*$/, '') + '/main.js'  
+        './docs/main.js',             
+        (base ? (base + '/main.js') : '/main.js')  
       ].map(p => {
-        // normalize double slashes
         try { return new URL(p, document.baseURI).href; } catch(e) { return p; }
       });
 
@@ -86,10 +105,10 @@
     })();
   </script>
 
- 
+  <!-- inline model display script (unchanged) -->
   <script>
     (function () {
- 
+    
       const modelTips = {};
 
       // Keep last known to avoid unnecessary DOM writes
@@ -106,9 +125,10 @@
 
         lastKnownModel = normalized || null;
       }
-
+      
       window.setSimulationModelDisplay = updateModelDisplay;
 
+      // Helper to safely read deep properties without throwing
       function safeGet(obj, path) {
         try {
           return path.reduce((acc, k) => (acc && acc[k] !== undefined) ? acc[k] : undefined, obj);
@@ -117,8 +137,11 @@
         }
       }
 
+      // Return an array of candidate strings from many common places the app might set
       function gatherModelCandidates() {
         const candidates = [];
+
+        // Common global variables / patterns
         try {
           if (window.simulationModel) {
             candidates.push(window.simulationModel.name);
@@ -126,9 +149,13 @@
             candidates.push(window.simulationModel.title);
           }
         } catch (e) {}
+
+        // window.currentModelName / window.modelName
         if (window.currentModelName) candidates.push(window.currentModelName);
         if (window.modelName) candidates.push(window.modelName);
         if (window.initialModelName) candidates.push(window.initialModelName);
+
+        // manager variations
         try {
           if (window.manager) {
             candidates.push(window.manager.modelName);
@@ -138,28 +165,37 @@
             candidates.push(safeGet(window, ['manager','name']));
           }
         } catch (e) {}
+
+        // app or other wrappers
         try {
           if (window.app) {
             candidates.push(safeGet(window, ['app','model','name']));
             candidates.push(safeGet(window, ['app','currentModel','name']));
           }
         } catch (e) {}
+
+        // dataset on body or any element with data-model-name
         try {
           if (document.body && document.body.dataset && document.body.dataset.modelName) candidates.push(document.body.dataset.modelName);
           const el = document.querySelector('[data-model-name]');
           if (el) {
             candidates.push(el.dataset && el.dataset.modelName);
+            // allow attribute value too
             candidates.push(el.getAttribute && el.getAttribute('data-model-name'));
           }
         } catch (e) {}
+
+        // strip falsy and non-strings
         return candidates.map(c => (typeof c === 'string' ? c.trim() : c)).filter(Boolean);
       }
 
+      // Try to infer an initial model name from common places
       function inferInitialModel() {
         const candidates = gatherModelCandidates();
         return candidates.length ? candidates[0] : null;
       }
 
+      // Poll for changes (helps when the app sets globals after page load)
       let pollTimer = null;
       function startPollingForModelChange() {
         if (pollTimer) return;
@@ -168,8 +204,9 @@
           if (inferred && inferred !== lastKnownModel) {
             updateModelDisplay(inferred);
           }
-        }, 500);
+        }, 500); 
       }
+
       function stopPollingForModelChange() {
         if (pollTimer) {
           clearInterval(pollTimer);
@@ -182,11 +219,13 @@
         if (d && d.name) {
           updateModelDisplay(d.name, d.tip);
         } else {
+          // event without detail -> re-infer
           const inferred = inferInitialModel();
           if (inferred) updateModelDisplay(inferred);
         }
       });
 
+      // Watch for attribute changes (e.g., data-model-name set later on body or another element)
       const observer = new MutationObserver(function (mutationsList) {
         for (const m of mutationsList) {
           if (m.type === 'attributes' && m.attributeName && m.attributeName.startsWith('data-')) {
@@ -194,16 +233,22 @@
             if (inferred && inferred !== lastKnownModel) updateModelDisplay(inferred);
           }
           if (m.type === 'childList') {
+            // new nodes might contain data-model-name
             const inferred = inferInitialModel();
             if (inferred && inferred !== lastKnownModel) updateModelDisplay(inferred);
           }
         }
       });
 
+      // On DOM ready, set sensible defaults and attempt inference; then start watchers/polling
       document.addEventListener('DOMContentLoaded', function () {
         const inferred = inferInitialModel();
         updateModelDisplay(inferred || 'Unknown Model', inferred ? modelTips[inferred] : null);
+
+        // start polling to catch late bindings
         startPollingForModelChange();
+
+        // observe body for attribute or child changes
         try {
           if (document.body) {
             observer.observe(document.body, { attributes: true, childList: true, subtree: true });
@@ -213,10 +258,12 @@
         }
       });
 
+      // Helpful debugging: log missing script or binding issues
       window.addEventListener('error', function (ev) {
         console.warn('Page error detected:', ev.message, ev.filename, ev.lineno);
       });
 
+      // Optionally expose a small API to other page components
       window.getSimulationModelDisplay = function () {
         const name = document.getElementById('current-model-name')?.textContent || null;
         const tip = document.getElementById('model-tip')?.textContent || null;
