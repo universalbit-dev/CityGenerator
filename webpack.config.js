@@ -6,7 +6,8 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 module.exports = {
   // Ensure index.js (CSS + UI wiring) runs before main.ts to avoid FOUC/layout races
   entry: ['./src/js/index.js', './src/main.ts'],
-  mode: 'development',
+  // Use production mode in CI for smaller builds; otherwise development for local debugging
+  mode: process.env.CI ? 'production' : 'development',
 
   // Enable proper source maps for debugging (creates bundle.js.map)
   devtool: 'source-map',
@@ -15,8 +16,8 @@ module.exports = {
     filename: 'bundle.js', // classic name for clarity
     path: path.resolve(__dirname, 'dist'),
     clean: true,
-    // important for correct chunk/asset resolution in dev and MF
-    publicPath: '/',
+    // Use relative publicPath so the site works when served from a subpath (e.g. /CityGenerator/)
+    publicPath: './',
   },
 
   resolve: {
