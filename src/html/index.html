@@ -40,12 +40,12 @@
     </section>
 
     <section class="mb-5">
-      <h4 class="h5">State</h4>
+      <h4 class="h5"></h4>
       <canvas id="state-chart" width="600" height="240" style="max-width:100%;"></canvas>
     </section>
 
     <section class="mb-5">
-      <h4 class="h5">Reward Trend</h4>
+      <h4 class="h5"></h4>
       <canvas id="rewardTrendChart" width="800" height="240" style="max-width:100%;"></canvas>
     </section>
   </div>
@@ -53,52 +53,170 @@
   <!-- JS bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-  <!-- If you use main.js, keep it; otherwise adjust or remove. -->
-  <script src="main.js"></script>
+  <script>
+    (function(){
+      const candidates = [
+        './main.js',                  
+        'main.js',                   
+        './src/html/main.js',         
+        './docs/main.js',            
+        window.location.pathname.replace(/\\/[^/]*$/, '') + '/main.js'  
+      ].map(p => {
+        // normalize double slashes
+        try { return new URL(p, document.baseURI).href; } catch(e) { return p; }
+      });
 
+      function tryLoad(i){
+        if (i >= candidates.length) {
+          console.error('Failed to load main.js from any candidate path', candidates);
+          return;
+        }
+        const src = candidates[i];
+        const s = document.createElement('script');
+        s.src = src;
+        s.async = false;
+        s.onload = function(){ console.info('Loaded main.js from', src); };
+        s.onerror = function(){
+          s.remove();
+          tryLoad(i+1);
+        };
+        document.head.appendChild(s);
+      }
+      tryLoad(0);
+    })();
+  </script>
+
+ 
   <script>
     (function () {
-      // modelTips mapping - add tips for known model names here or expose window.modelTips from other code
+ 
       const modelTips = {};
+
+      // Keep last known to avoid unnecessary DOM writes
+      let lastKnownModel = null;
 
       function updateModelDisplay(name, tip) {
         const nameEl = document.getElementById('current-model-name');
         const tipEl = document.getElementById('model-tip');
 
-        if (nameEl) nameEl.textContent = name || 'Unknown Model';
-        if (tipEl) tipEl.textContent = tip || (name && modelTips[name]) || 'No tip available for this model.';
+        const normalized = (typeof name === 'string' && name.trim()) ? name.trim() : null;
+
+        if (nameEl) nameEl.textContent = normalized || 'Unknown Model';
+        if (tipEl) tipEl.textContent = tip || (normalized && modelTips[normalized]) || 'No tip available for this model.';
+
+        lastKnownModel = normalized || null;
       }
 
-      // window.setSimulationModelDisplay('MyModel', 'Tip text for MyModel')
       window.setSimulationModelDisplay = updateModelDisplay;
 
-      // Try to infer an initial model name from common places
-      function inferInitialModel() {
-        const guesses = [
-          (window.simulationModel && window.simulationModel.name),
-          window.currentModelName,
-          (window.manager && window.manager.modelName),
-          document.body.dataset.modelName,
-          document.querySelector('[data-model-name]') && document.querySelector('[data-model-name]').dataset.modelName
-        ];
-        for (const g of guesses) {
-          if (g) return g;
+      function safeGet(obj, path) {
+        try {
+          return path.reduce((acc, k) => (acc && acc[k] !== undefined) ? acc[k] : undefined, obj);
+        } catch (e) {
+          return undefined;
         }
-        return null;
       }
 
-      // On DOM ready, set sensible defaults and attempt inference
+      function gatherModelCandidates() {
+        const candidates = [];
+        try {
+          if (window.simulationModel) {
+            candidates.push(window.simulationModel.name);
+            candidates.push(window.simulationModel.modelName);
+            candidates.push(window.simulationModel.title);
+          }
+        } catch (e) {}
+        if (window.currentModelName) candidates.push(window.currentModelName);
+        if (window.modelName) candidates.push(window.modelName);
+        if (window.initialModelName) candidates.push(window.initialModelName);
+        try {
+          if (window.manager) {
+            candidates.push(window.manager.modelName);
+            candidates.push(safeGet(window, ['manager','model','name']));
+            candidates.push(safeGet(window, ['manager','currentModel','name']));
+            candidates.push(safeGet(window, ['manager','current','name']));
+            candidates.push(safeGet(window, ['manager','name']));
+          }
+        } catch (e) {}
+        try {
+          if (window.app) {
+            candidates.push(safeGet(window, ['app','model','name']));
+            candidates.push(safeGet(window, ['app','currentModel','name']));
+          }
+        } catch (e) {}
+        try {
+          if (document.body && document.body.dataset && document.body.dataset.modelName) candidates.push(document.body.dataset.modelName);
+          const el = document.querySelector('[data-model-name]');
+          if (el) {
+            candidates.push(el.dataset && el.dataset.modelName);
+            candidates.push(el.getAttribute && el.getAttribute('data-model-name'));
+          }
+        } catch (e) {}
+        return candidates.map(c => (typeof c === 'string' ? c.trim() : c)).filter(Boolean);
+      }
+
+      function inferInitialModel() {
+        const candidates = gatherModelCandidates();
+        return candidates.length ? candidates[0] : null;
+      }
+
+      let pollTimer = null;
+      function startPollingForModelChange() {
+        if (pollTimer) return;
+        pollTimer = setInterval(() => {
+          const inferred = inferInitialModel();
+          if (inferred && inferred !== lastKnownModel) {
+            updateModelDisplay(inferred);
+          }
+        }, 500);
+      }
+      function stopPollingForModelChange() {
+        if (pollTimer) {
+          clearInterval(pollTimer);
+          pollTimer = null;
+        }
+      }
+
+      window.addEventListener('simulationModelChanged', function (e) {
+        const d = e && e.detail ? e.detail : null;
+        if (d && d.name) {
+          updateModelDisplay(d.name, d.tip);
+        } else {
+          const inferred = inferInitialModel();
+          if (inferred) updateModelDisplay(inferred);
+        }
+      });
+
+      const observer = new MutationObserver(function (mutationsList) {
+        for (const m of mutationsList) {
+          if (m.type === 'attributes' && m.attributeName && m.attributeName.startsWith('data-')) {
+            const inferred = inferInitialModel();
+            if (inferred && inferred !== lastKnownModel) updateModelDisplay(inferred);
+          }
+          if (m.type === 'childList') {
+            const inferred = inferInitialModel();
+            if (inferred && inferred !== lastKnownModel) updateModelDisplay(inferred);
+          }
+        }
+      });
+
       document.addEventListener('DOMContentLoaded', function () {
         const inferred = inferInitialModel();
         updateModelDisplay(inferred || 'Unknown Model', inferred ? modelTips[inferred] : null);
+        startPollingForModelChange();
+        try {
+          if (document.body) {
+            observer.observe(document.body, { attributes: true, childList: true, subtree: true });
+          }
+        } catch (e) {
+          console.warn('Model observer failed to start', e);
+        }
       });
 
-      // Helpful debugging: log missing script or binding issues
       window.addEventListener('error', function (ev) {
         console.warn('Page error detected:', ev.message, ev.filename, ev.lineno);
       });
 
-      // Optionally expose a small API to other page components
       window.getSimulationModelDisplay = function () {
         const name = document.getElementById('current-model-name')?.textContent || null;
         const tip = document.getElementById('model-tip')?.textContent || null;
