@@ -26,7 +26,7 @@ const DEFAULT_COLOUR_SCHEME: ColourScheme = {
     majorRoadColour: "#ffd265",       // yellow/orange for major roads
     majorRoadOutline: "#b58c00",      // gold/brown outline
     mainRoadColour: "#ffffff",        // white for main roads
-    mainRoadOutline: "#0055aa",       // blue outline for main roads
+    mainRoadOutline: "#0055aa",      // blue outline for main roads
     outlineSize: 1,
     minorWidth: 2,
     majorWidth: 4,
@@ -55,7 +55,7 @@ class Main {
     private roadsFolder: dat.GUI;
     private styleFolder: dat.GUI;
     private optionsFolder: dat.GUI;
-    private downloadsFolder: dat.GUI;
+    // downloadsFolder removed
 
     private domainController = DomainController.getInstance();
     private gui: dat.GUI;
@@ -81,10 +81,10 @@ class Main {
     private modelGenerator: ModelGenerator | undefined;
     
     showTensorField(): boolean {
-    // Change this logic based on your app's needs.
-    // For now, always show city map (returns false).
-    return false;
-}
+        // Change this logic based on your app's needs.
+        // For now, always show city map (returns false).
+        return false;
+    }
 
     constructor() {
         // --- Deduplication: Destroy previous ---
@@ -98,7 +98,7 @@ class Main {
         this.roadsFolder = this.gui.addFolder('Map');
         this.styleFolder = this.gui.addFolder('Style');
         this.optionsFolder = this.gui.addFolder('Options');
-        this.downloadsFolder = this.gui.addFolder('Download');
+        // Download folder removed: no this.downloadsFolder
 
         // Canvas setup
         this.canvas = document.getElementById(Util.CANVAS_ID) as HTMLCanvasElement;
@@ -130,7 +130,7 @@ class Main {
 
         // Now set up controls
         this.setupStyleControls();
-        this.setupOptionsAndDownloads();
+        this.setupOptionsAndDownloads(); // this method no longer creates a Download folder
 
         // Initial settings
         this.tensorField.setRecommended();
@@ -181,16 +181,12 @@ class Main {
     }
 
     private setupOptionsAndDownloads(): void {
-    // Only bind drawCentre to tensorField, not mainGui
-    this.optionsFolder.add(this.tensorField, 'drawCentre');
-    this.optionsFolder.add(this, 'highDPI').onChange((high: boolean) => this.changeCanvasScale(high));
+        // Only bind drawCentre to tensorField, not mainGui
+        this.optionsFolder.add(this.tensorField, 'drawCentre');
+        this.optionsFolder.add(this, 'highDPI').onChange((high: boolean) => this.changeCanvasScale(high));
 
-    // Download actions disabled (void functions)
-    this.downloadsFolder.add({ "PNG": () => {} }, 'PNG');
-    this.downloadsFolder.add({ "SVG": () => {} }, 'SVG');
-    this.downloadsFolder.add({ "STL": () => {} }, 'STL');
-    this.downloadsFolder.add({ "Heightmap": () => {} }, 'Heightmap');
-}
+        // Download actions removed entirely — no Download folder or controllers created
+    }
 
     generate(): void {
         if (!this.firstGenerate) {
@@ -226,10 +222,7 @@ class Main {
         this.domainController.cameraDirection = new Vector(this.cameraX / 10, this.cameraY / 10);
     }
 
-    downloadPng(): void { /* Download PNG disabled */ }
-    downloadSVG(): void { /* Download SVG disabled */ }
-    downloadHeightmap(): void { /* Download Heightmap disabled */ }
-    downloadSTL(): void { /* Download STL disabled */ }
+    // Disabled placeholder download functions removed (no longer needed)
 
     update(): void {
         if (this.modelGenerator) {
