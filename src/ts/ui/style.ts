@@ -32,6 +32,16 @@ export interface ColourScheme {
     buildingModels?: boolean;
     frameColour?: string;
     frameTextColour?: string;
+
+    // New optional tuning parameters for improved pseudo-3D rendering
+    buildingShadowColour?: string;
+    buildingLightAngle?: number; // degrees, from +X axis (right) clockwise
+    buildingShadeIntensity?: number; // 0..1, how strong the shading on sides should be
+    buildingRoofVariation?: number; // 0..1, introduce slight roof colour variation
+
+    // Debug / visualization options
+    showSideDebug?: boolean;        // draw normals/brightness indicators for building sides
+    debugNormalLength?: number;     // length of the debug normal lines in screen units
 }
 
 /**
@@ -103,6 +113,16 @@ export default abstract class Style {
         colourScheme.frameColour     = ensureColour('frameColour', colourScheme.frameColour, colourScheme.bgColour);
         colourScheme.frameTextColour = ensureColour('frameTextColour', colourScheme.frameTextColour, colourScheme.minorRoadOutline);
 
+        // New defaults for enhanced 3D-like rendering
+        colourScheme.buildingShadowColour = colourScheme.buildingShadowColour ?? "rgba(0,0,0,0.12)";
+        colourScheme.buildingLightAngle = colourScheme.buildingLightAngle ?? 220; // light coming from top-left-ish by default
+        colourScheme.buildingShadeIntensity = colourScheme.buildingShadeIntensity ?? 0.55;
+        colourScheme.buildingRoofVariation = colourScheme.buildingRoofVariation ?? 0.06;
+
+        // Debug defaults
+        colourScheme.showSideDebug = colourScheme.showSideDebug ?? false;
+        colourScheme.debugNormalLength = colourScheme.debugNormalLength ?? 8;
+
         if (!colourScheme.buildingSideColour) {
             // Defensive parsing
             let parsedRgb = [128,128,128];
@@ -113,7 +133,7 @@ export default abstract class Style {
                     if (rgb && Array.isArray(rgb)) {
                         parsedRgb = rgb.map((v: number) => Math.max(0, v - 40));
                     } else {
-                        log.error("parseCSSColor returned null/invalid for buildingColour:", baseColour);
+                        log.error("parseCSSColour returned null/invalid for buildingColour:", baseColour);
                     }
                 }
             } catch (err) {
@@ -133,6 +153,105 @@ export default abstract class Style {
 
     public set needsUpdate(n: boolean) {
         this.canvas.needsUpdate = n;
+    }
+
+    /**
+     * Compute a shaded colour by applying brightness to a CSS colour.
+     * brightness is a multiplier where 1 = unchanged, <1 darker, >1 lighter.
+     */
+    protected getShadedColour(baseCss: string, brightness: number, alphaOverride?: number): string {
+        try {
+            const rgb = Util.parseCSSColor(baseCss);
+            if (!rgb || !Array.isArray(rgb)) return baseCss;
+            const r = Math.min(255, Math.max(0, Math.round(rgb[0] * brightness)));
+            const g = Math.min(255, Math.max(0, Math.round(rgb[1] * brightness)));
+            const b = Math.min(255, Math.max(0, Math.round(rgb[2] * brightness)));
+            if (typeof alphaOverride === 'number') {
+                return `rgba(${r},${g},${b},${alphaOverride})`;
+            }
+            return `rgb(${r},${g},${b})`;
+        } catch (err) {
+            log.error("getShadedColour parse error:", err);
+            return baseCss;
+        }
+    }
+
+    /**
+     * Given a side polygon (array of Vector), compute a brightness multiplier
+     * using a simple 2D lighting model based on an angle in the colour scheme.
+     */
+    protected computeSideBrightness(side: Vector[]): number {
+        if (!side || side.length < 2) return 1.0;
+        try {
+            // Use the vector from first to second point as the edge direction
+            const a = side[0];
+            const b = side[1];
+            const edge = b.clone().sub(a);
+            // Perpendicular normal (2D): (-y, x)
+            const normal = new Vector(-edge.y, edge.x).normalize();
+
+            // Convert light angle to a unit vector
+            const angleDeg = (this.colourScheme.buildingLightAngle ?? 220) % 360;
+            const rad = angleDeg * Math.PI / 180.0;
+            const light = new Vector(Math.cos(rad), Math.sin(rad)).normalize();
+
+            // Dot product in [-1,1]
+            const dot = Math.max(-1, Math.min(1, normal.dot(light)));
+            // Map dot to brightness: favor values in [0.6, 1.15] scaled by shadeIntensity
+            const shadeIntensity = this.colourScheme.buildingShadeIntensity ?? 0.55;
+            const brightnessBase = 0.6 + ( (dot + 1) / 2 ) * 0.55;
+            const brightness = 1.0 - (1.0 - brightnessBase) * shadeIntensity;
+            return Math.max(0.25, Math.min(1.4, brightness));
+        } catch (err) {
+            log.error("computeSideBrightness error:", err);
+            return 1.0;
+        }
+    }
+
+    /**
+     * Small helper to compute a per-roof-variation multiplier
+     */
+    protected roofVariationMultiplier(seed: number): number {
+        const varAmt = this.colourScheme.buildingRoofVariation ?? 0.06;
+        // deterministic pseudo-random but stable
+        const s = Math.abs(Math.sin(seed * 999.123 + 0.123));
+        return 1.0 + (s - 0.5) * 2 * varAmt;
+    }
+
+    /**
+     * Draw a small debug normal/brightness indicator for a side.
+     * Uses the provided canvas wrapper; this keeps debug drawing centralized.
+     *
+     * Note: CanvasWrapper is a generic base type; not all wrapper-specific
+     * methods are typed on the abstract. To avoid a TS error here we cast to
+     * `any` for the thin debug calls. Long-term you can add these methods to
+     * the CanvasWrapper type definition instead.
+     */
+    protected drawSideDebug(canvas: CanvasWrapper, side: Vector[], brightness: number): void {
+        if (!this.colourScheme.showSideDebug) return;
+        if (!side || side.length < 2) return;
+        try {
+            const a = side[0];
+            const b = side[1];
+            const mid = a.clone().add(b).divideScalar(2);
+            const edge = b.clone().sub(a);
+            const normal = new Vector(-edge.y, edge.x).normalize();
+            const length = (this.colourScheme.debugNormalLength ?? 8) * this.domainController.zoom;
+            const end = mid.clone().add(normal.clone().multiplyScalar(length));
+
+            // Map brightness to a colour: brighter => greener, darker => reddish
+            const t = Math.max(0, Math.min(1, (brightness - 0.25) / (1.4 - 0.25)));
+            const r = Math.round(200 * (1 - t) + 40 * t);
+            const g = Math.round(40 * (1 - t) + 200 * t);
+            const bcol = Math.round(40 * (1 - t) + 40 * t);
+
+            // Cast to any to avoid missing-methods errors on the abstract wrapper
+            (canvas as any).setStrokeStyle(`rgb(${r},${g},${bcol})`);
+            (canvas as any).setLineWidth(1);
+            (canvas as any).drawPolyline([mid, end]);
+        } catch (err) {
+            // don't let debug drawing break the renderer
+        }
     }
 }
 
@@ -237,17 +356,64 @@ export class DefaultStyle extends Style {
                 for (const b of this.lots) canvas.drawPolygon(b);
             }
 
-            // Pseudo-3D
+            // Pseudo-3D - improved per-side shading, soft shadows, per-roof variation, and sorted sides
             if (this.showBuildingModels && (!this.zoomBuildings || this.domainController.zoom >= 2.5)) {
-                canvas.setFillStyle(this.colourScheme.buildingSideColour);
-                canvas.setStrokeStyle(this.colourScheme.buildingSideColour);
+                const baseSide = this.colourScheme.buildingSideColour!;
+                const baseRoof = this.colourScheme.buildingColour!;
+                // First draw soft ground shadows for buildings to give them weight
+                const lightAngle = (this.colourScheme.buildingLightAngle ?? 220) * Math.PI / 180;
+                const lightVec = new Vector(Math.cos(lightAngle), Math.sin(lightAngle)).normalize();
 
                 for (const b of this.buildingModels) {
-                    for (const s of b.sides) canvas.drawPolygon(s);
+                    if (!b.roof || b.roof.length === 0) continue;
+                    try {
+                        const depth = Math.max(1, b.height * 0.12) * this.domainController.zoom;
+                        const dx = -lightVec.x * depth;
+                        const dy = -lightVec.y * depth;
+                        const shadowPoly = b.lotScreen.map(p => p.clone().add(new Vector(dx, dy)));
+                        canvas.setFillStyle(this.colourScheme.buildingShadowColour!);
+                        canvas.setStrokeStyle("none");
+                        canvas.drawPolygon(shadowPoly);
+                    } catch (err) {
+                        // ignore per-building shadow errors
+                    }
                 }
-                canvas.setFillStyle(this.colourScheme.buildingColour);
-                canvas.setStrokeStyle(this.colourScheme.buildingStroke);
-                for (const b of this.buildingModels) canvas.drawPolygon(b.roof);
+
+                // Collect and sort sides back-to-front relative to camera
+                const allSides: any[] = [];
+                const camera = this.domainController.getCameraPosition();
+                for (const b of this.buildingModels) {
+                    for (const s of b.sides) {
+                        const averagePoint = s[0].clone().add(s[1]).divideScalar(2);
+                        allSides.push([averagePoint.distanceToSquared(camera), s, b]);
+                    }
+                }
+                allSides.sort((a, b) => b[0] - a[0]);
+
+                // Draw sides with computed shading (sorted)
+                for (const tuple of allSides) {
+                    const side: Vector[] = tuple[1];
+                    const brightness = this.computeSideBrightness(side);
+                    const shaded = this.getShadedColour(baseSide, brightness);
+                    canvas.setFillStyle(shaded);
+                    canvas.setStrokeStyle(shaded);
+                    canvas.drawPolygon(side);
+
+                    // Debug overlay per-side (normals/brightness)
+                    if (this.colourScheme.showSideDebug) {
+                        this.drawSideDebug(canvas, side, brightness);
+                    }
+                }
+
+                // Roofs with slight variation so not every roof is identical
+                let roofSeed = 1;
+                for (const b of this.buildingModels) {
+                    const roofMul = this.roofVariationMultiplier(roofSeed++);
+                    const roofColour = this.getShadedColour(baseRoof, roofMul);
+                    canvas.setFillStyle(roofColour);
+                    canvas.setStrokeStyle(this.colourScheme.buildingStroke);
+                    canvas.drawPolygon(b.roof);
+                }
             }
         }
 
@@ -361,36 +527,66 @@ export class RoughStyle extends Style {
                 for (const b of this.lots) canvas.drawPolygon(b);
             }
 
-            // Pseudo-3D
+            // Pseudo-3D with per-side shading (and per-side debug optionally)
             if (this.showBuildingModels && (!this.zoomBuildings || this.domainController.zoom >= 2.5)) {
-                canvas.setOptions({
-                    roughness: 1.2,
-                    stroke: this.colourScheme.buildingStroke,
-                    strokeWidth: 1,
-                    fill: this.colourScheme.buildingSideColour,
-                });
-
                 // TODO: improve sorting for sides rendering
                 const allSidesDistances: any[] = [];
                 const camera = this.domainController.getCameraPosition();
                 for (const b of this.buildingModels) {
                     for (const s of b.sides) {
                         const averagePoint = s[0].clone().add(s[1]).divideScalar(2);
-                        allSidesDistances.push([averagePoint.distanceToSquared(camera), s]);
+                        allSidesDistances.push([averagePoint.distanceToSquared(camera), s, b]);
                     }
                 }
                 allSidesDistances.sort((a, b) => b[0] - a[0]);
-                for (const p of allSidesDistances) canvas.drawPolygon(p[1]);
 
-                canvas.setOptions({
-                    roughness: 1.2,
-                    stroke: this.colourScheme.buildingStroke,
-                    strokeWidth: 1,
-                    fill: this.colourScheme.buildingColour,
-                });
+                // Draw sides with per-side shaded fill
+                for (const tuple of allSidesDistances) {
+                    const side: Vector[] = tuple[1];
+                    const brightness = this.computeSideBrightness(side);
+                    const shaded = this.getShadedColour(this.colourScheme.buildingSideColour!, brightness);
+                    canvas.setOptions({
+                        roughness: 1.2,
+                        stroke: this.colourScheme.buildingStroke,
+                        strokeWidth: 1,
+                        fill: shaded,
+                    });
+                    canvas.drawPolygon(side);
 
-                for (const b of this.buildingModels) canvas.drawPolygon(b.roof);
+                    if (this.colourScheme.showSideDebug) {
+                        // For the rough wrapper, draw the debug line in a simpler way
+                        const a = side[0];
+                        const b = side[1];
+                        const mid = a.clone().add(b).divideScalar(2);
+                        const edge = b.clone().sub(a);
+                        const normal = new Vector(-edge.y, edge.x).normalize();
+                        const length = (this.colourScheme.debugNormalLength ?? 8) * this.domainController.zoom;
+                        const end = mid.clone().add(normal.clone().multiplyScalar(length));
+                        // Draw as a small polyline
+                        canvas.setOptions({
+                            strokeWidth: 1,
+                            stroke: `rgb(255,0,0)`,
+                            fill: 'none',
+                        });
+                        canvas.drawPolyline([mid, end]);
+                    }
+                }
+
+                // Roofs
+                let seed = 1;
+                for (const b of this.buildingModels) {
+                    const roofMul = this.roofVariationMultiplier(seed++);
+                    const roofColour = this.getShadedColour(this.colourScheme.buildingColour!, roofMul);
+                    canvas.setOptions({
+                        roughness: 1.2,
+                        stroke: this.colourScheme.buildingStroke,
+                        strokeWidth: 1,
+                        fill: roofColour,
+                    });
+                    canvas.drawPolygon(b.roof);
+                }
             }
         }
     }
 }
+
