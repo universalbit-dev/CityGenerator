@@ -32,7 +32,7 @@ const DEFAULT_COLOUR_SCHEME: ColourScheme = {
     majorWidth: 4,
     mainWidth: 5,
     zoomBuildings: false,
-    buildingModels: false,
+    buildingModels: true,
     frameColour: "#cccccc",           // frame color
     frameTextColour: "#222222",       // frame text color
 };
