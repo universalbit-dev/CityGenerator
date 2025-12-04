@@ -216,7 +216,7 @@ export default class Buildings {
 
     private buildingParams: PolygonParams = {
         maxLength: 20,
-        minArea: 50,
+        minArea: 200,
         shrinkSpacing: 4,
         chanceNoDivide: 0.05,
     };
