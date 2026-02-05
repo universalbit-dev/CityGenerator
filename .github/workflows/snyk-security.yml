@@ -1,0 +1,67 @@
+name: Snyk Security Scan
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+  schedule:
+    # Run every day at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  snyk-scan:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Node.js (if needed for your project)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      # Install dependencies if needed
+      - name: Install dependencies
+        run: npm install
+        # Use 'pip install -r requirements.txt' for Python
+        # Use 'mvn install' for Java/Maven
+        # Or appropriate command for your stack
+      
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/node@master
+        # Change to snyk/actions/python@master for Python
+        # Change to snyk/actions/maven@master for Maven
+        # Change to snyk/actions/docker@master for Docker
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high
+      
+      - name: Upload Snyk results to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: snyk.sarif
+
+  snyk-monitor:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Run Snyk Monitor
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: monitor
