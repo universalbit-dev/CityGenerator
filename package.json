@@ -36,6 +36,8 @@
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
+    "@loaders.gl/core": "^4.3.4",
+    "@loaders.gl/gis": "^4.3.4",
     "@popperjs/core": "^2.11.8",
     "@svgdotjs/svg.js": "^3.2.0",
     "@types/openlayers": "^4.6.23",
