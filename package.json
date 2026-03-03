@@ -77,7 +77,9 @@
     "vite": "^6.2.6"
   },
   "overrides": {
-    "elliptic": "^6.6.1"
+    "elliptic": "^6.6.1",
+    "serialize-javascript": "^7.0.3",
+    "minimatch": "^3.1.2"
   },
   "engines": {
     "node": ">=20 <25"
