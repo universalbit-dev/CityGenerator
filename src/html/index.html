@@ -106,12 +106,6 @@
     #manager-info .model-tip  { color: #6c757d; margin: 0; }
 
     /* ── Charts container ────────────────────────────────── */
-    /*
-     * index.js checks getElementById('charts-container') first.
-     * If found it uses it directly — no new div is created.
-     * We pre-place it here with the right flex layout so the
-     * chart wrappers index.js injects get the correct sizing.
-     */
     #charts-container {
       display: flex;
       flex-wrap: wrap;
@@ -121,11 +115,6 @@
       width: 100%;
       box-sizing: border-box;
     }
-
-    /*
-     * index.js creates each wrapper with data-chart-wrapper="1"
-     * and inline flex/size styles. We layer card styling on top.
-     */
     #charts-container > div[data-chart-wrapper="1"] {
       background: #fff;
       border-radius: var(--radius);
@@ -185,22 +174,11 @@
     </div>
   </div>
 
-  <!-- ══ MODEL BANNER ══════════════════════════════════════ -->
-  <!--
-    index.js owns innerHTML of this div via renderManagerInfo().
-    It also appends a <select> dropdown here via setupUI().
-    Keep it empty — do not put static content inside.
-  -->
+  <!-- index.js owns innerHTML of this div via renderManagerInfo() -->
+  <!-- It also appends a <select> dropdown here via setupUI()      -->
   <div id="manager-info" role="status" aria-live="polite"></div>
 
-  <!-- ══ CHARTS ════════════════════════════════════════════ -->
-  <!--
-    Pre-placed so index.js → ensureChartElements() finds it
-    immediately via getElementById('charts-container') and
-    appends chart wrapper divs directly inside rather than
-    creating a new container and inserting it after #manager-info.
-    The CSS above styles each injected [data-chart-wrapper="1"].
-  -->
+  <!-- index.js → ensureChartElements() appends chart wrappers here -->
   <div id="charts-container"></div>
 
   <!-- ══ FOOTER ════════════════════════════════════════════ -->
@@ -260,7 +238,8 @@
 
   /* ── model display (pre-index.js only; index.js overwrites innerHTML) ── */
   function updateModelDisplay(name, tip) {
-    /* Once index.js has written its own HTML (contains the span), step back */
+    /* Once index.js has written its own HTML (contains a span with inline color),
+       step back and let it own the banner.                                       */
     const m = $id('manager-info');
     if (m && m.querySelector('span[style*="color"]')) return;
 
@@ -268,14 +247,30 @@
     if (!normalized) return;
 
     if (m) {
-      m.innerHTML =
-        `<div style="font-weight:700;font-size:1rem;margin-bottom:4px">
-           Active Model: <span class="model-name">${normalized}</span>
-         </div>
-         <p class="model-tip">${
-           tip || MODEL_TIPS[normalized] || 'No tip available for this model.'
-         }</p>`;
+      /* ── FIX: build DOM with textContent instead of innerHTML ── */
+      /* Clear existing children */
+      while (m.firstChild) m.removeChild(m.firstChild);
+
+      /* Header div: "Active Model: <span.model-name>" */
+      const headerDiv = document.createElement('div');
+      headerDiv.style.fontWeight   = '700';
+      headerDiv.style.fontSize     = '1rem';
+      headerDiv.style.marginBottom = '4px';
+      headerDiv.appendChild(document.createTextNode('Active Model: '));
+      const nameSpan = document.createElement('span');
+      nameSpan.className   = 'model-name';
+      nameSpan.textContent = normalized;           /* safe: no HTML parsing */
+      headerDiv.appendChild(nameSpan);
+
+      /* Tip paragraph */
+      const tipP = document.createElement('p');
+      tipP.className   = 'model-tip';
+      tipP.textContent = tip || MODEL_TIPS[normalized] || 'No tip available for this model.';
+
+      m.appendChild(headerDiv);
+      m.appendChild(tipP);
     }
+
     lastKnownModel = normalized;
   }
 
