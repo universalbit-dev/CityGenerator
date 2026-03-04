@@ -1,5 +1,7 @@
 export default class SmartCityStateManager {
     constructor() {
+        this.modelName = 'Smart City';
+        this.modelTip  = '\u{1F916} Deploy sensors, AI services & connectivity for a smarter city.';
         this.state = {
             population: 50000,
             sensorCoverage: 0.5,
@@ -11,8 +13,8 @@ export default class SmartCityStateManager {
     }
     update(action) {
         if (action === 0) this.state.sensorCoverage = Math.min(1, this.state.sensorCoverage + 0.03);
-        if (action === 1) this.state.connectivity = Math.min(1, this.state.connectivity + 0.02);
-        if (action === 2) this.state.aiServices = Math.min(1, this.state.aiServices + 0.02);
+        if (action === 1) this.state.connectivity   = Math.min(1, this.state.connectivity   + 0.02);
+        if (action === 2) this.state.aiServices     = Math.min(1, this.state.aiServices     + 0.02);
     }
     getStateArray() {
         const s = this.state;

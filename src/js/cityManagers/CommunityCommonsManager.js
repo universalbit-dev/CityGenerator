@@ -1,5 +1,7 @@
 export default class CommunityCommonsManager {
     constructor() {
+        this.modelName = 'Community Commons';
+        this.modelTip  = '\u{1F91D} Share resources, open public spaces & raise community happiness.';
         this.state = {
             population: 50000,
             sharedResources: 0.3,
@@ -11,8 +13,8 @@ export default class CommunityCommonsManager {
     }
     update(action) {
         if (action === 0) this.state.sharedResources = Math.min(1, this.state.sharedResources + 0.02);
-        if (action === 1) this.state.publicSpaces = Math.min(1, this.state.publicSpaces + 0.02);
-        if (action === 2) this.state.happiness = Math.min(1, this.state.happiness + 0.01);
+        if (action === 1) this.state.publicSpaces    = Math.min(1, this.state.publicSpaces    + 0.02);
+        if (action === 2) this.state.happiness       = Math.min(1, this.state.happiness       + 0.01);
     }
     getStateArray() {
         const s = this.state;

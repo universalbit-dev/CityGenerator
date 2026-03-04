@@ -1,5 +1,7 @@
 export default class CivicEcosystemManager {
     constructor() {
+        this.modelName = 'Civic Ecosystem';
+        this.modelTip  = '\u{1F3DB}\ufe0f Engage citizens, open data & grow business density for a thriving ecosystem.';
         this.state = {
             population: 50000,
             citizenEngagement: 0.3,
@@ -11,8 +13,8 @@ export default class CivicEcosystemManager {
     }
     update(action) {
         if (action === 0) this.state.citizenEngagement = Math.min(1, this.state.citizenEngagement + 0.02);
-        if (action === 1) this.state.openData = Math.min(1, this.state.openData + 0.01);
-        if (action === 2) this.state.businessDensity = Math.min(1, this.state.businessDensity + 0.03);
+        if (action === 1) this.state.openData          = Math.min(1, this.state.openData          + 0.01);
+        if (action === 2) this.state.businessDensity   = Math.min(1, this.state.businessDensity   + 0.03);
     }
     getStateArray() {
         const s = this.state;
