@@ -256,11 +256,20 @@ function ensureChartElements() {
 
 function renderManagerInfo(manager) {
   try {
-    const ctorName   = manager && manager.constructor && manager.constructor.name
-      ? manager.constructor.name : (typeof manager === 'function' ? manager.name : '');
-    const displayName = readableNameFromCtorName(ctorName);
-    const tip         = getManagerTipFor(manager);
-    const infoDiv     = document.getElementById('manager-info');
+    // ── Read instance-level modelName/modelTip first (minification-safe) ──
+    const displayName = (manager && manager.modelName)
+      ? manager.modelName
+      : readableNameFromCtorName(
+          manager && manager.constructor && manager.constructor.name
+            ? manager.constructor.name
+            : (typeof manager === 'function' ? manager.name : '')
+        );
+
+    const tip = (manager && manager.modelTip)
+      ? manager.modelTip
+      : getManagerTipFor(manager);
+
+    const infoDiv = document.getElementById('manager-info');
     if (infoDiv) {
       infoDiv.style.textAlign  = 'center';
       infoDiv.style.whiteSpace = 'normal';
