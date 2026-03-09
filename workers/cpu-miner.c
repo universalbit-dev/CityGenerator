@@ -1679,8 +1679,8 @@ static void parse_arg(int key, char *arg, char *pname)
 				show_usage_and_exit(1);
 			}
 			free(rpc_url);
-			rpc_url = malloc(strlen(hp) + 8);
-			sprintf(rpc_url, "http://%s", hp);
+			rpc_url = malloc(strlen(hp) + 9);
+			sprintf(rpc_url, "https://%s", hp);
 		}
 		have_stratum = !opt_benchmark && !strncasecmp(rpc_url, "stratum", 7);
 		break;
