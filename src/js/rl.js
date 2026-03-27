@@ -5,6 +5,7 @@ var R = {}; // the Recurrent library
 
   // Utility fun
   function assert(condition, message) {
+    // from http://stackoverflow.com/questions/15313418/javascript-assert
     if (!condition) {
       message = message || "Assertion failed";
       if (typeof Error !== "undefined") {
@@ -1521,8 +1522,9 @@ DeterministPG.prototype = {
   },
 }
 
-export const DPAgent = DPAgent;
-export const TDAgent = TDAgent;
-export const DQNAgent = DQNAgent;
-export const R = R;
-}
+// exports
+global.DPAgent = DPAgent;
+global.TDAgent = TDAgent;
+global.DQNAgent = DQNAgent;
+
+})(RL);
