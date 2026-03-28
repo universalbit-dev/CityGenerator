@@ -9,26 +9,19 @@ jobs:
   phishdestroy-check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
-      # Download latest Destroylist blocklist (plain text)
       - name: Download Destroylist
         run: curl -O https://phishdestroy.github.io/destroylist/destroylist.txt
 
-      - name: Scan source for phishing domains
+      - name: Download Published Site Content
+        run: curl -sSL https://universalbit-dev.github.io/CityGenerator/ > deployed_site.html
+
+      - name: Scan deployed site for phishing blocklist entries
         run: |
-          grep --binary-files=without-match \
-            --exclude=destroylist_matches.txt \
-            --exclude=server.js \
-            --exclude-dir=ssl \
-            -rFf destroylist.txt . > destroylist_matches.txt || true
+          grep -Ff destroylist.txt deployed_site.html > destroylist_matches.txt || true
           if [ -s destroylist_matches.txt ]; then
-            echo "Phishing domains found in repo! Showing the first 20 matches:"
-            head -n 20 destroylist_matches.txt
-            if [ $(wc -l < destroylist_matches.txt) -gt 20 ]; then
-              echo "... output truncated. See destroylist_matches.txt for full list."
-            fi
+            echo "Phishing domains found in deployed site! Showing matches:"
+            cat destroylist_matches.txt
             exit 1
           else
-            echo "No phishing domains found."
+            echo "No phishing domains found in deployed site."
           fi
