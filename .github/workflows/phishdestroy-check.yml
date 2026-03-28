@@ -2,6 +2,9 @@ name: Security Blocklist Scan
 
 on: [push, pull_request]
 
+permissions:
+	  contents: read
+    
 jobs:
   phishdestroy-check:
     runs-on: ubuntu-latest
