@@ -1,6 +1,10 @@
 name: Security Blocklist Scan
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 5 * * *'   # Every day at 05:00 UTC
 
 permissions:
   contents: read
