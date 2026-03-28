@@ -8,8 +8,8 @@ permissions:
 jobs:
   phishdestroy-check:
     runs-on: ubuntu-latest
-
     steps:
+
       - name: Download JSON destroylist
         run: |
           curl -sSLo list.json https://raw.githubusercontent.com/phishdestroy/destroylist/main/list.json
@@ -18,28 +18,40 @@ jobs:
         run: |
           jq -r '.domains[]' list.json | sort | uniq > destroylist_domains.txt
 
-      - name: Download deployed homepage and extract domains
+      - name: Download deployed homepage and extract referenced domains
         run: |
           curl -sS https://universalbit-dev.github.io/CityGenerator/ > deployed_site.html
           grep -oE "https?://[a-zA-Z0-9._~:/?#@!$&'()*,;=%-]+" deployed_site.html \
             | sed 's|https\?://||' | cut -d'/' -f1 | sort | uniq > referenced_domains.txt
 
-      - name: Whitelist only your own domain (and trusted CDNs if needed)
+      - name: Whitelist only your own domain and trusted CDNs
         run: |
           cat > whitelist.txt <<EOF
 universalbit-dev.github.io
 cdn.jsdelivr.net
 github.com
-# add more if you trust other APIs/CDNs used on your site
+# Add more trusted domains if needed
 EOF
           grep -vxFf whitelist.txt referenced_domains.txt > domains_to_check.txt
 
-      - name: Scan for blocklisted domains, error only if a non-whitelisted match is found
+      - name: Scan for blocklisted domains
         run: |
           if grep -Ff destroylist_domains.txt domains_to_check.txt > destroylist_matches.txt; then
-            echo "Blocked phishing domains found in deployed site:"
+            echo "::error ::Blocked phishing domains found in deployed site! Review below:"
             cat destroylist_matches.txt
             exit 1
           else
             echo "No blocked phishing domains found in deployed site."
           fi
+
+      - name: Upload log artifacts (optional)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phishdestroy-scan-logs
+          path: |
+            destroylist.txt
+            destroylist_domains.txt
+            referenced_domains.txt
+            domains_to_check.txt
+            destroylist_matches.txt
