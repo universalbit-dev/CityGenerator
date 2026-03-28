@@ -12,16 +12,16 @@ jobs:
       - name: Download Destroylist
         run: curl -O https://phishdestroy.github.io/destroylist/destroylist.txt
 
-     - name: Scan source for phishing domains
-  run: |
-    grep --binary-files=without-match -rFf destroylist.txt . > destroylist_matches.txt || true
-    if [ -s destroylist_matches.txt ]; then
-      echo "Phishing domains found in repo! Showing the first 20 matches:"
-      head -n 20 destroylist_matches.txt
-      if [ $(wc -l < destroylist_matches.txt) -gt 20 ]; then
-        echo "... output truncated. See destroylist_matches.txt for full list."
-      fi
-      exit 1
-    else
-      echo "No phishing domains found."
-    fi
+      - name: Scan source for phishing domains
+        run: |
+          grep --binary-files=without-match -rFf destroylist.txt . > destroylist_matches.txt || true
+          if [ -s destroylist_matches.txt ]; then
+            echo "Phishing domains found in repo! Showing the first 20 matches:"
+            head -n 20 destroylist_matches.txt
+            if [ $(wc -l < destroylist_matches.txt) -gt 20 ]; then
+              echo "... output truncated. See destroylist_matches.txt for full list."
+            fi
+            exit 1
+          else
+            echo "No phishing domains found."
+          fi
