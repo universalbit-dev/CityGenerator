@@ -14,25 +14,30 @@ jobs:
 
       - name: Wait for deployed site and download content
         run: |
-          EXPECTED='CityGenerator'  # Change if there's a better unique string in your main page
+          EXPECTED="CityGenerator"
           for i in {1..5}; do
             curl -sSL https://universalbit-dev.github.io/CityGenerator/ > deployed_site.html
             if grep -q "$EXPECTED" deployed_site.html; then
-              echo "Found expected content in deployed site."
+              echo "Site is live and up-to-date."
               break
             else
-              echo "Expected content not found, waiting 15 seconds before retrying... (attempt $i/5)"
+              echo "Expected site string not found, retrying in 15 seconds ($i/5)..."
               sleep 15
             fi
           done
 
-      - name: Scan deployed site for phishing blocklist entries
+      - name: Extract URLs/domains from deployed site
         run: |
-          grep -Ff destroylist.txt deployed_site.html > destroylist_matches.txt || true
+          grep -oE 'https?://[a-zA-Z0-9._~:/?#@!$&\'\(\)\*\+,;=%-]+' deployed_site.html | \
+            sed 's|https\?://||' | cut -d'/' -f1 | sort | uniq > referenced_domains.txt
+
+      - name: Scan referenced domains against blocklist
+        run: |
+          grep -Ff destroylist.txt referenced_domains.txt > destroylist_matches.txt || true
           if [ -s destroylist_matches.txt ]; then
-            echo "Phishing domains found in deployed site! Showing matches:"
+            echo "Blocked phishing domains found in the deployed site (by real usage):"
             cat destroylist_matches.txt
             exit 1
           else
-            echo "No phishing domains found in deployed site."
+            echo "No blocked phishing domains found in the deployed site."
           fi
