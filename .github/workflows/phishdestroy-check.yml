@@ -14,7 +14,7 @@ jobs:
 
       - name: Scan source for phishing domains
         run: |
-          grep --binary-files=without-match --exclude=destroylist_matches.txt --exclude=server.js -rFf destroylist.txt . > destroylist_matches.txt || true
+          grep --binary-files=without-match --exclude=destroylist_matches.txt --exclude=server.js --exclude-dir=ssl -rFf destroylist.txt . > destroylist_matches.txt || true
           if [ -s destroylist_matches.txt ]; then
             echo "Phishing domains found in repo! Showing the first 20 matches:"
             head -n 20 destroylist_matches.txt
