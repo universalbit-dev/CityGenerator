@@ -12,8 +12,19 @@ jobs:
       - name: Download Destroylist
         run: curl -O https://phishdestroy.github.io/destroylist/destroylist.txt
 
-      - name: Download Published Site Content
-        run: curl -sSL https://universalbit-dev.github.io/CityGenerator/ > deployed_site.html
+      - name: Wait for deployed site and download content
+        run: |
+          EXPECTED='CityGenerator'  # Change if there's a better unique string in your main page
+          for i in {1..5}; do
+            curl -sSL https://universalbit-dev.github.io/CityGenerator/ > deployed_site.html
+            if grep -q "$EXPECTED" deployed_site.html; then
+              echo "Found expected content in deployed site."
+              break
+            else
+              echo "Expected content not found, waiting 15 seconds before retrying... (attempt $i/5)"
+              sleep 15
+            fi
+          done
 
       - name: Scan deployed site for phishing blocklist entries
         run: |
