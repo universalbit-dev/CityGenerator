@@ -1,0 +1,25 @@
+name: Security Blocklist Scan
+
+on: [push, pull_request]
+
+jobs:
+  phishdestroy-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      # Download latest Destroylist blocklist (plain text)
+      - name: Download Destroylist
+        run: curl -O https://phishdestroy.github.io/destroylist/destroylist.txt
+
+      # Scan codebase for listed phishing domains
+      - name: Scan source for phishing domains
+        run: |
+          grep -rFf destroylist.txt . > destroylist_matches.txt || true
+          if [ -s destroylist_matches.txt ]; then
+            echo "Phishing domains found in repo! See destroylist_matches.txt"
+            cat destroylist_matches.txt
+            exit 1
+          else
+            echo "No phishing domains found."
+          fi
