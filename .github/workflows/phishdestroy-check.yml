@@ -28,7 +28,7 @@ jobs:
 
       - name: Extract URLs/domains from deployed site
         run: |
-          grep -oE 'https?://[a-zA-Z0-9._~:/?#@!$&\'\(\)\*\+,;=%-]+' deployed_site.html | \
+          grep -oE "https?://[a-zA-Z0-9._~:/?#@!$&'()*,;=%-]+" deployed_site.html | \
             sed 's|https\?://||' | cut -d'/' -f1 | sort | uniq > referenced_domains.txt
 
       - name: Scan referenced domains against blocklist
