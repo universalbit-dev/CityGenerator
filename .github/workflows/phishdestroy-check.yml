@@ -8,36 +8,38 @@ permissions:
 jobs:
   phishdestroy-check:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Download Destroylist
-        run: curl -O https://phishdestroy.github.io/destroylist/destroylist.txt
-
-      - name: Wait for deployed site and download content
+      - name: Download JSON destroylist
         run: |
-          EXPECTED="CityGenerator"
-          for i in {1..5}; do
-            curl -sSL https://universalbit-dev.github.io/CityGenerator/ > deployed_site.html
-            if grep -q "$EXPECTED" deployed_site.html; then
-              echo "Site is live and up-to-date."
-              break
-            else
-              echo "Expected site string not found, retrying in 15 seconds ($i/5)..."
-              sleep 15
-            fi
-          done
+          curl -sSLo list.json https://raw.githubusercontent.com/phishdestroy/destroylist/main/list.json
 
-      - name: Extract URLs/domains from deployed site
+      - name: Extract blocklisted domains from JSON
         run: |
-          grep -oE "https?://[a-zA-Z0-9._~:/?#@!$&'()*,;=%-]+" deployed_site.html | \
-            sed 's|https\?://||' | cut -d'/' -f1 | sort | uniq > referenced_domains.txt
+          jq -r '.domains[]' list.json | sort | uniq > destroylist_domains.txt
 
-      - name: Scan referenced domains against blocklist
+      - name: Download deployed homepage and extract domains
         run: |
-          grep -Ff destroylist.txt referenced_domains.txt > destroylist_matches.txt || true
-          if [ -s destroylist_matches.txt ]; then
-            echo "Blocked phishing domains found in the deployed site (by real usage):"
+          curl -sS https://universalbit-dev.github.io/CityGenerator/ > deployed_site.html
+          grep -oE "https?://[a-zA-Z0-9._~:/?#@!$&'()*,;=%-]+" deployed_site.html \
+            | sed 's|https\?://||' | cut -d'/' -f1 | sort | uniq > referenced_domains.txt
+
+      - name: Whitelist only your own domain (and trusted CDNs if needed)
+        run: |
+          cat > whitelist.txt <<EOF
+universalbit-dev.github.io
+cdn.jsdelivr.net
+github.com
+# add more if you trust other APIs/CDNs used on your site
+EOF
+          grep -vxFf whitelist.txt referenced_domains.txt > domains_to_check.txt
+
+      - name: Scan for blocklisted domains, error only if a non-whitelisted match is found
+        run: |
+          if grep -Ff destroylist_domains.txt domains_to_check.txt > destroylist_matches.txt; then
+            echo "Blocked phishing domains found in deployed site:"
             cat destroylist_matches.txt
             exit 1
           else
-            echo "No blocked phishing domains found in the deployed site."
+            echo "No blocked phishing domains found in deployed site."
           fi
