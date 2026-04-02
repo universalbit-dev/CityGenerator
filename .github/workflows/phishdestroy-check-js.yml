@@ -1,0 +1,81 @@
+name: Security Blocklist Scan Js
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 5 * * *'   # Every day at 05:00 UTC
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      # Standard Node.js project steps — add/modify as needed for your project!
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      # Optionally: Build your project if you have a build step
+      # - name: Build
+      #   run: npm run build
+
+      # Optionally: Run tests
+      # - name: Test
+      #   run: npm test
+
+      # Security blocklist scan steps (your script, unchanged except for artifact name fix!)
+      - name: Download JSON destroylist
+        run: |
+          curl -sSLo list.json https://raw.githubusercontent.com/phishdestroy/destroylist/main/list.json
+
+      - name: Extract blocklisted domains from JSON
+        run: |
+          jq -r '.domains[]' list.json | sort | uniq > destroylist_domains.txt
+
+      - name: Download deployed homepage and extract referenced domains
+        run: |
+          curl -sS https://universalbit-dev.github.io/CityGenerator/ > deployed_site.html
+          grep -oE "https?://[a-zA-Z0-9._~:/?#@!$&'()*,;=%-]+" deployed_site.html \
+            | sed 's|https\?://||' | cut -d'/' -f1 | sort | uniq > referenced_domains.txt
+
+      - name: Whitelist only your own domain and trusted CDNs
+        run: |
+          cat > whitelist.txt <<EOF
+universalbit-dev.github.io
+cdn.jsdelivr.net
+github.com
+# Add more trusted domains if needed
+EOF
+          grep -vxFf whitelist.txt referenced_domains.txt > domains_to_check.txt
+
+      - name: Scan for blocklisted domains
+        run: |
+          if grep -Ff destroylist_domains.txt domains_to_check.txt > destroylist_matches.txt; then
+            echo "::error ::Blocked phishing domains found in deployed site! Review below:"
+            cat destroylist_matches.txt
+            exit 1
+          else
+            echo "No blocked phishing domains found in deployed site."
+          fi
+
+      - name: Upload log artifacts (optional)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phishdestroy-scan-logs
+          path: |
+            list.json
+            destroylist_domains.txt
+            referenced_domains.txt
+            domains_to_check.txt
+            destroylist_matches.txt
