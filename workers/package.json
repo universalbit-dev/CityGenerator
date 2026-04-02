@@ -28,7 +28,7 @@
     "fs-extra": "^11.1.0",
     "humanize-duration": "^3.20.1",
     "tiny-secp256k1": "^2.2.3",
-    "underscore": "^1.13.7"
+    "underscore": "^1.13.8"
   },
   "bugs": {
     "url": "https://github.com/universalbit-dev/CityGenerator/issues"
