@@ -7,8 +7,11 @@
     "generate-cert": "mkdir -p ssl && openssl req -nodes -new -x509 -keyout ssl/private-key.pem -out ssl/certificate.pem -days 365 -config ssl/distinguished.cnf",
     "build": "webpack",
     "postbuild": "node ./src/js/deep.js && cp ./src/html/style.css ./dist/",
-    "postinstall": "npm run generate-cert && npm run build",
-    "start": "node https_server.js"
+    "postinstall": "npm run generate-cert && npm audit fix && npm run build",
+    "start": "node https_server.js",
+    "audit": "npm audit --audit-level=moderate",
+    "audit:fix": "npm audit fix",
+    "audit:fix:force": "npm audit fix --force"
   },
   "keywords": [
     "citygenerator",
@@ -78,8 +81,15 @@
   },
   "overrides": {
     "elliptic": "^6.6.1",
-    "serialize-javascript": "^7.0.3",
-    "minimatch": "^3.1.2"
+    "serialize-javascript": "^7.0.5",
+    "minimatch": "^9.0.4",
+    "braces": "^3.0.3",
+    "semver": "^7.6.0",
+    "path-to-regexp": "^6.2.1",
+    "tough-cookie": "^4.1.4",
+    "ws": "^8.18.1",
+    "micromatch": "^4.0.8",
+    "cross-spawn": "^7.0.6"
   },
   "engines": {
     "node": ">=20 <25"
