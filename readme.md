@@ -4,8 +4,6 @@
 [![Hyperledger](https://img.shields.io/badge/hyperledger-2F3134?style=for-the-badge&logo=hyperledger&logoColor=white)](https://www.lfdecentralizedtrust.org/)
 [![FreeCodeCamp](https://img.shields.io/badge/Freecodecamp-%23123.svg?&style=for-the-badge&logo=freecodecamp&logoColor=green)](https://www.freecodecamp.org/)
 
-**[Web3](https://github.com/freeCodeCamp/web3-curriculum?tab=readme-ov-file)**
-
 ---
 
 ### [CityGenerator](https://github.com/universalbit-dev/CityGenerator)
