@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>CityGenerator</title>
+  <title>CityGenerator - AI Learning Simulation</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- Bootstrap CSS -->
@@ -15,6 +15,7 @@
     /* ── Design tokens ───────────────────────────────────── */
     :root {
       --accent:  #0d6efd;
+      --accent-rl: #6c75ff;
       --radius:  .75rem;
       --card-sh: 0 2px 10px rgba(0,0,0,.08);
     }
@@ -52,6 +53,11 @@
       box-shadow: 0 0 0 3px #ffc10733;
       animation: pulse-amber 2s infinite;
     }
+    #sim-status-dot.learning {
+      background: var(--accent-rl);
+      box-shadow: 0 0 0 3px rgba(108,117,255,0.2);
+      animation: pulse-learning 1.5s infinite;
+    }
     @keyframes pulse-green {
       0%,100% { box-shadow: 0 0 0 3px #28a74533; }
       50%      { box-shadow: 0 0 0 6px #28a74511; }
@@ -59,6 +65,10 @@
     @keyframes pulse-amber {
       0%,100% { box-shadow: 0 0 0 3px #ffc10733; }
       50%      { box-shadow: 0 0 0 6px #ffc10711; }
+    }
+    @keyframes pulse-learning {
+      0%,100% { box-shadow: 0 0 0 3px rgba(108,117,255,0.2); }
+      50%      { box-shadow: 0 0 0 6px rgba(108,117,255,0.1); }
     }
 
     /* ── Generic white card ──────────────────────────────── */
@@ -94,6 +104,18 @@
     }
     .btn-round:active { transform: scale(.96); }
 
+    /* ── RL Agent selector styling ───────────────────────── */
+    .form-select.rl-select {
+      background: linear-gradient(135deg, #f8f9ff 0%, #e8f0fe 100%);
+      border: 2px solid var(--accent-rl);
+      color: var(--accent-rl);
+      font-weight: 600;
+    }
+    .form-select.rl-select:focus {
+      border-color: var(--accent-rl);
+      box-shadow: 0 0 0 0.2rem rgba(108,117,255,0.25);
+    }
+
     /* ── Model info banner (index.js writes innerHTML here) ── */
     #manager-info {
       border-left: 4px solid var(--accent);
@@ -107,20 +129,38 @@
 
     /* ── Charts container ────────────────────────────────── */
     #charts-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: flex-start;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 24px;
       width: 100%;
       box-sizing: border-box;
     }
+    
+    /* Chart wrappers */
     #charts-container > div[data-chart-wrapper="1"] {
       background: #fff;
       border-radius: var(--radius);
       box-shadow: var(--card-sh);
-      padding: 1rem 1rem .5rem;
+      padding: 1rem;
       box-sizing: border-box;
+      min-height: 300px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Special styling for RL stats chart */
+    #charts-container > div[data-chart-wrapper="1"]:has(#rl-stats-chart) {
+      background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
+      border: 2px solid rgba(108,117,255,0.1);
+    }
+
+    /* Chart titles */
+    .chart-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 0.5rem;
+      color: #495057;
     }
 
     /* reward value label index.js appends inside the reward wrapper */
@@ -132,11 +172,65 @@
       color: #212529;
     }
 
+    /* RL stats value label */
+    #rl-stats-value {
+      font-weight: 600;
+      font-size: .85rem;
+      text-align: center;
+      margin-top: 6px;
+      color: var(--accent-rl);
+      background: rgba(108,117,255,0.1);
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+
+    /* Learning indicators */
+    .learning-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: var(--accent-rl);
+      margin-top: 0.25rem;
+    }
+    .learning-indicator::before {
+      content: "🧠";
+      font-size: 1rem;
+    }
+
+    /* Performance badges */
+    .perf-badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      background: rgba(108,117,255,0.1);
+      color: var(--accent-rl);
+      margin: 0 2px;
+    }
+
     /* ── Footer ──────────────────────────────────────────── */
     .app-footer {
       font-size: .76rem;
       color: #adb5bd;
       text-align: center;
+    }
+
+    /* ── Responsive adjustments ──────────────────────────── */
+    @media (max-width: 768px) {
+      #charts-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .app-header h1 {
+        font-size: 1.1rem;
+      }
+      
+      .btn-round {
+        font-size: 0.85rem;
+        padding: 0.35rem 0.8rem;
+      }
     }
   </style>
 </head>
@@ -150,7 +244,7 @@
     <h1>
       CityGenerator
       <span class="badge bg-secondary ms-1"
-            style="font-size:.7rem;vertical-align:middle;">Deep Q-Learning</span>
+            style="font-size:.7rem;vertical-align:middle;">AI Learning</span>
     </h1>
   </header>
 
@@ -175,7 +269,7 @@
   </div>
 
   <!-- index.js owns innerHTML of this div via renderManagerInfo() -->
-  <!-- It also appends a <select> dropdown here via setupUI()      -->
+  <!-- It also appends dropdown selectors here via setupUI()      -->
   <div id="manager-info" role="status" aria-live="polite"></div>
 
   <!-- index.js → ensureChartElements() appends chart wrappers here -->
@@ -183,7 +277,7 @@
 
   <!-- ══ FOOTER ════════════════════════════════════════════ -->
   <footer class="app-footer pb-2">
-    CityGenerator · Deep Q-Learning Simulator ·
+    CityGenerator · AI Learning Simulator ·
     <a href="https://github.com/universalbit-dev/CityGenerator"
        target="_blank" rel="noopener"
        class="text-decoration-none">GitHub</a>
@@ -194,7 +288,7 @@
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- ══ Simulation UI helper ══════════════════════════════════════════════ -->
+<!-- ══ Enhanced Simulation UI helper with RL support ════════════════════ -->
 <script>
 (function () {
   'use strict';
@@ -222,24 +316,40 @@
     'Cookieless City':           '🔒 Privacy-first agent — your choices boost digital safety.',
   };
 
+  /* ── RL Agent tips ───────────────────────────────────────────────────── */
+  const RL_AGENT_TIPS = {
+    'random': '🎲 Random actions - baseline performance for comparison',
+    'td_learning': '🧠 Q-Learning agent - learns optimal policies through temporal difference',
+    'dqn': '🤖 Deep Q-Network - neural network for complex state-action mapping',
+    'hybrid': '⚡ Hybrid agent - adaptive exploration with multiple learning strategies'
+  };
+
   /* ── state ───────────────────────────────────────────────────────────── */
   let lastKnownModel = null;
-  let pollTimer      = null;
+  let lastKnownRLAgent = null;
+  let pollTimer = null;
 
   const $id = id => document.getElementById(id);
 
-  /* ── status dot ──────────────────────────────────────────────────────── */
-  function setSimRunning(running) {
+  /* ── status dot with RL awareness ────────────────────────────────────── */
+  function setSimRunning(running, isLearning = false) {
     const dot = $id('sim-status-dot');
     if (!dot) return;
+    
     dot.classList.toggle('paused', !running);
-    dot.title = running ? 'Simulation running' : 'Simulation paused';
+    dot.classList.toggle('learning', running && isLearning);
+    
+    if (!running) {
+      dot.title = 'Simulation paused';
+    } else if (isLearning) {
+      dot.title = 'AI Learning in progress';
+    } else {
+      dot.title = 'Simulation running';
+    }
   }
 
-  /* ── model display (pre-index.js only; index.js overwrites innerHTML) ── */
-  function updateModelDisplay(name, tip) {
-    /* Once index.js has written its own HTML (contains a span with inline color),
-       step back and let it own the banner.                                       */
+  /* ── Enhanced model display with RL support ─────────────────────────── */
+  function updateModelDisplay(name, tip, rlAgent = null, rlTip = null) {
     const m = $id('manager-info');
     if (m && m.querySelector('span[style*="color"]')) return;
 
@@ -247,8 +357,6 @@
     if (!normalized) return;
 
     if (m) {
-      /* ── FIX: build DOM with textContent instead of innerHTML ── */
-      /* Clear existing children */
       while (m.firstChild) m.removeChild(m.firstChild);
 
       /* Header div: "Active Model: <span.model-name>" */
@@ -259,24 +367,69 @@
       headerDiv.appendChild(document.createTextNode('Active Model: '));
       const nameSpan = document.createElement('span');
       nameSpan.className   = 'model-name';
-      nameSpan.textContent = normalized;           /* safe: no HTML parsing */
+      nameSpan.textContent = normalized;
       headerDiv.appendChild(nameSpan);
 
-      /* Tip paragraph */
+      /* RL Agent info if available */
+      if (rlAgent) {
+        const rlDiv = document.createElement('div');
+        rlDiv.style.fontWeight = '600';
+        rlDiv.style.fontSize = '0.9rem';
+        rlDiv.style.marginBottom = '4px';
+        rlDiv.style.color = '#6c75ff';
+        rlDiv.appendChild(document.createTextNode('RL Agent: '));
+        const rlSpan = document.createElement('span');
+        rlSpan.textContent = rlAgent;
+        rlDiv.appendChild(rlSpan);
+        headerDiv.appendChild(document.createElement('br'));
+        headerDiv.appendChild(rlDiv);
+      }
+
+      /* Model tip paragraph */
       const tipP = document.createElement('p');
       tipP.className   = 'model-tip';
       tipP.textContent = tip || MODEL_TIPS[normalized] || 'No tip available for this model.';
 
-      m.appendChild(headerDiv);
-      m.appendChild(tipP);
+      /* RL tip if available */
+      if (rlTip) {
+        const rlTipP = document.createElement('p');
+        rlTipP.style.color = '#666';
+        rlTipP.style.fontSize = '0.85rem';
+        rlTipP.style.marginTop = '4px';
+        rlTipP.style.marginBottom = '0';
+        rlTipP.textContent = rlTip;
+        
+        m.appendChild(headerDiv);
+        m.appendChild(tipP);
+        m.appendChild(rlTipP);
+      } else {
+        m.appendChild(headerDiv);
+        m.appendChild(tipP);
+      }
     }
 
     lastKnownModel = normalized;
+    if (rlAgent) lastKnownRLAgent = rlAgent;
+  }
+
+  /* ── Enhanced chart monitoring ───────────────────────────────────────── */
+  function monitorChartHealth() {
+    // Check if all expected charts are present and rendering
+    const expectedCharts = ['state-chart', 'rewardTrendChart', 'rl-stats-chart'];
+    const missingCharts = expectedCharts.filter(id => !$id(id));
+    
+    if (missingCharts.length > 0) {
+      console.warn('Missing charts:', missingCharts);
+    }
+
+    // Check for RL learning status
+    const isLearning = window.rlMode && window.rlMode !== 'random';
+    setSimRunning(!window.isPaused, isLearning);
   }
 
   window.setSimulationModelDisplay = updateModelDisplay;
 
-  /* ── model inference ─────────────────────────────────────────────────── */
+  /* ── Enhanced model inference with RL support ────────────────────────── */
   function safeGet(obj, path) {
     try { return path.reduce((a,k) => (a && a[k] !== undefined ? a[k] : undefined), obj); }
     catch (_) { return undefined; }
@@ -324,45 +477,83 @@
     return cands.length ? cands[0] : null;
   }
 
-  /* ── polling ─────────────────────────────────────────────────────────── */
+  function inferRLAgent() {
+    try {
+      if (window.rlMode) {
+        return window.rlMode.split('_').map(word => 
+          word.charAt(0).toUpperCase() + word.slice(1)
+        ).join(' ');
+      }
+    } catch (_) {}
+    return null;
+  }
+
+  /* ── Enhanced polling with RL monitoring ─────────────────────────────── */
   function startPolling() {
     if (pollTimer) return;
     pollTimer = setInterval(() => {
       const m = inferModel();
-      if (m && m !== lastKnownModel) updateModelDisplay(m);
+      const rl = inferRLAgent();
+      
+      if (m && (m !== lastKnownModel || rl !== lastKnownRLAgent)) {
+        const rlTip = rl ? RL_AGENT_TIPS[window.rlMode] : null;
+        updateModelDisplay(m, MODEL_TIPS[m], rl, rlTip);
+      }
+      
+      monitorChartHealth();
     }, 500);
   }
 
-  /* ── simulationModelChanged event ────────────────────────────────────── */
+  /* ── simulationModelChanged event with RL support ───────────────────── */
   window.addEventListener('simulationModelChanged', function (e) {
     const d = e?.detail ?? null;
-    if (d?.name) updateModelDisplay(d.name, d.tip);
-    else { const m = inferModel(); if (m) updateModelDisplay(m); }
+    const rl = inferRLAgent();
+    const rlTip = rl ? RL_AGENT_TIPS[window.rlMode] : null;
+    
+    if (d?.name) {
+      updateModelDisplay(d.name, d.tip, rl, rlTip);
+    } else { 
+      const m = inferModel(); 
+      if (m) updateModelDisplay(m, MODEL_TIPS[m], rl, rlTip);
+    }
   });
 
-  /* ── MutationObserver (lightweight — attributes + direct children only) ─ */
+  /* ── MutationObserver (enhanced for RL) ──────────────────────────────── */
   const mo = new MutationObserver(() => {
     const inferred = inferModel();
-    if (inferred && inferred !== lastKnownModel) updateModelDisplay(inferred);
+    const rl = inferRLAgent();
+    if (inferred && (inferred !== lastKnownModel || rl !== lastKnownRLAgent)) {
+      const rlTip = rl ? RL_AGENT_TIPS[window.rlMode] : null;
+      updateModelDisplay(inferred, MODEL_TIPS[inferred], rl, rlTip);
+    }
   });
 
-  /* ── DOMContentLoaded ────────────────────────────────────────────────── */
+  /* ── DOMContentLoaded with enhanced controls ─────────────────────────── */
   document.addEventListener('DOMContentLoaded', function () {
     const pauseBtn  = $id('pause-btn');
     const resumeBtn = $id('resume-btn');
     const resetBtn  = $id('reset-btn');
 
     if (pauseBtn)  pauseBtn.addEventListener ('click', () => setSimRunning(false));
-    if (resumeBtn) resumeBtn.addEventListener('click', () => setSimRunning(true));
+    if (resumeBtn) resumeBtn.addEventListener('click', () => {
+      const isLearning = window.rlMode && window.rlMode !== 'random';
+      setSimRunning(true, isLearning);
+    });
     if (resetBtn) {
       resetBtn.addEventListener('click', () => {
         try { if (window.manager?.reset) window.manager.reset(); } catch (_) {}
         try { if (window.city?.reset)    window.city.reset();    } catch (_) {}
+        try { if (window.currentRLAgent?.reset) window.currentRLAgent.reset(); } catch (_) {}
       });
     }
 
     const m = inferModel();
-    if (m) updateModelDisplay(m, MODEL_TIPS[m]);
+    const rl = inferRLAgent();
+    if (m) {
+      const rlTip = rl ? RL_AGENT_TIPS[window.rlMode] : null;
+      updateModelDisplay(m, MODEL_TIPS[m], rl, rlTip);
+    }
+    
     startPolling();
 
     try {
@@ -370,10 +561,13 @@
     } catch (e) { console.warn('Model observer failed to start', e); }
   });
 
-  /* ── debug ───────────────────────────────────────────────────────────── */
+  /* ── Enhanced debug functions ────────────────────────────────────────── */
   window.getSimulationModelDisplay = () => ({
     name: $id('manager-info')?.querySelector('.model-name')?.textContent ?? null,
     tip:  $id('manager-info')?.querySelector('.model-tip')?.textContent  ?? null,
+    rlAgent: lastKnownRLAgent,
+    rlMode: window.rlMode ?? null,
+    learningStats: window.learningStats ?? null
   });
 
 })();
