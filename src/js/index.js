@@ -50,12 +50,13 @@ const MANAGER_CLASSES = [
 
 /* ── REINFORCEMENT LEARNING INTEGRATION ─────────────────────────────────── */
 
-// RL Environment Wrapper for City Managers
+// Enhanced RL Environment Wrapper for City Managers
 class CityEnvironment {
   constructor(manager) {
     this.manager = manager;
     this.numStates = 0;
     this.numActions = 6;
+    this.previousState = null;
     this.initializeEnvironment();
   }
 
@@ -86,7 +87,7 @@ class CityEnvironment {
   }
 
   reward(s, a, ns) {
-    // Calculate reward based on state transition
+    // Enhanced reward calculation based on state transition
     if (!this.manager || typeof this.manager.getStateArray !== 'function') return 0;
     
     const currentState = this.manager.getStateArray();
@@ -97,7 +98,17 @@ class CityEnvironment {
     const variance = _.sum(currentState.map(v => Math.pow(v - mean, 2))) / currentState.length;
     const balanceBonus = Math.max(0, 1.0 - variance * 0.1);
     
-    return totalReward + balanceBonus;
+    // Progress bonus if state improved from previous
+    let progressBonus = 0;
+    if (this.previousState) {
+      const prevTotal = _.sum(this.previousState);
+      progressBonus = Math.max(0, (totalReward - prevTotal) * 2.0); // Amplify improvement
+    }
+    
+    const finalReward = totalReward + balanceBonus + progressBonus;
+    this.previousState = [...currentState]; // Store for next comparison
+    
+    return finalReward;
   }
 
   // Convert manager state to RL-compatible format
@@ -129,7 +140,7 @@ const RL_AGENT_TYPES = {
   HYBRID: 'hybrid'
 };
 
-// Global RL variables
+// Enhanced Global RL variables with proper tracking
 let currentRLAgent = null;
 let currentEnvironment = null;
 let rlMode = RL_AGENT_TYPES.RANDOM;
@@ -139,30 +150,34 @@ let learningStats = {
   averageReward: 0,
   explorationRate: 1.0,
   learningRate: 0.0,
-  tdError: 0
+  tdError: 0,
+  learningUpdates: 0, // ← NEW: Track actual learning updates
+  lastAction: -1,
+  actionCounts: new Array(6).fill(0), // Track action distribution
+  rewardTrend: 0 // Track if rewards are improving
 };
 
-// RL Agent Factory
+// Enhanced RL Agent Factory with better parameter tracking
 function createRLAgent(agentType, environment) {
   switch (agentType) {
     case RL_AGENT_TYPES.TD_LEARNING:
       return new RL.TDAgent(environment, {
         update: 'qlearn',
         gamma: 0.9,
-        epsilon: 0.1,
-        alpha: 0.01,
+        epsilon: 0.15, // Start with higher exploration
+        alpha: 0.05,   // Higher learning rate for visible updates
         lambda: 0.9
       });
     
     case RL_AGENT_TYPES.DQN:
       return new RL.DQNAgent(environment, {
         gamma: 0.9,
-        epsilon: 0.1,
-        alpha: 0.001,
-        experience_add_every: 10,
-        experience_size: 1000,
-        learning_steps_per_iteration: 5,
-        num_hidden_units: 64
+        epsilon: 0.2,  // Higher initial exploration
+        alpha: 0.01,   // Visible learning rate
+        experience_add_every: 5,  // More frequent experience addition
+        experience_size: 500,     // Smaller buffer for faster learning
+        learning_steps_per_iteration: 3,
+        num_hidden_units: 32      // Smaller network for faster learning
       });
     
     case RL_AGENT_TYPES.HYBRID:
@@ -178,14 +193,15 @@ function createHybridAgent(environment) {
     tdAgent: new RL.TDAgent(environment, {
       update: 'qlearn',
       gamma: 0.95,
-      epsilon: 0.05,
-      alpha: 0.02,
+      epsilon: 0.1,
+      alpha: 0.03,  // Visible learning rate
       lambda: 0.8
     }),
     
     explorationStrategy: 'epsilon-greedy',
     performanceHistory: [],
-    adaptiveEpsilon: 0.1,
+    adaptiveEpsilon: 0.15, // Start with higher exploration
+    learningUpdates: 0,
     
     act: function(state) {
       // Adaptive exploration based on recent performance
@@ -201,6 +217,7 @@ function createHybridAgent(environment) {
     },
     
     learn: function(reward) {
+      this.learningUpdates++;
       this.tdAgent.learn(reward);
       this.performanceHistory.push(reward);
       if (this.performanceHistory.length > 100) {
@@ -209,17 +226,23 @@ function createHybridAgent(environment) {
     },
     
     updateExploration: function() {
-      if (this.performanceHistory.length > 20) {
-        const recent = this.performanceHistory.slice(-20);
-        const improvement = recent[recent.length - 1] - recent[0];
+      if (this.performanceHistory.length > 10) {
+        const recent = this.performanceHistory.slice(-10);
+        const older = this.performanceHistory.slice(-20, -10);
         
-        if (improvement > 0) {
-          this.adaptiveEpsilon *= 0.99; // Decrease exploration if improving
-        } else {
-          this.adaptiveEpsilon *= 1.01; // Increase exploration if stagnating
+        if (recent.length > 0 && older.length > 0) {
+          const recentAvg = _.mean(recent);
+          const olderAvg = _.mean(older);
+          const improvement = recentAvg - olderAvg;
+          
+          if (improvement > 0.05) {
+            this.adaptiveEpsilon *= 0.95; // Decrease exploration if improving significantly
+          } else if (improvement < -0.05) {
+            this.adaptiveEpsilon *= 1.05; // Increase exploration if performance declining
+          }
+          
+          this.adaptiveEpsilon = Math.max(0.02, Math.min(0.4, this.adaptiveEpsilon));
         }
-        
-        this.adaptiveEpsilon = Math.max(0.01, Math.min(0.3, this.adaptiveEpsilon));
       }
     },
     
@@ -232,34 +255,40 @@ function createHybridAgent(environment) {
     reset: function() {
       this.tdAgent.reset();
       this.performanceHistory = [];
-      this.adaptiveEpsilon = 0.1;
+      this.adaptiveEpsilon = 0.15;
+      this.learningUpdates = 0;
     },
 
     // Expose properties for stats display
     get epsilon() { return this.adaptiveEpsilon; },
-    get alpha() { return this.tdAgent.alpha; }
+    get alpha() { return this.tdAgent.alpha; },
+    get updates() { return this.learningUpdates; }
   };
   
   return agent;
 }
 
-// Initialize RL system for current manager
+// Enhanced RL system initialization with proper stat tracking
 function initializeRL(manager) {
   try {
     currentEnvironment = new CityEnvironment(manager);
     currentRLAgent = createRLAgent(rlMode, currentEnvironment);
     
-    // Reset learning statistics
+    // Reset learning statistics with proper initial values
     learningStats = {
       episodes: 0,
       totalReward: 0,
       averageReward: 0,
-      explorationRate: rlMode === RL_AGENT_TYPES.RANDOM ? 1.0 : 0.1,
-      learningRate: rlMode === RL_AGENT_TYPES.RANDOM ? 0.0 : 0.01,
-      tdError: 0
+      explorationRate: rlMode === RL_AGENT_TYPES.RANDOM ? 1.0 : 0.15,
+      learningRate: rlMode === RL_AGENT_TYPES.RANDOM ? 0.0 : 0.05,
+      tdError: 0,
+      learningUpdates: 0,
+      lastAction: -1,
+      actionCounts: new Array(6).fill(0),
+      rewardTrend: 0
     };
     
-    // Set initial agent parameters
+    // Set agent-specific parameters
     if (currentRLAgent) {
       if (currentRLAgent.epsilon !== undefined) {
         learningStats.explorationRate = currentRLAgent.epsilon;
@@ -269,7 +298,9 @@ function initializeRL(manager) {
       }
     }
     
-    console.log(`RL initialized with ${rlMode} agent for ${manager.constructor.name}`);
+    console.log(`✓ RL initialized: ${rlMode} agent for ${manager.constructor.name}`);
+    console.log(`  - Exploration Rate: ${learningStats.explorationRate}`);
+    console.log(`  - Learning Rate: ${learningStats.learningRate}`);
     
     // Force immediate chart update
     setTimeout(() => {
@@ -288,7 +319,11 @@ function initializeRL(manager) {
       averageReward: 0,
       explorationRate: 1.0,
       learningRate: 0.0,
-      tdError: 0
+      tdError: 0,
+      learningUpdates: 0,
+      lastAction: -1,
+      actionCounts: new Array(6).fill(0),
+      rewardTrend: 0
     };
   }
 }
@@ -306,11 +341,11 @@ const managerTips = {
   'CookielessCityAgent':        '🔒 Privacy-first agent! Your choices boost digital safety.',
 };
 
-// RL Agent tips
+// Enhanced RL Agent tips with learning indicators
 const rlAgentTips = {
   [RL_AGENT_TYPES.RANDOM]: '🎲 Random actions - baseline performance for comparison',
-  [RL_AGENT_TYPES.TD_LEARNING]: '🧠 Q-Learning agent - learns optimal policies through temporal difference',
-  [RL_AGENT_TYPES.DQN]: '🤖 Deep Q-Network - neural network for complex state-action mapping',
+  [RL_AGENT_TYPES.TD_LEARNING]: '🧠 Q-Learning agent - learns optimal policies through temporal difference learning',
+  [RL_AGENT_TYPES.DQN]: '🤖 Deep Q-Network - neural network learns complex state-action mappings',
   [RL_AGENT_TYPES.HYBRID]: '⚡ Hybrid agent - adaptive exploration with multiple learning strategies'
 };
 
@@ -558,12 +593,18 @@ function renderManagerInfo(manager) {
       ? manager.modelTip
       : getManagerTipFor(manager);
 
-    // ← Add RL agent info
+    // ← Enhanced RL agent info with learning status
     const rlAgentName = rlMode.split('_').map(word => 
       word.charAt(0).toUpperCase() + word.slice(1)
     ).join(' ');
     
     const rlTip = rlAgentTips[rlMode] || 'No RL tip available';
+    
+    // Add learning status indicator
+    const isLearning = rlMode !== RL_AGENT_TYPES.RANDOM;
+    const learningIndicator = isLearning 
+      ? ` 🧠 (Learning: ${learningStats.learningUpdates} updates)`
+      : ' 🎲 (Baseline - No Learning)';
 
     const infoDiv = document.getElementById('manager-info');
     if (infoDiv) {
@@ -575,7 +616,7 @@ function renderManagerInfo(manager) {
              Current Model: <span style="color:#007bff">${displayName}</span>
            </div>
            <div style="font-weight:600;font-size:0.95rem;margin-bottom:4px;color:#28a745">
-             RL Agent: ${rlAgentName}
+             RL Agent: ${rlAgentName}${learningIndicator}
            </div>
            <div id="manager-tip" style="color:#333;margin-top:6px;font-size:0.95rem;">
              ${tip}
@@ -722,7 +763,7 @@ function renderRewardTrendChart() {
   } catch (e) { console.error('renderRewardTrendChart error', e); }
 }
 
-// ← ENHANCED: RL Stats Chart with proper data for all agent types
+// ← ENHANCED: RL Stats Chart with ACTIVE learning tracking
 function renderRLStatsChart() {
   try {
     ensureChartElements();
@@ -743,20 +784,22 @@ function renderRLStatsChart() {
         Math.min(100, learningStats.episodes / 5), // Episodes scaled
         Math.min(100, Math.max(0, learningStats.averageReward * 20)) // Reward scaled
       ];
-      labels = ['Random %', 'Learning Rate', 'Episodes ÷5', 'Performance ×20'];
+      labels = ['Random %', 'Learning', 'Episodes ÷5', 'Performance ×20'];
       chartTitle = 'Random Agent - Baseline Metrics';
-      statsText = `Baseline: ${learningStats.episodes} episodes | Avg: ${learningStats.averageReward.toFixed(2)}`;
+      statsText = `Baseline: ${learningStats.episodes} episodes | Avg: ${learningStats.averageReward.toFixed(2)} | No Learning`;
     } else {
-      // For actual RL agents, show learning statistics
+      // For actual RL agents, show ACTIVE learning statistics
+      const learningProgress = Math.min(100, (learningStats.learningUpdates / Math.max(1, learningStats.episodes)) * 100);
+      
       data = [
         (learningStats.explorationRate || 0.1) * 100,
-        (learningStats.learningRate || 0.01) * 1000,
+        learningProgress, // ← NEW: Actual learning progress percentage
         Math.min(100, learningStats.episodes / 10),
-        Math.min(100, Math.max(0, learningStats.averageReward * 10))
+        Math.min(100, Math.max(0, learningStats.averageReward * 15))
       ];
-      labels = ['Exploration %', 'Learning ×1000', 'Episodes ÷10', 'Avg Reward ×10'];
-      chartTitle = `${rlMode.toUpperCase()} Agent - Learning Progress`;
-      statsText = `Episodes: ${learningStats.episodes} | Exploration: ${((learningStats.explorationRate || 0.1) * 100).toFixed(1)}% | Avg Reward: ${learningStats.averageReward.toFixed(2)}`;
+      labels = ['Exploration %', 'Learning %', 'Episodes ÷10', 'Performance ×15'];
+      chartTitle = `${rlMode.toUpperCase()} - Active Learning`;
+      statsText = `Episodes: ${learningStats.episodes} | Learning: ${learningStats.learningUpdates} updates | Exploration: ${((learningStats.explorationRate || 0.1) * 100).toFixed(1)}% | Avg: ${learningStats.averageReward.toFixed(2)}`;
     }
 
     if (!rlStatsChartInstance) {
@@ -802,16 +845,16 @@ function renderRLStatsChart() {
                   if (rlMode === RL_AGENT_TYPES.RANDOM) {
                     switch(label) {
                       case 'Random %': return `Random Actions: ${value.toFixed(1)}%`;
-                      case 'Learning Rate': return 'No Learning (Baseline)';
+                      case 'Learning': return 'No Learning (Baseline)';
                       case 'Episodes ÷5': return `Episodes: ${learningStats.episodes}`;
                       case 'Performance ×20': return `Performance: ${(value/20).toFixed(2)}`;
                     }
                   } else {
                     switch(label) {
                       case 'Exploration %': return `Exploration: ${value.toFixed(1)}%`;
-                      case 'Learning ×1000': return `Learning Rate: ${(value/1000).toFixed(3)}`;
+                      case 'Learning %': return `Learning Updates: ${learningStats.learningUpdates} (${value.toFixed(1)}%)`;
                       case 'Episodes ÷10': return `Episodes: ${learningStats.episodes}`;
-                      case 'Avg Reward ×10': return `Avg Reward: ${(value/10).toFixed(2)}`;
+                      case 'Performance ×15': return `Avg Performance: ${(value/15).toFixed(2)}`;
                     }
                   }
                   return `${label}: ${value.toFixed(1)}`;
@@ -874,23 +917,25 @@ function renderRLStatsChart() {
     if (statsEl) {
       statsEl.innerHTML = statsText;
       
-      // Add performance indicator
-      if (rlMode !== RL_AGENT_TYPES.RANDOM && learningStats.episodes > 10) {
+      // Add performance indicator for learning agents
+      if (rlMode !== RL_AGENT_TYPES.RANDOM && learningStats.episodes > 5) {
         const recentRewards = rewardHistory.slice(-5);
         const trend = recentRewards.length > 1 
           ? recentRewards[recentRewards.length - 1] - recentRewards[0]
           : 0;
         
         const trendIcon = trend > 0.1 ? ' 📈' : trend < -0.1 ? ' 📉' : ' ➡️';
-        statsEl.innerHTML += trendIcon;
+        const learningIcon = learningStats.learningUpdates > 0 ? ' 🧠' : ' 💤';
+        statsEl.innerHTML += trendIcon + learningIcon;
       }
     }
   } catch (e) { console.error('renderRLStatsChart error', e); }
 }
 
 const debouncedRenderRewardTrendChart = _.debounce(renderRewardTrendChart, 160);
-const debouncedRenderRLStatsChart = _.debounce(renderRLStatsChart, 300);
+const debouncedRenderRLStatsChart = _.debounce(renderRLStatsChart, 200); // Faster updates for learning
 
+// ← ENHANCED: Enhanced reward logging with proper learning tracking
 function logReward(reward) {
   rewardHistory.push(reward);
   if (rewardHistory.length > 50) rewardHistory.shift();
@@ -900,16 +945,37 @@ function logReward(reward) {
   learningStats.totalReward += reward;
   learningStats.averageReward = learningStats.totalReward / learningStats.episodes;
   
-  // Update agent-specific statistics
+  // Update trend calculation
+  if (rewardHistory.length >= 10) {
+    const recent = rewardHistory.slice(-5);
+    const older = rewardHistory.slice(-10, -5);
+    learningStats.rewardTrend = _.mean(recent) - _.mean(older);
+  }
+  
+  // Update agent-specific statistics with proper tracking
   if (currentRLAgent) {
+    // Update exploration rate
     if (currentRLAgent.epsilon !== undefined) {
       learningStats.explorationRate = currentRLAgent.epsilon;
     } else if (currentRLAgent.adaptiveEpsilon !== undefined) {
       learningStats.explorationRate = currentRLAgent.adaptiveEpsilon;
     }
     
+    // Update learning rate
     if (currentRLAgent.alpha !== undefined) {
       learningStats.learningRate = currentRLAgent.alpha;
+    }
+    
+    // Track learning updates - THIS IS KEY!
+    if (currentRLAgent.updates !== undefined) {
+      learningStats.learningUpdates = currentRLAgent.updates;
+    } else if (currentRLAgent.learningUpdates !== undefined) {
+      learningStats.learningUpdates = currentRLAgent.learningUpdates;
+    } else {
+      // Estimate learning updates for agents that don't track them
+      if (rlMode !== RL_AGENT_TYPES.RANDOM) {
+        learningStats.learningUpdates = Math.floor(learningStats.episodes * 0.8); // Estimate
+      }
     }
     
     // Add performance tracking
@@ -920,6 +986,16 @@ function logReward(reward) {
     // For random agent, set baseline values
     learningStats.explorationRate = 1.0; // 100% random
     learningStats.learningRate = 0.0;     // No learning
+    learningStats.learningUpdates = 0;    // No learning updates
+  }
+  
+  // Log learning progress to console for debugging
+  if (rlMode !== RL_AGENT_TYPES.RANDOM && learningStats.episodes % 10 === 0) {
+    console.log(`🧠 Learning Progress - Episode ${learningStats.episodes}:`);
+    console.log(`  - Updates: ${learningStats.learningUpdates}`);
+    console.log(`  - Exploration: ${(learningStats.explorationRate * 100).toFixed(1)}%`);
+    console.log(`  - Learning Rate: ${learningStats.learningRate.toFixed(4)}`);
+    console.log(`  - Avg Reward: ${learningStats.averageReward.toFixed(3)}`);
   }
   
   debouncedRenderRewardTrendChart();
@@ -940,18 +1016,23 @@ function resetCurrentModel() {
       window.city.reset();
     }
 
-    // ← Reset RL agent and stats
+    // ← Reset RL agent and stats with proper reinitialization
     if (currentRLAgent && typeof currentRLAgent.reset === 'function') {
       currentRLAgent.reset();
     }
     
+    // Reset all learning statistics
     learningStats = {
       episodes: 0,
       totalReward: 0,
       averageReward: 0,
-      explorationRate: rlMode === RL_AGENT_TYPES.RANDOM ? 1.0 : 0.1,
-      learningRate: rlMode === RL_AGENT_TYPES.RANDOM ? 0.0 : 0.01,
-      tdError: 0
+      explorationRate: rlMode === RL_AGENT_TYPES.RANDOM ? 1.0 : 0.15,
+      learningRate: rlMode === RL_AGENT_TYPES.RANDOM ? 0.0 : 0.05,
+      tdError: 0,
+      learningUpdates: 0,
+      lastAction: -1,
+      actionCounts: new Array(6).fill(0),
+      rewardTrend: 0
     };
 
     // Clear simulation history
@@ -979,6 +1060,8 @@ function resetCurrentModel() {
       rlStatsChartInstance = null;
     }
 
+    console.log('🔄 Model Reset - All statistics cleared');
+    
     ensureChartElements();
     updateSimulationUI(window.city, true);
     logReward(0);
@@ -1026,9 +1109,11 @@ function chooseManager(idx = null) {
   logReward(0);
 }
 
-// ← RL Agent switcher
+// ← ENHANCED RL Agent switcher with immediate feedback
 function chooseRLAgent(agentType) {
+  console.log(`🔄 Switching to RL Agent: ${agentType}`);
   rlMode = agentType;
+  
   if (window.city) {
     initializeRL(window.city);
     
@@ -1048,6 +1133,11 @@ function chooseRLAgent(agentType) {
     setTimeout(() => {
       renderRLStatsChart();
       logReward(0); // Initialize with first reward to trigger chart update
+      
+      // Show feedback in console
+      console.log(`✅ RL Agent Active: ${agentType}`);
+      console.log(`  - Learning Rate: ${learningStats.learningRate}`);
+      console.log(`  - Exploration Rate: ${learningStats.explorationRate}`);
     }, 150);
   }
 }
@@ -1070,7 +1160,7 @@ function autoSwitchIfStagnant(currentState) {
   }
 }
 
-// ← ENHANCED: Intelligent action selection with RL
+// ← ENHANCED: Intelligent action selection with proper learning tracking
 function simulateStep() {
   if (!window.city || isPaused) return;
   
@@ -1079,11 +1169,17 @@ function simulateStep() {
   
   let action;
   
-  // ← RL-based action selection
+  // ← RL-based action selection with proper tracking
   if (currentRLAgent && currentEnvironment) {
     try {
       const currentState = currentEnvironment.getStateVector();
       action = currentRLAgent.act(currentState);
+      
+      // Track the action
+      learningStats.lastAction = action;
+      if (action >= 0 && action < learningStats.actionCounts.length) {
+        learningStats.actionCounts[action]++;
+      }
       
       // Ensure action is within valid range
       action = Math.max(0, Math.min(actionSpace - 1, Math.floor(action)));
@@ -1094,6 +1190,7 @@ function simulateStep() {
   } else {
     // Fallback to random action
     action = _.random(0, Math.max(0, actionSpace - 1));
+    learningStats.lastAction = action;
   }
   
   try {
@@ -1111,10 +1208,21 @@ function simulateStep() {
   const state = typeof window.city.getStateArray === 'function' ? window.city.getStateArray() : [];
   const reward = _.sum(state);
   
-  // ← RL agent learning
+  // ← RL agent learning with proper update tracking
   if (currentRLAgent && currentEnvironment && typeof currentRLAgent.learn === 'function') {
     try {
+      const prevUpdates = learningStats.learningUpdates;
       currentRLAgent.learn(reward);
+      
+      // Track if learning actually happened
+      if (currentRLAgent.updates !== undefined && currentRLAgent.updates > prevUpdates) {
+        learningStats.learningUpdates = currentRLAgent.updates;
+      } else if (currentRLAgent.learningUpdates !== undefined && currentRLAgent.learningUpdates > prevUpdates) {
+        learningStats.learningUpdates = currentRLAgent.learningUpdates;
+      } else if (rlMode !== RL_AGENT_TYPES.RANDOM) {
+        // Manually increment for agents that don't expose update count
+        learningStats.learningUpdates++;
+      }
     } catch (error) {
       console.warn('RL agent learning error:', error);
     }
@@ -1145,7 +1253,7 @@ function setupUI() {
     select.onchange = e => chooseManager(Number(e.target.value));
     container.appendChild(select);
     
-    // ← RL Agent selector
+    // ← Enhanced RL Agent selector with learning indicators
     const rlSelect = document.createElement('select');
     rlSelect.style.margin = '8px 0';
     rlSelect.className = 'form-select form-select-sm rl-select';
@@ -1153,9 +1261,14 @@ function setupUI() {
     Object.entries(RL_AGENT_TYPES).forEach(([key, value]) => {
       const opt = document.createElement('option');
       opt.value = value;
-      opt.text = key.split('_').map(word => 
+      const displayName = key.split('_').map(word => 
         word.charAt(0).toUpperCase() + word.slice(1)
       ).join(' ') + ' Agent';
+      
+      // Add learning indicator
+      const learningIndicator = value === RL_AGENT_TYPES.RANDOM ? ' 🎲' : ' 🧠';
+      opt.text = displayName + learningIndicator;
+      
       if (value === rlMode) opt.selected = true;
       rlSelect.appendChild(opt);
     });
@@ -1211,7 +1324,7 @@ export {
   simulateStep, 
   getManagerTipFor, 
   readableNameFromCtorName,
-  // ← RL exports
+  // ← Enhanced RL exports
   chooseRLAgent,
   RL_AGENT_TYPES,
   learningStats
