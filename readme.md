@@ -3,7 +3,6 @@
 [![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org)
 [![Hyperledger](https://img.shields.io/badge/hyperledger-2F3134?style=for-the-badge&logo=hyperledger&logoColor=white)](https://www.lfdecentralizedtrust.org/)
 [![FreeCodeCamp](https://img.shields.io/badge/Freecodecamp-%23123.svg?&style=for-the-badge&logo=freecodecamp&logoColor=green)](https://www.freecodecamp.org/)
-
 ---
 
 ### [CityGenerator](https://github.com/universalbit-dev/CityGenerator)
@@ -21,6 +20,8 @@ The **CityGenerator** project focuses on creating **dynamic city models** inspir
 3. **Collaboration**: Create open-source tools and models to engage developers, urban planners, and researchers in building decentralized urban systems.
 
 ---
+### [Explore Ubuntu's vision for Smart Cities](https://ubuntu.com/internet-of-things/smart-city)
+
 
 ### Clone the project
 ```bash
@@ -176,10 +177,6 @@ npm run build
 ##### Blockchain Integration: Information about integrating with DigiByte and other blockchain environments.
 -- [DigiByte Integration Guide](https://www.digibyte.org/docs/integrationguide.pdf) --
 -- [Documentation and examples](https://github.com/RenzoDD/digibyte-js?tab=readme-ov-file#documentation--examples-) --
-#### Blockchain Environment
--- [Workers](https://github.com/universalbit-dev/CityGenerator/blob/master/workers/readme.md)
-
-
 
 ##### Contributing: feel free to make something of amazing.
 ## 📢 Support the UniversalBit Project
