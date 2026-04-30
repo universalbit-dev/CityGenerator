@@ -25,20 +25,20 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20' # Or your preferred version
+        node-version: '20'
 
     - name: Install dependencies
-      run: npm ci # Or yarn install, if you use yarn
+      run: npm ci
 
-    # Uncomment if you want to build with webpack (not needed for CodeQL scan)
-    # - name: Build with webpack
-    #   run: npm run build # Or your build command
+    # Uncomment if your project requires a build step, like TypeScript transpile or webpack
+    # - name: Build project
+    #   run: npm run build
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
       with:
-        languages: javascript
-        build-mode: none
+        languages: javascript,typescript
+        build-mode: none   # Set to 'none' if no build step is needed
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
