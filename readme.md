@@ -177,6 +177,15 @@ npm run build
 ##### Blockchain Integration: Information about integrating with DigiByte and other blockchain environments.
 -- [DigiByte Integration Guide](https://www.digibyte.org/docs/integrationguide.pdf) --
 -- [Documentation and examples](https://github.com/RenzoDD/digibyte-js?tab=readme-ov-file#documentation--examples-) --
+## Quick Start for ESP32 NodeMCU – Fully Supported & Tested
+
+1. **Download or clone** the [esptool_microminer](https://github.com/universalbit-dev/esptool_microminer) repository.
+2. **Flash the mining firmware** directly to your **ESP32 NodeMCU** board — this model is fully supported and thoroughly tested.<br>
+3. **Configure your WiFi and mining pool settings** as detailed in the project instructions.
+4. **Connect your NodeMCU** to an open mining pool (e.g., [web.public-pool.io](https://web.public-pool.io)) and start solo or distributed mining.
+5. **(Optional)** Integrate with **CityGenerator** workflows to enable blockchain-based event validation and decentralized, real-world data verification.
+
+---
 
 ##### Contributing: feel free to make something of amazing.
 ## 📢 Support the UniversalBit Project
