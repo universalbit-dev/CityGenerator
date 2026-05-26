@@ -140,12 +140,6 @@ flowchart TD
    - If you encounter any issues with the HTTPS server or certificate generation, refer to the [SSL README](ssl/readme.md) for detailed instructions and troubleshooting tips.
 
 ---
-
-##### Draw City
-![CityGenerator Header](https://github.com/universalbit-dev/CityGenerator/blob/master/assets/images/draw_city.png)
-
-> **Note:** generated using **Google Gemini AI**.
-
 **Resources**
 * [Docs](https://github.com/universalbit-dev/CityGenerator/tree/master/docs)
 * [CityGenerator usage](https://github.com/universalbit-dev/CityGenerator/blob/master/docs/usageguide.md)
