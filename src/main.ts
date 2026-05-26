@@ -1,3 +1,5 @@
+// src/main.ts
+
 import * as log from 'loglevel';
 import * as dat from 'dat.gui';
 import TensorFieldGUI from './ts/ui/tensor_field_gui';
@@ -13,28 +15,28 @@ import Vector from './ts/vector';
 import ModelGenerator from './ts/model_generator';
 import { saveAs } from 'file-saver';
 
-// --- Use default colour scheme, no JSON ---
+// --- Use default colour scheme ---
 const DEFAULT_COLOUR_SCHEME: ColourScheme = {
-    bgColour: "#f5f3ee",              // light background
+    bgColour: "#f5f3ee",
     bgColourIn: "#f5f3ee",
-    buildingColour: "#d9cfc3",        // light tan for buildings
-    buildingStroke: "#bba58d",        // subtle outline for buildings
-    seaColour: "#0055aa",             // blue for water
-    grassColour: "#c2e59c",           // soft green for parks/grass
-    minorRoadColour: "#a0a0a0",       // light gray for minor roads
-    minorRoadOutline: "#7a7a7a",      // darker outline for minor roads
-    majorRoadColour: "#ffd265",       // yellow/orange for major roads
-    majorRoadOutline: "#b58c00",      // gold/brown outline
-    mainRoadColour: "#ffffff",        // white for main roads
-    mainRoadOutline: "#0055aa",      // blue outline for main roads
+    buildingColour: "#d9cfc3",
+    buildingStroke: "#bba58d",
+    seaColour: "#0055aa",
+    grassColour: "#c2e59c",
+    minorRoadColour: "#a0a0a0",
+    minorRoadOutline: "#7a7a7a",
+    majorRoadColour: "#ffd265",
+    majorRoadOutline: "#b58c00",
+    mainRoadColour: "#ffffff",
+    mainRoadOutline: "#0055aa",
     outlineSize: 1,
     minorWidth: 2,
     majorWidth: 4,
     mainWidth: 5,
     zoomBuildings: false,
     buildingModels: true,
-    frameColour: "#cccccc",           // frame color
-    frameTextColour: "#222222",       // frame text color
+    frameColour: "#cccccc",
+    frameTextColour: "#222222",
 };
 
 declare global {
@@ -46,22 +48,20 @@ declare global {
     }
 }
 
-/**
- * Main entry point for CityGenerator.
- */
 class Main {
     private static readonly STARTING_WIDTH = 1440;
+
     private tensorFolder: dat.GUI;
     private roadsFolder: dat.GUI;
     private styleFolder: dat.GUI;
     private optionsFolder: dat.GUI;
-    // downloadsFolder removed
 
     private domainController = DomainController.getInstance();
     private gui: dat.GUI;
     private dragController: DragController;
     private tensorField: TensorFieldGUI;
-    private mainGui: MainGUI;
+    public mainGui: MainGUI;
+    private isGenerating = false;
 
     private imageScale = 3;
     public highDPI = false;
@@ -79,10 +79,9 @@ class Main {
     public cameraY = 0;
     private firstGenerate = true;
     private modelGenerator: ModelGenerator | undefined;
-    
+
     showTensorField(): boolean {
-        // Change this logic based on your app's needs.
-        // For now, always show city map (returns false).
+        // In this app, false means the main city map is shown.
         return false;
     }
 
@@ -98,7 +97,6 @@ class Main {
         this.roadsFolder = this.gui.addFolder('Map');
         this.styleFolder = this.gui.addFolder('Style');
         this.optionsFolder = this.gui.addFolder('Options');
-        // Download folder removed: no this.downloadsFolder
 
         // Canvas setup
         this.canvas = document.getElementById(Util.CANVAS_ID) as HTMLCanvasElement;
@@ -113,7 +111,7 @@ class Main {
         // --- Style and core object initialization FIRST ---
         this.changeColourScheme(this.colourScheme);
 
-        // Tensor field and main GUI (must come after style is initialized)
+        // Tensor field and main GUI
         const noiseParamsPlaceholder: NoiseParams = {
             globalNoise: false,
             noiseSizePark: 20,
@@ -122,20 +120,17 @@ class Main {
             noiseAngleGlobal: 20,
         };
         this.dragController = new DragController(this.gui);
-
-        // TensorFieldGUI: correct constructor and type
         this.tensorField = new TensorFieldGUI(this.tensorFolder, this.dragController, true, noiseParamsPlaceholder);
-        // MainGUI expects a TensorField (TensorFieldGUI is a subclass)
         this.mainGui = new MainGUI(this.roadsFolder, this.tensorField, () => this.tensorFolder.close());
 
-        // Now set up controls
+        // Set up controls
         this.setupStyleControls();
-        this.setupOptionsAndDownloads(); // this method no longer creates a Download folder
+        this.setupOptionsAndDownloads();
 
         // Initial settings
         this.tensorField.setRecommended();
 
-        // Add zoom control and generate button
+        // Add zoom control and generate button (dat.GUI)
         const zoomController = this.gui.add(this.domainController, 'zoom');
         this.domainController.setZoomUpdate(() => zoomController.updateDisplay());
         this.gui.add(this, 'generate');
@@ -181,28 +176,34 @@ class Main {
     }
 
     private setupOptionsAndDownloads(): void {
-        // Only bind drawCentre to tensorField, not mainGui
         this.optionsFolder.add(this.tensorField, 'drawCentre');
         this.optionsFolder.add(this, 'highDPI').onChange((high: boolean) => this.changeCanvasScale(high));
-
-        // Download actions removed entirely — no Download folder or controllers created
     }
 
-    generate(): void {
+    async triggerGeneration() {
+        if (this.isGenerating) return;
+        this.isGenerating = true;
+        try {
+            if (this.mainGui && typeof this.mainGui.generateEverything === 'function') {
+                await this.mainGui.generateEverything();
+            } else {
+                console.error('mainGui is not initialized or generateEverything is missing.');
+            }
+        } finally {
+            this.isGenerating = false;
+        }
+    }
+
+    async generate(): Promise<void> {
         if (!this.firstGenerate) {
             this.tensorField.setRecommended();
         } else {
             this.firstGenerate = false;
         }
-        if (this.mainGui && typeof this.mainGui.generateEverything === 'function') {
-            this.mainGui.generateEverything();
-        } else {
-            console.error('mainGui is not initialized or generateEverything is missing.');
-        }
+        await this.triggerGeneration();
     }
 
     changeColourScheme(scheme: string): void {
-        // Use ONLY the default scheme
         const colourScheme: ColourScheme = DEFAULT_COLOUR_SCHEME;
         this.zoomBuildings = colourScheme.zoomBuildings ?? false;
         this.buildingModels = colourScheme.buildingModels ?? false;
@@ -222,8 +223,6 @@ class Main {
         this.domainController.cameraDirection = new Vector(this.cameraX / 10, this.cameraY / 10);
     }
 
-    // Disabled placeholder download functions removed (no longer needed)
-
     update(): void {
         if (this.modelGenerator) {
             let continueUpdate = true;
@@ -238,35 +237,45 @@ class Main {
         window.__cityGenAnimationFrameId__ = requestAnimationFrame(this.update.bind(this));
     }
 
-   draw(): void {
-    const isTensorField = this.showTensorField();
+    draw(): void {
+        const isTensorField = this.showTensorField();
 
-    // Toggle drag functionality based on mode
-    this.dragController.setDragDisabled(!isTensorField);
+        this.dragController.setDragDisabled(!isTensorField);
 
-    if (isTensorField) {
-        this.previousFrameDrawTensor = true;
-        this.tensorField.draw(this.tensorCanvas);
-    } else {
-        if (this.previousFrameDrawTensor) {
-            this.previousFrameDrawTensor = false;
-            // Force redraw when switching from tensor field mode
-            this.mainGui.draw(this._style, true);
+        if (isTensorField) {
+            this.previousFrameDrawTensor = true;
+            this.tensorField.draw(this.tensorCanvas);
         } else {
-            this.mainGui.draw(this._style);
+            if (this.previousFrameDrawTensor) {
+                this.previousFrameDrawTensor = false;
+                this.mainGui.draw(this._style, true);
+            } else {
+                this.mainGui.draw(this._style);
+            }
         }
     }
 }
-}
 
-// --- GLOBAL SINGLETON ENTRYPOINT ---
+// --- GLOBAL SINGLETON ENTRYPOINT / PAGE LOAD ---
 (window as any).log = log;
-window.addEventListener('load', (): void => {
+window.addEventListener('load', async (): Promise<void> => {
     if (window.__cityGenMainInstance__) {
         if (window.__cityGenGuiInstance__) window.__cityGenGuiInstance__.destroy();
         if (window.__cityGenAnimationFrameId__ !== undefined) {
             cancelAnimationFrame(window.__cityGenAnimationFrameId__);
         }
     }
-    window.__cityGenMainInstance__ = new Main();
+    const mainInstance = new Main();
+    window.__cityGenMainInstance__ = mainInstance;
+
+    // Auto-generate city on load
+    await mainInstance.triggerGeneration();
+
+    // "Random City Model" button handler (if present)
+    const randomBtn = document.getElementById('random-city-model-btn');
+    if (randomBtn) {
+        randomBtn.addEventListener('click', async () => {
+            await mainInstance.triggerGeneration();
+        });
+    }
 });
