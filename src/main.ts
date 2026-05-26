@@ -1,5 +1,3 @@
-// src/main.ts
-
 import * as log from 'loglevel';
 import * as dat from 'dat.gui';
 import TensorFieldGUI from './ts/ui/tensor_field_gui';
