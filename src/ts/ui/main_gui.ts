@@ -1,6 +1,6 @@
 import * as log from 'loglevel';
 import DomainController from './domain_controller';
-import TensorField from '../impl/tensor_field';
+import TensorFieldGUI from './tensor_field_gui';
 import { RK4Integrator } from '../impl/integrator';
 import { StreamlineParams } from '../impl/streamlines';
 import { WaterParams } from '../impl/water_generator';
@@ -58,7 +58,7 @@ export default class MainGUI {
 
     constructor(
         private guiFolder: dat.GUI,
-        private tensorField: TensorField,
+        private tensorField: TensorFieldGUI,
         private closeTensorFolder: () => void
     ) {
         // dat.GUI controls - only public properties permitted
@@ -182,6 +182,13 @@ export default class MainGUI {
         this.minorRoads.setPostGenerateCallback(() => {
             this.addParks();
         });
+
+        // ======== AUTO GENERATE EVERYTHING ON FIRST RUN =========
+        // Ensures recommended tensor preset AND correct async sequence
+        (async () => {
+            this.tensorField.setRecommended();
+            await this.generateEverything();
+        })();
     }
 
     /**
@@ -243,7 +250,7 @@ export default class MainGUI {
      * Generate all roads and buildings for the city.
      */
     async generateEverything() {
-        this.coastline.generateRoads();
+        await this.coastline.generateRoads();
         await this.mainRoads.generateRoads();
         await this.majorRoads.generateRoads(this.animate);
         await this.minorRoads.generateRoads(this.animate);
