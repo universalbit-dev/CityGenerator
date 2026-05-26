@@ -186,8 +186,8 @@ export default class MainGUI {
         // ======== AUTO GENERATE EVERYTHING ON FIRST RUN =========
         // Ensures recommended tensor preset AND correct async sequence
         (async () => {
-            this.tensorField.setRecommended();
-            await this.generateEverything();
+            //this.tensorField.setRecommended();
+            this.generateEverything();
         })();
     }
 
@@ -250,13 +250,22 @@ export default class MainGUI {
      * Generate all roads and buildings for the city.
      */
     async generateEverything() {
-        await this.coastline.generateRoads();
-        await this.mainRoads.generateRoads();
-        await this.majorRoads.generateRoads(this.animate);
-        await this.minorRoads.generateRoads(this.animate);
-        this.redraw = true;
-        await this.buildings.generate(this.animate);
-    }
+    await this.coastline.generateRoads();
+    await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+
+    await this.mainRoads.generateRoads();
+    await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+
+    await this.majorRoads.generateRoads(this.animate);
+    await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+
+    await this.minorRoads.generateRoads(this.animate);
+    await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+
+    this.redraw = true;
+    await this.buildings.generate(this.animate);
+    await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+}
 
     /**
      * Update all animated components.
