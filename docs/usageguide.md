@@ -42,8 +42,4 @@ Here are the steps I usually take when I use the tool:
 - **Tensor Field Detail** - Opening the `Tensor` folder reveals the tensor field. I `addRadial` a couple of times to add some roundabouts. I `addGrid` a few times and change their size, decay, and position to vary the grid structure.
 - **Roads** - I step through each of the `Main`, `Major`, `Minor` folders `Generate`ing roads at each stage, moving to the next when I'm happy. Increase `numParks` under `Map/Params` if you want more parks.
 - **Buildings** - `Buildings/AddBuildings`
-
-## Editing Colour Themes
-
-The file containing the available colour schemes is [src/colour_schemes.json](https://github.com/universalbit-dev/CityGenerator/blob/master/src/colour_schemes.json). In future you'll be able to edit these in the web editor, but for now you have to build the project yourself to add colour schemes.
-Edit this file to add a colour scheme, and it will automatically be included in the drop down menu. Currently, new colour schemes cannot have the hand-drawn look, but this will be changed in future.
+Edit this file to add a colour scheme, and it will automatically be included in the drop down menu. Currently, new colour schemes canhave the hand-drawn look, but this will be changed in future.
