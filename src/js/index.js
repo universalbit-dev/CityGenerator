@@ -407,6 +407,18 @@ function ensureChartElements() {
 }
 
 /* ---------- Secure Info Updates (100% Clean CodeQL) ---------- */
+function getManagerTipFor(manager) {
+  try {
+    let targetIdx = -1;
+    if (manager) {
+      targetIdx = MANAGER_CLASSES.indexOf(manager.constructor);
+    }
+    if (targetIdx !== -1 && managerTips[targetIdx]) {
+      return managerTips[targetIdx];
+    }
+  } catch (e) {}
+  return 'No tip available for this model.';
+}
 
 function renderManagerInfo(manager) {
   try {
