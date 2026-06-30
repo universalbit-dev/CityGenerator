@@ -1512,7 +1512,7 @@ DeterministPG.prototype = {
           }
         }
       }
-      // update the critic parameters too
+// update the critic parameters too
       for(var i=0;i<this.ntheta;i++) {
         var update = this.beta * tderror * psi_sa0.w[i];
         this.criticw.w[i] += update;
@@ -1527,4 +1527,10 @@ global.DPAgent = DPAgent;
 global.TDAgent = TDAgent;
 global.DQNAgent = DQNAgent;
 
-})(RL);
+})(typeof window !== 'undefined' ? (window.RL = window.RL || {}) : (global.RL = global.RL || {}));
+
+// --- MODERN BUNDLER COMMONJS EXPORT HOOK ---
+// Safely expose the RL object to Webpack's CommonJS module loader 
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = typeof window !== 'undefined' ? window.RL : global.RL;
+}
