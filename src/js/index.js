@@ -16,6 +16,9 @@ import './convnet.js';
 import './deepqlearn.js';
 import './vis.js';
 import './rl.js'; // ← RL INTEGRATION
+
+
+
 import Chart from 'chart.js/auto';
 import _ from './lodash.js';
 
@@ -135,14 +138,30 @@ let learningStats = {
   tdError: 0
 };
 
+// Local variable reference or defensive window proxy discovery
+function getRLEngine() {
+  if (typeof RL !== 'undefined' && RL) {
+    return RL;
+  }
+  if (typeof window !== 'undefined' && window.RL) {
+    return window.RL;
+  }
+  return null;
+}
+
 function createRLAgent(agentType, environment) {
+  const RL_Engine = getRLEngine();
+  if (!RL_Engine) {
+    throw new Error("Missing Global Namespace: Context dependencies from 'rl.js' are unresolved.");
+  }
+
   switch (agentType) {
     case RL_AGENT_TYPES.TD_LEARNING:
-      return new RL.TDAgent(environment, {
+      return new RL_Engine.TDAgent(environment, {
         update: 'qlearn', gamma: 0.9, epsilon: 0.1, alpha: 0.01, lambda: 0.9
       });
     case RL_AGENT_TYPES.DQN:
-      return new RL.DQNAgent(environment, {
+      return new RL_Engine.DQNAgent(environment, {
         gamma: 0.9, epsilon: 0.1, alpha: 0.001, experience_add_every: 10,
         experience_size: 1000, learning_steps_per_iteration: 5, num_hidden_units: 64
       });
@@ -154,8 +173,13 @@ function createRLAgent(agentType, environment) {
 }
 
 function createHybridAgent(environment) {
+  const RL_Engine = getRLEngine();
+  if (!RL_Engine) {
+    throw new Error("Missing Global Namespace: Hybrid dependencies from 'rl.js' are unresolved.");
+  }
+
   return {
-    tdAgent: new RL.TDAgent(environment, {
+    tdAgent: new RL_Engine.TDAgent(environment, {
       update: 'qlearn', gamma: 0.95, epsilon: 0.05, alpha: 0.02, lambda: 0.8
     }),
     explorationStrategy: 'epsilon-greedy',
@@ -200,8 +224,14 @@ function createHybridAgent(environment) {
 function initializeRL(manager) {
   try {
     currentEnvironment = new CityEnvironment(manager);
+    
+    console.log("Attempting to build agent with mode:", rlMode);
     currentRLAgent = createRLAgent(rlMode, currentEnvironment);
     
+    if (rlMode !== 'random' && !currentRLAgent) {
+      throw new Error(`Factory failed to build agent instance for mode: ${rlMode}`);
+    }
+
     learningStats = {
       episodes: 0,
       totalReward: 0,
@@ -213,15 +243,35 @@ function initializeRL(manager) {
     
     if (currentRLAgent) {
       if (currentRLAgent.epsilon !== undefined) learningStats.explorationRate = currentRLAgent.epsilon;
+      else if (currentRLAgent.adaptiveEpsilon !== undefined) learningStats.explorationRate = currentRLAgent.adaptiveEpsilon;
+      
       if (currentRLAgent.alpha !== undefined) learningStats.learningRate = currentRLAgent.alpha;
     }
     
-    console.log(`RL initialized with ${rlMode} agent`);
+    console.log(`RL initialized successfully with ${rlMode} agent`);
     setTimeout(() => { renderRLStatsChart(); }, 100);
   } catch (error) {
     console.error('RL initialization error:', error);
+    alert(`ENGINE CRASH FALLBACK:\nMessage: ${error.message}\nStack: ${error.stack ? error.stack.split('\n')[0] : 'None'}`);
+    
     currentRLAgent = null;
     rlMode = RL_AGENT_TYPES.RANDOM;
+    
+    const agentSelect = document.querySelector('#agent-select-mount select');
+    if (agentSelect) {
+      agentSelect.value = RL_AGENT_TYPES.RANDOM;
+    }
+    
+    learningStats = {
+      episodes: 0,
+      totalReward: 0,
+      averageReward: 0,
+      explorationRate: 1.0,
+      learningRate: 0.0,
+      tdError: 0
+    };
+    
+    setTimeout(() => { renderRLStatsChart(); }, 100);
   }
 }
 
@@ -422,15 +472,24 @@ function getManagerTipFor(manager) {
 
 function renderManagerInfo(manager) {
   try {
-    // FIX: Look up index directly from global array to prevent minification name breaking ("JP"/"unknown")
     let targetIdx = -1;
     if (manager) {
       targetIdx = MANAGER_CLASSES.indexOf(manager.constructor);
     }
     
     const displayName = (targetIdx !== -1) ? ORDERED_LABELS[targetIdx] : 'Alternative Blueprint';
-    const tip = (targetIdx !== -1) ? managerTips[targetIdx] : 'Optimization Engine Online.';
-    const rlAgentName = rlMode.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+    const tip = getManagerTipFor(manager);
+
+    // Defensive lookup to map text fields independently from split parameters
+    const activeMode = rlMode || 'random';
+    let cleanAgentTitle = 'Random Baseline';
+    if (activeMode === RL_AGENT_TYPES.TD_LEARNING) {
+      cleanAgentTitle = 'Q-Learning (TD)';
+    } else if (activeMode === RL_AGENT_TYPES.DQN) {
+      cleanAgentTitle = 'Deep Q-Network (DQN)';
+    } else if (activeMode === RL_AGENT_TYPES.HYBRID) {
+      cleanAgentTitle = 'Adaptive Hybrid Engine';
+    }
 
     const infoDiv = document.getElementById('manager-info');
     if (infoDiv) {
@@ -461,7 +520,7 @@ function renderManagerInfo(manager) {
       itemAgentLabel.textContent = 'RL Target Model:';
       const itemAgentValue = document.createElement('strong');
       itemAgentValue.className = 'text-success';
-      itemAgentValue.textContent = rlAgentName + ' Engine';
+      itemAgentValue.textContent = cleanAgentTitle;
       
       itemAgent.appendChild(itemAgentLabel);
       itemAgent.appendChild(itemAgentValue);
@@ -750,15 +809,16 @@ function chooseManager(idx = null) {
 
 function chooseRLAgent(agentType) {
   rlMode = agentType;
-  
-  // Visual synchronization hook for manual/automated agent changes
-  const agentSelect = document.querySelector('#agent-select-mount select');
-  if (agentSelect) {
-    agentSelect.value = agentType;
-  }
 
   if (window.city) {
     initializeRL(window.city);
+    
+    // Check if initializeRL overrode mode back to 'random' due to an internal initialization crash
+    const agentSelect = document.querySelector('#agent-select-mount select');
+    if (agentSelect) {
+      agentSelect.value = rlMode; 
+    }
+
     updateSimulationUI(window.city, true);
     if (rlStatsChartInstance) { rlStatsChartInstance.destroy(); rlStatsChartInstance = null; }
     ensureChartElements();
