@@ -50,17 +50,17 @@ const MANAGER_CLASSES = [
   CookielessCityAgent,
 ];
 
-// Clean mapping dictionary to translate string names directly and mask raw class strings
-const MODEL_NAME_TRANSLATIONS = {
-  'UrbanFabricManager': 'Urban Fabric',
-  'CivicEcosystemManager': 'Civic Ecosystem',
-  'CircularCityManager': 'Circular Loop City',
-  'SmartCityStateManager': 'Smart Grid Infrastructure',
-  'ResilientCityModelManager': 'Resilient Prototype',
-  'CommunityCommonsManager': 'Community Commons Matrix',
-  'PermacultureDesignManager': 'Permaculture Regenerative',
-  'CookielessCityAgent': 'Privacy-First Core Network'
-};
+// Explicit ordered array matching the index sequence of MANAGER_CLASSES for absolute safety
+const ORDERED_LABELS = [
+  'Urban Fabric',
+  'Civic Ecosystem',
+  'Circular Loop City',
+  'Smart Grid Infrastructure',
+  'Resilient Prototype',
+  'Community Commons Matrix',
+  'Permaculture Regenerative',
+  'Privacy-First Core Network'
+];
 
 /* ── REINFORCEMENT LEARNING INTEGRATION ─────────────────────────────────── */
 
@@ -216,7 +216,7 @@ function initializeRL(manager) {
       if (currentRLAgent.alpha !== undefined) learningStats.learningRate = currentRLAgent.alpha;
     }
     
-    console.log(`RL initialized with ${rlMode} agent for ${manager.constructor.name}`);
+    console.log(`RL initialized with ${rlMode} agent`);
     setTimeout(() => { renderRLStatsChart(); }, 100);
   } catch (error) {
     console.error('RL initialization error:', error);
@@ -227,16 +227,16 @@ function initializeRL(manager) {
 
 /* ── ORIGINAL CODE WITH MOBILE RESPONSIBILITY ENHANCEMENTS ───────────────── */
 
-const managerTips = {
-  'UrbanFabricManager':         '🏗️ Invest in roads, power grid & green space to grow the city fabric.',
-  'CivicEcosystemManager':      '🏛️ Engage citizens, open data & grow business density for a thriving ecosystem.',
-  'CircularCityManager':        '♻️ Boost local production, recycling & renewable energy to close the resource loop!',
-  'SmartCityStateManager':      '🤖 Deploy sensors, AI services & connectivity for a smarter city.',
-  'ResilientCityModelManager':  '🦾 Build redundancy, diversity & crisis readiness for a resilient city.',
-  'CommunityCommonsManager':    '🤝 Share resources, open public spaces & raise community happiness.',
-  'PermacultureDesignManager':  '🌱 Learn regenerative city planning and permaculture for a resilient urban future.',
-  'CookielessCityAgent':        '🔒 Privacy-first agent! Your choices boost digital safety.',
-};
+const managerTips = [
+  '🏗️ Invest in roads, power grid & green space to grow the city fabric.',
+  '🏛️ Engage citizens, open data & grow business density for a thriving ecosystem.',
+  '♻️ Boost local production, recycling & renewable energy to close the resource loop!',
+  '🤖 Deploy sensors, AI services & connectivity for a smarter city.',
+  '🦾 Build redundancy, diversity & crisis readiness for a resilient city.',
+  '🤝 Share resources, open public spaces & raise community happiness.',
+  '🌱 Learn regenerative city planning and permaculture for a resilient urban future.',
+  '🔒 Privacy-first agent! Your choices boost digital safety.'
+];
 
 const rlAgentTips = {
   [RL_AGENT_TYPES.RANDOM]: '🎲 Random actions - baseline performance for comparison',
@@ -260,23 +260,6 @@ function readableNameFromCtorName(ctorName) {
   if (!ctorName || typeof ctorName !== 'string') return 'Unknown Model';
   const stripped = ctorName.replace(/Manager$/, '');
   return stripped.replace(/([a-z0-9])([A-Z])/g, '$1 $2').trim() || ctorName;
-}
-
-function getManagerTipFor(manager) {
-  try {
-    const ctorName = (typeof manager === 'function')
-      ? (manager.name || '')
-      : (manager?.constructor?.name) ? manager.constructor.name : '';
-    const candidates = [];
-    if (ctorName) {
-      candidates.push(ctorName, ctorName.replace(/Manager$/, ''), readableNameFromCtorName(ctorName));
-    }
-    candidates.push(...candidates.map(c => c.toLowerCase()));
-    for (const key of candidates) {
-      if (managerTips[key]) return managerTips[key];
-    }
-  } catch (e) {}
-  return 'No tip available for this model.';
 }
 
 function computeYAxisMax(values) {
@@ -427,8 +410,14 @@ function ensureChartElements() {
 
 function renderManagerInfo(manager) {
   try {
-    const displayName = manager?.modelName || MODEL_NAME_TRANSLATIONS[manager?.constructor?.name] || readableNameFromCtorName(manager?.constructor?.name);
-    const tip = manager?.modelTip || getManagerTipFor(manager);
+    // FIX: Look up index directly from global array to prevent minification name breaking ("JP"/"unknown")
+    let targetIdx = -1;
+    if (manager) {
+      targetIdx = MANAGER_CLASSES.indexOf(manager.constructor);
+    }
+    
+    const displayName = (targetIdx !== -1) ? ORDERED_LABELS[targetIdx] : 'Alternative Blueprint';
+    const tip = (targetIdx !== -1) ? managerTips[targetIdx] : 'Optimization Engine Online.';
     const rlAgentName = rlMode.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 
     const infoDiv = document.getElementById('manager-info');
@@ -631,17 +620,19 @@ function renderRLStatsChart() {
           maintainAspectRatio: false,
           responsive: true,
           plugins: {
-            legend: { position: 'top', labels: { boxWidth: 8, font: { size: 10 } } }
+            legend: { position: 'top', labels: { boxWidth: 10, font: { size: 11, weight: '600' } } }
           },
           scales: {
             r: {
               beginAtZero: true,
               max: 100,
               ticks: { display: false },
+              grid: { color: 'rgba(0, 0, 0, 0.05)' },
+              angleLines: { color: 'rgba(0, 0, 0, 0.05)' },
               pointLabels: {
                 color: '#495057',
-                font: { size: 10, weight: '600' },
-                padding: 14
+                font: { size: 9, weight: '600' },
+                padding: 16
               }
             }
           }
@@ -822,7 +813,7 @@ function setupUI() {
   const modelMount = document.getElementById('model-select-mount');
   const agentMount = document.getElementById('agent-select-mount');
 
-  // 1. Mount translated Model select choices securely using .textContent
+  // 1. Mount translated Model select choices securely using index-safe lookups
   if (modelMount && !modelMount.querySelector('select')) {
     const select = document.createElement('select');
     select.className = 'form-select form-select-sm shadow-sm fw-semibold';
@@ -831,7 +822,8 @@ function setupUI() {
     MANAGER_CLASSES.forEach((cls, i) => {
       const opt = document.createElement('option');
       opt.value = i;
-      const cleanLabel = MODEL_NAME_TRANSLATIONS[cls.name] || readableNameFromCtorName(cls.name);
+      
+      const cleanLabel = ORDERED_LABELS[i] || 'Alternative Blueprint';
       opt.textContent = 'Model: ' + cleanLabel;
       select.appendChild(opt);
     });
