@@ -16,8 +16,7 @@ module.exports = {
     filename: 'bundle.js', // classic name for clarity
     path: path.resolve(__dirname, 'dist'),
     clean: true,
-    // Use relative publicPath so the site works when served from a subpath (e.g. /CityGenerator/)
-    publicPath: './',
+    publicPath: process.env.CI ? '/CityGenerator/' : '/',
   },
 
   resolve: {
