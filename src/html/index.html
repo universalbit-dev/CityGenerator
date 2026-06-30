@@ -20,7 +20,6 @@
       font-family: system-ui, -apple-system, sans-serif;
     }
     
-    /* Clean Hero Canvas Header Container */
     .hero-header {
       background: linear-gradient(135deg, var(--dark-blue) 0%, #1a3a5c 100%);
       color: #fff;
@@ -49,7 +48,6 @@
       box-shadow: 0 0 0 3px rgba(40,167,69,0.3);
     }
 
-    /* Map Circular viewport frame setup */
     .circle-mask {
       border-radius: 50%;
       overflow: hidden;
@@ -76,6 +74,15 @@
       border-bottom: 1px solid #f1f3f5;
       padding-bottom: 0.5rem;
       margin-bottom: 1rem;
+    }
+
+    /* Fixed Button Grid to Stop Edge Overflow */
+    .btn-responsive-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+      width: 100%;
+      margin-bottom: 1.5rem;
     }
 
     .tuning-control-grid {
@@ -106,11 +113,11 @@
       <div class="sim-card d-flex flex-column h-100">
         
         <div class="card-title-custom">🎛️ Console Control Matrix</div>
-        <div class="d-flex flex-wrap gap-2 mb-4">
-          <button id="resume-btn" type="button" class="btn btn-success btn-sm px-2.5 flex-grow-1">▶ Resume</button>
-          <button id="pause-btn"  type="button" class="btn btn-warning btn-sm px-2.5 flex-grow-1">⏸ Pause</button>
-          <button id="random-city-model-btn" type="button" class="btn btn-primary btn-sm px-2.5 flex-grow-1">🔀 Mutation</button>
-          <button id="reset-btn" type="button" class="btn btn-danger btn-sm px-2.5 flex-grow-1">↺ Reset</button>
+        <div class="btn-responsive-grid">
+          <button id="resume-btn" type="button" class="btn btn-success btn-sm w-100">▶ Resume</button>
+          <button id="pause-btn"  type="button" class="btn btn-warning btn-sm w-100">⏸ Pause</button>
+          <button id="random-city-model-btn" type="button" class="btn btn-primary btn-sm w-100">🔀 Mutation</button>
+          <button id="reset-btn" type="button" class="btn btn-danger btn-sm w-100">↺ Reset</button>
         </div>
 
         <div class="card-title-custom">📊 Engine Diagnostics & Tuning</div>
