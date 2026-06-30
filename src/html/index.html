@@ -4,172 +4,134 @@
   <meta charset="utf-8" />
   <title>CityGenerator - AI Learning Simulation</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-  <!-- Project stylesheet -->
   <link rel="stylesheet" href="style.css">
   <style>
     :root {
       --accent:  #0d6efd;
       --accent-rl: #6c75ff;
       --radius:  .75rem;
-      --card-sh: 0 2px 10px rgba(0,0,0,.08);
+      --card-sh: 0 4px 20px rgba(0,0,0,.05);
+      --bg-main: #f8f9fa;
+      --dark-blue: #0d1b2a;
     }
-    body { background: #f0f2f5; }
-    .app-header {
-      background: linear-gradient(135deg,#0d1b2a 0%,#1a3a5c 100%);
+    body { 
+      background: var(--bg-main); 
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    
+    /* Clean Hero Canvas Header Container */
+    .hero-header {
+      background: linear-gradient(135deg, var(--dark-blue) 0%, #1a3a5c 100%);
       color: #fff;
       border-radius: var(--radius);
-      padding: .75rem 1.25rem;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      box-shadow: var(--card-sh);
+    }
+    
+    .header-title-row {
       display: flex;
       align-items: center;
-      gap: .75rem;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
     }
-    .app-header h1 {
-      margin: 0;
-      font-size: 1.35rem;
-      font-weight: 700;
-      letter-spacing: .02em;
-    }
+    .header-title-row h1 { margin: 0; font-size: 1.3rem; font-weight: 700; }
+    
     #sim-status-dot {
-      flex-shrink: 0;
-      width: 11px; height: 11px;
+      width: 10px; height: 10px;
       border-radius: 50%;
       background: #28a745;
-      box-shadow: 0 0 0 3px #28a74533;
-      animation: pulse-green 2s infinite;
+      box-shadow: 0 0 0 3px rgba(40,167,69,0.3);
     }
-    #sim-status-dot.paused {
-      background: #ffc107;
-      box-shadow: 0 0 0 3px #ffc10733;
-      animation: pulse-amber 2s infinite;
+
+    /* Map Circular viewport frame setup */
+    .circle-mask {
+      border-radius: 50%;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      width: 290px; height: 290px;
+      background: #dde6ee;
+      border: 4px solid rgba(255, 255, 255, 0.9);
     }
-    #sim-status-dot.learning {
-      background: var(--accent-rl);
-      box-shadow: 0 0 0 3px rgba(108,117,255,0.2);
-      animation: pulse-learning 1.5s infinite;
-    }
-    @keyframes pulse-green {
-      0%,100% { box-shadow: 0 0 0 3px #28a74533; }
-      50%      { box-shadow: 0 0 0 6px #28a74511; }
-    }
-    @keyframes pulse-amber {
-      0%,100% { box-shadow: 0 0 0 3px #ffc10733; }
-      50%      { box-shadow: 0 0 0 6px #ffc10711; }
-    }
-    @keyframes pulse-learning {
-      0%,100% { box-shadow: 0 0 0 3px rgba(108,117,255,0.2); }
-      50%      { box-shadow: 0 0 0 6px rgba(108,117,255,0.1); }
-    }
+    #map-canvas { display: block; width: 100%; height: 100%; }
+
     .sim-card {
       background: #fff;
       border-radius: var(--radius);
       box-shadow: var(--card-sh);
+      border: 1px solid rgba(0,0,0,.03);
+      padding: 1.25rem;
     }
-    /* Canvas wrapper: responsive, but replaced rectangle with a circle display */
-    .canvas-wrapper {
-      display: flex; justify-content: center;
-      width: 100%;
-      min-width: 0;
-      border-radius: var(--radius);
-      overflow: visible;
-      background: transparent;
-      padding: 1rem 0;
+    .card-title-custom {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #6c757d;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid #f1f3f5;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;
     }
-    .circle-mask {
-      border-radius: 50%;
-      overflow: hidden;
-      box-shadow: 0 2px 10px rgba(0,0,0,.10);
-      width: 360px;
-      height: 360px;
-      max-width: 90vw;
-      max-height: 90vw;
-      background: #fff;
+
+    .tuning-control-grid {
       display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    #map-canvas {
-      display: block;
-      width: 100%;
-      height: 100%;
-      background: #dde6ee;
-      border-radius: 0; /* handled by circle-mask */
-    }
-    @media (max-width: 600px) {
-      .circle-mask {
-        width: 98vw !important;
-        height: 98vw !important;
-      }
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
     }
   </style>
 </head>
-
 <body>
-<div class="container-fluid py-3 d-flex flex-column gap-3">
-  <!-- Header -->
-  <header class="app-header">
-    <span id="sim-status-dot" title="Simulation running"></span>
-    <h1>
-      CityGenerator
-      <span class="badge bg-secondary ms-1"
-            style="font-size:.7rem;vertical-align:middle;">AI Learning</span>
-    </h1>
+<div class="container-fluid py-3 d-flex flex-column gap-3 mx-auto" style="max-width: 1100px;">
+  
+  <header class="hero-header">
+    <div class="header-title-row">
+      <div id="sim-status-dot"></div>
+      <h1>CityGenerator <span class="badge bg-primary bg-opacity-50 text-white" style="font-size:0.7rem; vertical-align: middle;">v1.1.1</span></h1>
+    </div>
+    
+    <div class="circle-mask">
+      <canvas id="map-canvas" width="290" height="290"></canvas>
+    </div>
   </header>
-  <!-- Map Canvas (circular, responsive) -->
-  <div class="sim-card p-0 overflow-visible">
-    <div class="canvas-wrapper">
-      <div class="circle-mask">
-        <canvas id="map-canvas" width="360" height="360"></canvas>
+
+  <div class="row g-3">
+    
+    <div class="col-12 col-md-5">
+      <div class="sim-card d-flex flex-column h-100">
+        
+        <div class="card-title-custom">🎛️ Console Control Matrix</div>
+        <div class="d-flex flex-wrap gap-2 mb-4">
+          <button id="resume-btn" type="button" class="btn btn-success btn-sm px-2.5 flex-grow-1">▶ Resume</button>
+          <button id="pause-btn"  type="button" class="btn btn-warning btn-sm px-2.5 flex-grow-1">⏸ Pause</button>
+          <button id="random-city-model-btn" type="button" class="btn btn-primary btn-sm px-2.5 flex-grow-1">🔀 Mutation</button>
+          <button id="reset-btn" type="button" class="btn btn-danger btn-sm px-2.5 flex-grow-1">↺ Reset</button>
+        </div>
+
+        <div class="card-title-custom">📊 Engine Diagnostics & Tuning</div>
+        <div class="tuning-control-grid">
+          <div id="model-select-mount"></div>
+          <div id="agent-select-mount"></div>
+        </div>
+        <div id="manager-info" role="status" aria-live="polite" class="d-flex flex-column gap-2"></div>
+        
       </div>
     </div>
-  </div>
-  <!-- Controls -->
-  <div class="sim-card px-3 py-2">
-    <p class="section-label mb-2">Simulation Controls</p>
-    <div class="d-flex flex-wrap gap-2 align-items-center">
-      <button id="pause-btn"             type="button"
-              class="btn btn-warning  btn-round">⏸ Pause</button>
-      <button id="resume-btn"            type="button"
-              class="btn btn-success  btn-round">▶ Resume</button>
-      <button id="random-city-model-btn" type="button"
-              class="btn btn-primary  btn-round">🔀 Random City Model</button>
-      <button id="reset-btn"             type="button"
-              class="btn btn-outline-secondary btn-round ms-auto">↺ Reset State</button>
-    </div>
-  </div>
-  <!-- Info and charts -->
-  <div id="manager-info" role="status" aria-live="polite"></div>
-  <div id="charts-container"></div>
-  <!-- Footer -->
-  <footer class="app-footer pb-2">
-    CityGenerator · AI Learning Simulator ·
-    <a href="https://github.com/universalbit-dev/CityGenerator"
-       target="_blank" rel="noopener"
-       class="text-decoration-none">GitHub</a>
-  </footer>
-</div>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-(function () {
-  'use strict';
-  // --- Optionally, ensure all 2D drawing is within a circular area ---
-  const canvas = document.getElementById('map-canvas');
-  if (canvas) {
-    const ctx = canvas.getContext('2d');
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(canvas.width/2, canvas.height/2, canvas.width/2, 0, Math.PI*2);
-    ctx.clip();
-    // (Draw your city map as usual after this. This ensures nothing is painted outside the circle)
-    // ctx.restore(); // Call restore when done with circular drawing
-  }
-  // Your CityGenerator JS remains unchanged (except canvas is now circularly masked)
-})();
-</script>
+    <div class="col-12 col-md-7">
+      <div class="sim-card h-100">
+        <div class="card-title-custom">🧠 Reinforcement Learning Graphs</div>
+        <div id="charts-container"></div>
+      </div>
+    </div>
+    
+  </div>
+
+</div>
 </body>
 </html>
