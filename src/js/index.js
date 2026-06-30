@@ -725,6 +725,13 @@ function chooseManager(idx = null) {
     window.city = new UrbanFabricManager();
   }
 
+  // Visual synchronization hook for automated switch events
+  const actualIdx = MANAGER_CLASSES.indexOf(CityManager);
+  const modelSelect = document.querySelector('#model-select-mount select');
+  if (modelSelect && actualIdx !== -1) {
+    modelSelect.value = actualIdx;
+  }
+
   initializeRL(window.city);
   rewardHistory = [];
   lastState     = null;
@@ -740,6 +747,13 @@ function chooseManager(idx = null) {
 
 function chooseRLAgent(agentType) {
   rlMode = agentType;
+  
+  // Visual synchronization hook for manual/automated agent changes
+  const agentSelect = document.querySelector('#agent-select-mount select');
+  if (agentSelect) {
+    agentSelect.value = agentType;
+  }
+
   if (window.city) {
     initializeRL(window.city);
     updateSimulationUI(window.city, true);
