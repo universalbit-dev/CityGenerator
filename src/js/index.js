@@ -414,7 +414,6 @@ function ensureChartElements() {
 }
 
 /* ---------- Secure Info Updates ---------- */
-
 function renderManagerInfo(manager) {
   try {
     const displayName = manager?.modelName || readableNameFromCtorName(manager?.constructor?.name);
@@ -423,35 +422,56 @@ function renderManagerInfo(manager) {
 
     const infoDiv = document.getElementById('manager-info');
     if (infoDiv) {
-      // Retain existing structural select forms if present
-      const existingSelects = infoDiv.querySelectorAll('select');
-      
-      // Clear pure text wrappers safely
-      const wrappers = infoDiv.querySelectorAll('.telemetry-text-block');
-      wrappers.forEach(w => w.remove());
+      // Safely clear out historical feedback text blocks without disturbing structural select elements
+      const oldBlocks = infoDiv.querySelectorAll('.telemetry-text-block');
+      oldBlocks.forEach(b => b.remove());
 
       const textBlock = document.createElement('div');
-      textBlock.className = 'telemetry-text-block d-flex flex-column gap-1 w-100 mt-2 text-start';
+      textBlock.className = 'telemetry-text-block d-flex flex-column gap-1 w-100 mt-1';
 
+      // 1. Secure Model Row Construction
       const itemModel = document.createElement('div');
-      itemModel.style.cssText = 'font-size:0.85rem; padding:4px 8px; background:#f8f9fa; border-radius:4px; display:flex; justify-content:space-between;';
-      itemModel.innerHTML = `<span>Model:</span><strong class="text-primary">${displayName}</strong>`;
+      itemModel.style.cssText = 'font-size:0.85rem; padding:6px 10px; background:#f8f9fa; border-radius:6px; display:flex; justify-content:space-between; border: 1px solid rgba(0,0,0,0.02);';
+      
+      const itemModelLabel = document.createElement('span');
+      itemModelLabel.textContent = 'Active Blueprint:';
+      
+      const itemModelValue = document.createElement('strong');
+      itemModelValue.className = 'text-primary';
+      itemModelValue.textContent = displayName;
+      
+      itemModel.appendChild(itemModelLabel);
+      itemModel.appendChild(itemModelValue);
 
+      // 2. Secure Agent Row Construction (Fixing the CodeQL Warning)
       const itemAgent = document.createElement('div');
-      itemAgent.style.cssText = 'font-size:0.85rem; padding:4px 8px; background:#f8f9fa; border-radius:4px; display:flex; justify-content:space-between;';
-      itemAgent.innerHTML = `<span>RL Method:</span><strong class="text-success">${rlAgentName}</strong>`;
+      itemAgent.style.cssText = 'font-size:0.85rem; padding:6px 10px; background:#f8f9fa; border-radius:6px; display:flex; justify-content:space-between; border: 1px solid rgba(0,0,0,0.02);';
+      
+      const itemAgentLabel = document.createElement('span');
+      itemAgentLabel.textContent = 'RL Target Model:';
+      
+      const itemAgentValue = document.createElement('strong');
+      itemAgentValue.className = 'text-success';
+      itemAgentValue.textContent = rlAgentName + ' Engine'; // Safe string combination passed to textContent
+      
+      itemAgent.appendChild(itemAgentLabel);
+      itemAgent.appendChild(itemAgentValue);
 
+      // 3. Secure Tooltip Tip Box Construction
       const itemTip = document.createElement('div');
-      itemTip.style.cssText = 'font-size:0.8rem; color:#6c757d; padding:6px; background:#fff; border:1px solid #eee; border-radius:4px; margin-top:4px;';
+      itemTip.style.cssText = 'font-size:0.8rem; color:#495057; padding:8px 12px; background:#fffcf5; border:1px solid #ffeeba; border-radius:6px; margin-top:4px; line-height: 1.4;';
       itemTip.textContent = tip;
 
+      // Assemble everything securely into the text container block
       textBlock.appendChild(itemModel);
       textBlock.appendChild(itemAgent);
       textBlock.appendChild(itemTip);
       
       infoDiv.appendChild(textBlock);
     }
-  } catch (e) {}
+  } catch (e) {
+    console.error('renderManagerInfo error', e);
+  }
 }
 
 function renderStateChart(manager, forceNewChart = false) {
