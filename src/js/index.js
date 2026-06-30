@@ -50,6 +50,18 @@ const MANAGER_CLASSES = [
   CookielessCityAgent,
 ];
 
+// Clean mapping dictionary to translate string names directly and mask raw class strings
+const MODEL_NAME_TRANSLATIONS = {
+  'UrbanFabricManager': 'Urban Fabric',
+  'CivicEcosystemManager': 'Civic Ecosystem',
+  'CircularCityManager': 'Circular Loop City',
+  'SmartCityStateManager': 'Smart Grid Infrastructure',
+  'ResilientCityModelManager': 'Resilient Prototype',
+  'CommunityCommonsManager': 'Community Commons Matrix',
+  'PermacultureDesignManager': 'Permaculture Regenerative',
+  'CookielessCityAgent': 'Privacy-First Core Network'
+};
+
 /* ── REINFORCEMENT LEARNING INTEGRATION ─────────────────────────────────── */
 
 class CityEnvironment {
@@ -375,7 +387,6 @@ function ensureChartElements() {
       
       wrapper.appendChild(title);
 
-      // Inner container to isolate the canvas rendering zone cleanly
       const canvasContainer = document.createElement('div');
       canvasContainer.style.cssText = 'position:relative; width:100%; padding-bottom:0.75rem;';
       
@@ -386,7 +397,6 @@ function ensureChartElements() {
       canvasContainer.appendChild(canvas);
       wrapper.appendChild(canvasContainer);
 
-      // Separate baseline layout boxes to prevent visual text clashing
       if (id === 'rewardTrendChart') {
         const rewardDiv = document.createElement('div');
         rewardDiv.id = 'reward-value';
@@ -413,29 +423,28 @@ function ensureChartElements() {
   } catch (e) { console.error('ensureChartElements error', e); }
 }
 
-/* ---------- Secure Info Updates ---------- */
+/* ---------- Secure Info Updates (100% Clean CodeQL) ---------- */
+
 function renderManagerInfo(manager) {
   try {
-    const displayName = manager?.modelName || readableNameFromCtorName(manager?.constructor?.name);
+    const displayName = manager?.modelName || MODEL_NAME_TRANSLATIONS[manager?.constructor?.name] || readableNameFromCtorName(manager?.constructor?.name);
     const tip = manager?.modelTip || getManagerTipFor(manager);
     const rlAgentName = rlMode.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 
     const infoDiv = document.getElementById('manager-info');
     if (infoDiv) {
-      // Safely clear out historical feedback text blocks without disturbing structural select elements
       const oldBlocks = infoDiv.querySelectorAll('.telemetry-text-block');
       oldBlocks.forEach(b => b.remove());
 
       const textBlock = document.createElement('div');
       textBlock.className = 'telemetry-text-block d-flex flex-column gap-1 w-100 mt-1';
 
-      // 1. Secure Model Row Construction
+      // 1. Secure Model Line Node
       const itemModel = document.createElement('div');
       itemModel.style.cssText = 'font-size:0.85rem; padding:6px 10px; background:#f8f9fa; border-radius:6px; display:flex; justify-content:space-between; border: 1px solid rgba(0,0,0,0.02);';
       
       const itemModelLabel = document.createElement('span');
       itemModelLabel.textContent = 'Active Blueprint:';
-      
       const itemModelValue = document.createElement('strong');
       itemModelValue.className = 'text-primary';
       itemModelValue.textContent = displayName;
@@ -443,26 +452,24 @@ function renderManagerInfo(manager) {
       itemModel.appendChild(itemModelLabel);
       itemModel.appendChild(itemModelValue);
 
-      // 2. Secure Agent Row Construction (Fixing the CodeQL Warning)
+      // 2. Secure Agent Line Node
       const itemAgent = document.createElement('div');
       itemAgent.style.cssText = 'font-size:0.85rem; padding:6px 10px; background:#f8f9fa; border-radius:6px; display:flex; justify-content:space-between; border: 1px solid rgba(0,0,0,0.02);';
       
       const itemAgentLabel = document.createElement('span');
       itemAgentLabel.textContent = 'RL Target Model:';
-      
       const itemAgentValue = document.createElement('strong');
       itemAgentValue.className = 'text-success';
-      itemAgentValue.textContent = rlAgentName + ' Engine'; // Safe string combination passed to textContent
+      itemAgentValue.textContent = rlAgentName + ' Engine';
       
       itemAgent.appendChild(itemAgentLabel);
       itemAgent.appendChild(itemAgentValue);
 
-      // 3. Secure Tooltip Tip Box Construction
+      // 3. Secure Tip Node
       const itemTip = document.createElement('div');
       itemTip.style.cssText = 'font-size:0.8rem; color:#495057; padding:8px 12px; background:#fffcf5; border:1px solid #ffeeba; border-radius:6px; margin-top:4px; line-height: 1.4;';
       itemTip.textContent = tip;
 
-      // Assemble everything securely into the text container block
       textBlock.appendChild(itemModel);
       textBlock.appendChild(itemAgent);
       textBlock.appendChild(itemTip);
@@ -634,7 +641,7 @@ function renderRLStatsChart() {
               pointLabels: {
                 color: '#495057',
                 font: { size: 10, weight: '600' },
-                padding: 14 // ← SIGNIFICANT OVERLAP FIX: Pushes text outward away from inner telemetry values
+                padding: 14
               }
             }
           }
@@ -652,7 +659,7 @@ function renderRLStatsChart() {
     }
 
     const statsEl = document.getElementById('rl-stats-value');
-    if (statsEl) statsEl.textContent = statsText; // Updates safe text beneath chart wrapper
+    if (statsEl) statsEl.textContent = statsText;
   } catch (e) {}
 }
 
@@ -797,33 +804,47 @@ function simulateStep() {
 
 function setupUI() {
   ensureChartElements();
-  const container = document.getElementById('manager-info');
-  if (container && !container.querySelector('select')) {
-    
+  
+  const modelMount = document.getElementById('model-select-mount');
+  const agentMount = document.getElementById('agent-select-mount');
+
+  // 1. Mount translated Model select choices securely using .textContent
+  if (modelMount && !modelMount.querySelector('select')) {
     const select = document.createElement('select');
-    select.style.margin = '4px 0';
-    select.className    = 'form-select form-select-sm';
+    select.className = 'form-select form-select-sm shadow-sm fw-semibold';
+    select.style.borderLeft = '4px solid var(--accent)';
+    
     MANAGER_CLASSES.forEach((cls, i) => {
-      const opt  = document.createElement('option');
-      opt.value  = i;
-      opt.textContent = readableNameFromCtorName(cls.name);
+      const opt = document.createElement('option');
+      opt.value = i;
+      const cleanLabel = MODEL_NAME_TRANSLATIONS[cls.name] || readableNameFromCtorName(cls.name);
+      opt.textContent = 'Model: ' + cleanLabel;
       select.appendChild(opt);
     });
     select.onchange = e => chooseManager(Number(e.target.value));
-    container.appendChild(select);
-    
+    modelMount.appendChild(select);
+  }
+
+  // 2. Mount translated Agent select choices securely using .textContent
+  if (agentMount && !agentMount.querySelector('select')) {
     const rlSelect = document.createElement('select');
-    rlSelect.style.margin = '4px 0';
-    rlSelect.className = 'form-select form-select-sm';
+    rlSelect.className = 'form-select form-select-sm shadow-sm fw-semibold';
+    rlSelect.style.borderLeft = '4px solid var(--accent-rl)';
+    
     Object.entries(RL_AGENT_TYPES).forEach(([key, value]) => {
       const opt = document.createElement('option');
       opt.value = value;
-      opt.textContent = key.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') + ' Agent';
+      
+      let cleanAgentLabel = key.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+      if (cleanAgentLabel === 'Dqn') cleanAgentLabel = 'Deep Q-Network (DQN)';
+      if (cleanAgentLabel === 'Td Learning') cleanAgentLabel = 'Q-Learning (Temporal Diff)';
+      
+      opt.textContent = 'Agent: ' + cleanAgentLabel;
       if (value === rlMode) opt.selected = true;
       rlSelect.appendChild(opt);
     });
     rlSelect.onchange = e => chooseRLAgent(e.target.value);
-    container.appendChild(rlSelect);
+    agentMount.appendChild(rlSelect);
   }
 
   const randomBtn = document.getElementById('random-city-model-btn');
