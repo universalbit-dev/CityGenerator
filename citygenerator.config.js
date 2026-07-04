@@ -3,8 +3,7 @@ module.exports = {
     {
       name: "CityGenerator",
       script: "./https_server.js",
-      instances: "max",
-      exec_mode: "cluster",
+      exec_mode: "fork",
       env: {
         NODE_ENV: "production"
       }
