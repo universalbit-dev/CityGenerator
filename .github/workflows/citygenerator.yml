@@ -5,10 +5,12 @@ on:
     branches:
       - master
       - main
+    tags:
+      - 'v*.*.*'
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -59,13 +61,21 @@ jobs:
       - name: List pm2 processes (for build logs)
         run: pm2 list
 
+      - name: Push compiled assets to 'cdn' branch
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: cdn
+          publish_dir: ./dist
+          keep_files: false
+
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
 
       - name: Upload static site artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist'   # Change if your build output is elsewhere
+          path: './dist'
 
       - name: Deploy to GitHub Pages
         id: deployment
