@@ -62,7 +62,7 @@ class Main {
     private isGenerating = false;
 
     private imageScale = 3;
-    public highDPI = false;
+    public highDPI = true;
 
     private canvas: HTMLCanvasElement;
     private tensorCanvas: DefaultCanvasWrapper;
