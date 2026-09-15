@@ -122,8 +122,8 @@ export class DefaultCanvasWrapper extends CanvasWrapper {
 
     private getCssSize(): { cssWidth: number; cssHeight: number; rectWidth: number; rectHeight: number } {
         const rect = this.canvas.getBoundingClientRect();
-        const rectWidth = rect.width || this.canvas.clientWidth || window.innerWidth;
-        const rectHeight = rect.height || this.canvas.clientHeight || window.innerHeight;
+        const rectWidth = Math.min(window.innerWidth, rect.width || this.canvas.clientWidth || window.innerWidth);
+        const rectHeight = Math.min(window.innerHeight, rect.height || this.canvas.clientHeight || window.innerHeight);
         const cssWidth = rectWidth * this.canvasScale;
         const cssHeight = rectHeight * this.canvasScale;
         return { cssWidth, cssHeight, rectWidth, rectHeight };
