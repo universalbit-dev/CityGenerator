@@ -24,8 +24,8 @@ export interface RoughOptions {
  */
 export default abstract class CanvasWrapper {
     protected svgNode: any;
-    protected _width: number = 0;   // CSS pixels * scale
-    protected _height: number = 0;  // CSS pixels * scale
+    protected _width: number = 0;   
+    protected _height: number = 0;  
     public needsUpdate: boolean = false;
 
     protected canvas: HTMLCanvasElement;
@@ -64,8 +64,6 @@ export default abstract class CanvasWrapper {
     abstract drawCircle(centre: Vector, radius: number): void;
     abstract drawSquare(centre: Vector, radius: number): void;
     abstract drawPolyline(line: Vector[]): void;
-    
-    // NEW: Batch rendering method for extreme performance gains on road networks
     abstract drawPolylines(lines: Vector[][]): void; 
 
     setDimensions(): void {
@@ -105,7 +103,6 @@ export default abstract class CanvasWrapper {
     }
 }
 
-/* DefaultCanvasWrapper handles DPR/backing store and 2D context transforms */
 export class DefaultCanvasWrapper extends CanvasWrapper {
     private ctx: CanvasRenderingContext2D;
     private svg: any;
@@ -152,8 +149,15 @@ export class DefaultCanvasWrapper extends CanvasWrapper {
         this.lastRectWidth = rectWidth;
         this.lastRectHeight = rectHeight;
 
-        const backingWidth = Math.max(1, Math.round(cssWidth * dpr));
-        const backingHeight = Math.max(1, Math.round(cssHeight * dpr));
+        const MAX_CANVAS_DIMENSION = 8192;
+        let backingWidth = Math.max(1, Math.round(cssWidth * dpr));
+        let backingHeight = Math.max(1, Math.round(cssHeight * dpr));
+
+        if (backingWidth > MAX_CANVAS_DIMENSION || backingHeight > MAX_CANVAS_DIMENSION) {
+            const ratio = Math.min(MAX_CANVAS_DIMENSION / backingWidth, MAX_CANVAS_DIMENSION / backingHeight);
+            backingWidth = Math.round(backingWidth * ratio);
+            backingHeight = Math.round(backingHeight * ratio);
+        }
 
         this.canvas.width = backingWidth;
         this.canvas.height = backingHeight;
@@ -298,7 +302,6 @@ export class DefaultCanvasWrapper extends CanvasWrapper {
         }
     }
 
-    // NEW: Render multiple lines inside a single draw call for massive performance gains
     drawPolylines(lines: Vector[][]): void {
         if (!lines || lines.length === 0) return;
         this.updateBackingStore();
@@ -347,7 +350,6 @@ export class DefaultCanvasWrapper extends CanvasWrapper {
     }
 }
 
-/* RoughCanvasWrapper handles sketchy rendering via rough.js */
 export class RoughCanvasWrapper extends CanvasWrapper {
     private r = require('roughjs/bundled/rough.cjs');
     private rc: any;
@@ -412,7 +414,6 @@ export class RoughCanvasWrapper extends CanvasWrapper {
         this.appendSvgNode(this.rc.linearPath(line.map(v => [v.x, v.y]), this.options));
     }
 
-    // NEW: Compile multiple lines into a single SVG path for massive rough.js performance improvements
     drawPolylines(lines: Vector[][]): void {
         if (!lines || lines.length === 0) return;
         
