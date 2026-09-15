@@ -15,18 +15,14 @@ import CanvasWrapper from './canvas_wrapper';
 import Buildings, { BuildingModel } from './buildings';
 import PolygonUtil from '../impl/polygon_util';
 
-/**
- * Handles Map folder, glues together impl
- */
 export default class MainGUI {
-    // Properties exposed to dat.GUI and for external configuration
-    public numBigParks = 100;
-    public numSmallParks = 50;
+    public numBigParks = 120;
+    public numSmallParks = 80;
     public clusterBigParks = false;
     public animate = true;
     public animationSpeed = 30;
+    public fillGreenAreas = false;
 
-    // Internals
     private domainController = DomainController.getInstance();
     private intersections: Vector[] = [];
     private bigParks: Vector[][] = [];
@@ -39,16 +35,15 @@ export default class MainGUI {
     private minorRoads: RoadGUI;
     private buildings: Buildings;
 
-    // Params
     private coastlineParams: WaterParams;
     private mainParams: StreamlineParams;
     private majorParams: StreamlineParams;
     private minorParams: StreamlineParams = {
-        dsep: 20,
-        dtest: 15,
+        dsep: 25,
+        dtest: 18,
         dstep: 1,
-        dlookahead: 40,
-        dcirclejoin: 5,
+        dlookahead: 45,
+        dcirclejoin: 6,
         joinangle: 0.1,
         pathIterations: 1000,
         seedTries: 300,
@@ -61,24 +56,27 @@ export default class MainGUI {
         private tensorField: TensorFieldGUI,
         private closeTensorFolder: () => void
     ) {
-        // dat.GUI controls - only public properties permitted
-        guiFolder.add(this, 'generateEverything');
-        guiFolder.add(this, 'animate');
+        guiFolder.add(this, 'generateEverything').name('Generate Eco-City');
+        guiFolder.add(this, 'animate').name('Animate Generation');
         guiFolder.add(this, 'animationSpeed');
+        guiFolder.add(this, 'fillGreenAreas').name('Pave Green Areas').onChange(() => {
+            this.addParks();
+            this.buildings.generate(this.animate);
+            this.redraw = true;
+        });
 
-        // Water and road params setup
         this.coastlineParams = {
             ...this.minorParams,
-            coastNoise: { noiseEnabled: true, noiseSize: 30, noiseAngle: 20 },
-            riverNoise: { noiseEnabled: true, noiseSize: 30, noiseAngle: 20 },
-            riverBankSize: 10,
-            riverSize: 30,
+            coastNoise: { noiseEnabled: true, noiseSize: 35, noiseAngle: 25 },
+            riverNoise: { noiseEnabled: true, noiseSize: 35, noiseAngle: 25 },
+            riverBankSize: 15,
+            riverSize: 35,
             pathIterations: 10000,
             simplifyTolerance: 10,
         };
 
-        this.majorParams = { ...this.minorParams, dsep: 100, dtest: 30, dlookahead: 200, collideEarly: 0 };
-        this.mainParams = { ...this.minorParams, dsep: 400, dtest: 200, dlookahead: 500, collideEarly: 0 };
+        this.majorParams = { ...this.minorParams, dsep: 120, dtest: 35, dlookahead: 220, collideEarly: 0 };
+        this.mainParams = { ...this.minorParams, dsep: 450, dtest: 220, dlookahead: 550, collideEarly: 0 };
 
         const integrator = new RK4Integrator(tensorField, this.minorParams);
         const redraw = () => (this.redraw = true);
@@ -89,23 +87,21 @@ export default class MainGUI {
             integrator,
             this.guiFolder,
             closeTensorFolder,
-            'Water',
+            'Water / Riparian',
             redraw
         ).initFolder();
 
-        this.mainRoads = new RoadGUI(this.mainParams, integrator, this.guiFolder, closeTensorFolder, 'Main', redraw).initFolder();
-        this.majorRoads = new RoadGUI(this.majorParams, integrator, this.guiFolder, closeTensorFolder, 'Major', redraw, this.animate).initFolder();
-        this.minorRoads = new RoadGUI(this.minorParams, integrator, this.guiFolder, closeTensorFolder, 'Minor', redraw, this.animate).initFolder();
+        this.mainRoads = new RoadGUI(this.mainParams, integrator, this.guiFolder, closeTensorFolder, 'Main Corridors', redraw).initFolder();
+        this.majorRoads = new RoadGUI(this.majorParams, integrator, this.guiFolder, closeTensorFolder, 'Arterial Networks', redraw, this.animate).initFolder();
+        this.minorRoads = new RoadGUI(this.minorParams, integrator, this.guiFolder, closeTensorFolder, 'Local Access', redraw, this.animate).initFolder();
 
-        // Parks GUI
-        const parks = guiFolder.addFolder('Parks');
-        parks.add({ Generate: () => { this.buildings.reset(); this.addParks(); this.redraw = true; } }, 'Generate');
-        parks.add(this, 'clusterBigParks');
-        parks.add(this, 'numBigParks');
-        parks.add(this, 'numSmallParks');
+        const parks = guiFolder.addFolder('Green Infrastructure / Parks');
+        parks.add({ Generate: () => { this.buildings.reset(); this.addParks(); this.redraw = true; } }, 'Generate').name('Generate Green Network');
+        parks.add(this, 'clusterBigParks').name('Cluster Green Zones');
+        parks.add(this, 'numBigParks').name('Large Eco-Belts');
+        parks.add(this, 'numSmallParks').name('Community Gardens');
 
-        // Buildings GUI
-        const buildingsFolder = guiFolder.addFolder('Buildings');
+        const buildingsFolder = guiFolder.addFolder('Eco-Architecture');
         this.buildings = new Buildings(tensorField, buildingsFolder, redraw, this.minorParams.dstep, this.animate);
         this.buildings.setPreGenerateCallback(() => {
             const allStreamlines = [
@@ -117,7 +113,6 @@ export default class MainGUI {
             this.buildings.setAllStreamlines(allStreamlines);
         });
 
-        // Animate callback
         const animateCtrl = guiFolder.__controllers.find(ctrl => ctrl.property === 'animate');
         if (animateCtrl) {
             animateCtrl.onChange((b: boolean) => {
@@ -131,7 +126,6 @@ export default class MainGUI {
         this.majorRoads.setExistingStreamlines([this.coastline, this.mainRoads]);
         this.mainRoads.setExistingStreamlines([this.coastline]);
 
-        // Pre/post generate callbacks for water and roads
         this.coastline.setPreGenerateCallback(() => {
             this.mainRoads.clearStreamlines();
             this.majorRoads.clearStreamlines();
@@ -183,17 +177,11 @@ export default class MainGUI {
             this.addParks();
         });
 
-        // ======== AUTO GENERATE EVERYTHING ON FIRST RUN =========
-        // Ensures recommended tensor preset AND correct async sequence
         (async () => {
-            //this.tensorField.setRecommended();
             this.generateEverything();
         })();
     }
 
-    /**
-     * Generate parks based on available polygons.
-     */
     addParks(): void {
         const g = new Graph(
             [...this.majorRoads.allStreamlines, ...this.mainRoads.allStreamlines, ...this.minorRoads.allStreamlines],
@@ -204,8 +192,8 @@ export default class MainGUI {
         const p = new PolygonFinder(
             g.nodes,
             {
-                maxLength: 20,
-                minArea: 80,
+                maxLength: 25,
+                minArea: 100,
                 shrinkSpacing: 4,
                 chanceNoDivide: 1,
             },
@@ -214,8 +202,14 @@ export default class MainGUI {
         p.findPolygons();
         const polygons = p.polygons;
 
+        if (this.fillGreenAreas) {
+            this.bigParks = [];
+            this.smallParks = [];
+            this.tensorField.parks = [];
+            return;
+        }
+
         if (this.minorRoads.allStreamlines.length === 0) {
-            // Big parks
             this.bigParks = [];
             this.smallParks = [];
             if (polygons.length > this.numBigParks) {
@@ -234,7 +228,6 @@ export default class MainGUI {
                 this.bigParks.push(...polygons);
             }
         } else {
-            // Small parks
             this.smallParks = [];
             for (let i = 0; i < this.numSmallParks; i++) {
                 const parkIndex = Math.floor(Math.random() * polygons.length);
@@ -246,30 +239,24 @@ export default class MainGUI {
         this.tensorField.parks.push(...this.bigParks, ...this.smallParks);
     }
 
-    /**
-     * Generate all roads and buildings for the city.
-     */
     async generateEverything() {
-    await this.coastline.generateRoads();
-    await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+        await this.coastline.generateRoads();
+        await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
 
-    await this.mainRoads.generateRoads();
-    await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+        await this.mainRoads.generateRoads();
+        await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
 
-    await this.majorRoads.generateRoads(this.animate);
-    await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+        await this.majorRoads.generateRoads(this.animate);
+        await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
 
-    await this.minorRoads.generateRoads(this.animate);
-    await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+        await this.minorRoads.generateRoads(this.animate);
+        await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
 
-    this.redraw = true;
-    await this.buildings.generate(this.animate);
-    await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
-}
+        this.redraw = true;
+        await this.buildings.generate(this.animate);
+        await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+    }
 
-    /**
-     * Update all animated components.
-     */
     update() {
         let continueUpdate = true;
         const start = performance.now();
@@ -283,9 +270,6 @@ export default class MainGUI {
         this.redraw = this.redraw || continueUpdate;
     }
 
-    /**
-     * Draw the current state of the map with the given style.
-     */
     draw(style: Style, forceDraw = false, customCanvas?: CanvasWrapper): void {
         if (!style.needsUpdate && !forceDraw && !this.redraw && !this.domainController.moved) {
             return;
@@ -322,39 +306,21 @@ export default class MainGUI {
             && this.coastline.roadsEmpty();
     }
 
-    // OBJ Export methods
-    public get seaPolygon(): Vector[] {
-        return this.coastline.seaPolygon;
-    }
-
-    public get riverPolygon(): Vector[] {
-        return this.coastline.river;
-    }
-
-    public get buildingModels(): BuildingModel[] {
-        return this.buildings.models;
-    }
-
-    public getBlocks(): Promise<Vector[][]> {
-        return this.buildings.getBlocks();
-    }
+    public get seaPolygon(): Vector[] { return this.coastline.seaPolygon; }
+    public get riverPolygon(): Vector[] { return this.coastline.river; }
+    public get buildingModels(): BuildingModel[] { return this.buildings.models; }
+    public getBlocks(): Promise<Vector[][]> { return this.buildings.getBlocks(); }
 
     public get minorRoadPolygons(): Vector[][] {
-        return this.minorRoads.roads.map(
-            r => PolygonUtil.resizeGeometry(r, 1 * this.domainController.zoom, false)
-        );
+        return this.minorRoads.roads.map(r => PolygonUtil.resizeGeometry(r, 1 * this.domainController.zoom, false));
     }
 
     public get majorRoadPolygons(): Vector[][] {
-        return [...this.majorRoads.roads, this.coastline.secondaryRiver].map(
-            r => PolygonUtil.resizeGeometry(r, 2 * this.domainController.zoom, false)
-        );
+        return [...this.majorRoads.roads, this.coastline.secondaryRiver].map(r => PolygonUtil.resizeGeometry(r, 2 * this.domainController.zoom, false));
     }
 
     public get mainRoadPolygons(): Vector[][] {
-        return [...this.mainRoads.roads, ...this.coastline.roads].map(
-            r => PolygonUtil.resizeGeometry(r, 2.5 * this.domainController.zoom, false)
-        );
+        return [...this.mainRoads.roads, ...this.coastline.roads].map(r => PolygonUtil.resizeGeometry(r, 2.5 * this.domainController.zoom, false));
     }
 
     public get coastlinePolygon(): Vector[] {

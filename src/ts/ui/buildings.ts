@@ -6,205 +6,182 @@ import Vector from '../vector';
 import PolygonFinder from '../impl/polygon_finder';
 import {PolygonParams} from '../impl/polygon_finder';
 
-
 export interface BuildingModel {
     height: number;
-    lotWorld: Vector[]; // In world space
-    lotScreen: Vector[]; // In screen space
-    roof: Vector[]; // In screen space
-    sides: Vector[][]; // In screen space (array of quads)
-    // Optional: per-side computed shade value (0..1). Populated by BuildingModels.
-    sideShades?: number[];
+    lotWorld: Vector[]; 
+    lotScreen: Vector[]; 
+    roof: Vector[]; 
+    sides: Vector[][]; 
+    sideShades?: number[]; 
+    centroidWorld?: Vector; 
+    isVisible?: boolean; 
 }
 
-/**
- * Pseudo 3D buildings
- *
- * Enhancements:
- * - cameraHeightFactor: tunable factor affecting camera distance used in projection (controls apparent perspective)
- * - heightScale: multiplier for building heights (allows global exaggeration or suppression)
- * - per-side shade values are computed and stored in BuildingModel.sideShades for later use by style/drawing code
- * - more robust perspective math with safety clamps to avoid division-by-zero artifacts
- */
 class BuildingModels {
     private domainController = DomainController.getInstance();
     private _buildingModels: BuildingModel[] = [];
 
-    // visual tuning parameters (exposed via setters)
-    private cameraHeightFactor = 1.0; // multiplies the base camera distance (d)
-    private heightScale = 1.0;        // multiplies each building's height (for exaggeration)
-    private orthoHeightFactor = 1.0;  // multiplier for orthographic offset
-    private lightDir: Vector = new Vector(0.5, -0.7); // 2D light direction used to compute per-side shading (screen-space)
-    private ambientShade = 0.55;      // minimum shade multiplier (darker baseline)
-    private specularBoost = 0.3;      // additional brightness range
+    private cameraHeightFactor = 1.0; 
+    private heightScale = 1.0;        
+    private orthoHeightFactor = 1.0;  
+    private minHeight = 6;            
+    private maxHeight = 20;           
+    private lightDir: Vector = new Vector(0.5, -0.7).normalize(); 
+    private ambientShade = 0.65;      
+    private specularBoost = 0.2;      
 
-    constructor(lots: Vector[][]) {  // Lots in world space
+    constructor(lots: Vector[][]) {  
         for (const lot of lots) {
+            const height = Math.random() * (this.maxHeight - this.minHeight) + this.minHeight;
             this._buildingModels.push({
-                height: Math.random() * 20 + 20,
+                height,
                 lotWorld: lot,
                 lotScreen: [],
                 roof: [],
                 sides: [],
-                sideShades: []
+                sideShades: [],
+                centroidWorld: this.computeCentroid(lot),
+                isVisible: true
             });
         }
-        this._buildingModels.sort((a, b) => a.height - b.height);
-        // normalize lightDir for stable shading
-        try { this.lightDir = this.lightDir.clone().normalize(); } catch (e) { /* ignore */ }
+        log.debug(`Initialized ${this._buildingModels.length} eco-modular building models.`);
     }
 
     get buildingModels(): BuildingModel[] {
-        return this._buildingModels;
+        return this._buildingModels.filter(b => b.isVisible);
     }
 
-    /**
-     * Set global camera height factor (1.0 = default).
-     * Increasing makes projection appear less extreme (camera farther away relative to height).
-     */
-    public setCameraHeightFactor(f: number) {
-        if (!Number.isFinite(f) || f <= 0) return;
-        this.cameraHeightFactor = f;
+    public setCameraHeightFactor(f: number) { if (Number.isFinite(f) && f > 0) this.cameraHeightFactor = f; }
+    public getCameraHeightFactor(): number { return this.cameraHeightFactor; }
+    public setHeightScale(s: number) { if (Number.isFinite(s) && s > 0) this.heightScale = s; }
+    public getHeightScale(): number { return this.heightScale; }
+    public setOrthoHeightFactor(f: number) { if (Number.isFinite(f) && f > 0) this.orthoHeightFactor = f; }
+    public setHeightRange(min: number, max: number) {
+        if (Number.isFinite(min) && Number.isFinite(max) && min < max) {
+            this.minHeight = min;
+            this.maxHeight = max;
+        }
     }
-
-    public getCameraHeightFactor(): number {
-        return this.cameraHeightFactor;
-    }
-
-    /**
-     * Global height multiplier for buildings. Useful to exaggerate or reduce heights.
-     */
-    public setHeightScale(s: number) {
-        if (!Number.isFinite(s) || s <= 0) return;
-        this.heightScale = s;
-    }
-
-    public getHeightScale(): number {
-        return this.heightScale;
-    }
-
-    /**
-     * Set orthographic height factor used to offset roofs when in orthographic mode.
-     */
-    public setOrthoHeightFactor(f: number) {
-        if (!Number.isFinite(f) || f <= 0) return;
-        this.orthoHeightFactor = f;
-    }
-
-    public setLightDirection(v: Vector) {
-        if (!v) return;
-        this.lightDir = v.clone().normalize();
-    }
-
+    public setLightDirection(v: Vector) { if (v) this.lightDir = v.clone().normalize(); }
     public setShadingParams(ambient: number, specular: number) {
         if (Number.isFinite(ambient)) this.ambientShade = ambient;
         if (Number.isFinite(specular)) this.specularBoost = specular;
     }
 
-    /**
-     * Recalculated when the camera moves or zoom/params change.
-     *
-     * Produces:
-     * - lotScreen: footprint in screen space
-     * - roof: projected roof polygon in screen space
-     * - sides: sides as quads [v0_ground, v1_ground, v1_roof, v0_roof]
-     * - sideShades: computed shading factor per side (0..1)
-     */
+    private computeCentroid(lot: Vector[]): Vector {
+        let x = 0, y = 0;
+        const len = lot.length;
+        if (len === 0) return new Vector(0, 0);
+        for (const v of lot) {
+            x += v.x;
+            y += v.y;
+        }
+        return new Vector(x / len, y / len);
+    }
+
     setBuildingProjections(): void {
-        // base camera distance scaled by zoom and cameraHeightFactor
         const baseD = 1000;
         const d = (baseD * this.cameraHeightFactor) / Math.max(0.0001, this.domainController.zoom);
         const cameraPos = this.domainController.getCameraPosition();
-        for (const b of this._buildingModels) {
-            // compute screen-space footprint
-            b.lotScreen = b.lotWorld.map(v => this.domainController.worldToScreen(v.clone()));
+        
+        const screenCenter = new Vector(this.domainController.screenDimensions.x / 2, this.domainController.screenDimensions.y / 2);
+        const cullRadiusSq = Math.pow(Math.max(this.domainController.screenDimensions.x, this.domainController.screenDimensions.y) * 0.6, 2);
 
-            // compute roof from scaled height per building
-            const scaledHeight = (b.height * this.heightScale);
+        const distances = new Map<BuildingModel, number>();
+
+        for (const b of this._buildingModels) {
+            if (!b.centroidWorld) continue;
+
+            const screenCentroid = this.domainController.worldToScreen(b.centroidWorld.clone());
+            
+            if (screenCentroid.distanceToSquared(screenCenter) > cullRadiusSq) {
+                b.isVisible = false;
+                continue;
+            }
+
+            b.isVisible = true;
+
+            const dx = b.centroidWorld.x - cameraPos.x;
+            const dy = b.centroidWorld.y - cameraPos.y;
+            distances.set(b, (dx * dx) + (dy * dy)); 
+        }
+
+        const visibleModels = this._buildingModels.filter(b => b.isVisible);
+        visibleModels.sort((a, b) => distances.get(b)! - distances.get(a)!);
+
+        for (const b of visibleModels) {
+            b.lotScreen = b.lotWorld.map(v => this.domainController.worldToScreen(v.clone()));
+            const scaledHeight = b.height * this.heightScale;
             b.roof = b.lotScreen.map(v => this.heightVectorToScreen(v, scaledHeight, d, cameraPos));
 
-            // compute sides and per-side shade
             b.sides = this.getBuildingSides(b);
-            b.sideShades = this.computeSideShades(b, cameraPos);
+            b.sideShades = this.computeSideShades(b);
         }
     }
 
-    /**
-     * Use a more conventional perspective-like projection with a safe clamp.
-     * For orthographic, use cameraDirection offset scaled by orthoHeightFactor.
-     */
     private heightVectorToScreen(v: Vector, h: number, d: number, camera: Vector): Vector {
-        // Safety: prevent worldZ <= 0 which would flip or blow up projection
-        // Treat d as eyeZ (distance from camera to "ground" plane)
         const eyeZ = Math.max(1.0, d);
         const worldZ = eyeZ - h;
-        // If worldZ gets too close to zero (object is at/behind eye), clamp to a small positive value
         const safeWorldZ = Math.max(0.0001, worldZ);
         const scale = eyeZ / safeWorldZ;
 
         if (this.domainController.orthographic) {
-            // orthographic offset in the direction of cameraDirection (screen-space)
-            // scale the offset by height and orthoHeightFactor
             const diff = this.domainController.cameraDirection.clone().multiplyScalar(-h * this.orthoHeightFactor);
             return v.clone().add(diff);
         } else {
-            // perspective-ish projection (2D-friendly)
-            // Move v relative to camera, scale, then translate back
             return v.clone().sub(camera).multiplyScalar(scale).add(camera);
         }
     }
 
-    /**
-     * Get sides of buildings by joining corresponding edges between the roof and ground
-     */
     private getBuildingSides(b: BuildingModel): Vector[][] {
         const polygons: Vector[][] = [];
         for (let i = 0; i < b.lotScreen.length; i++) {
             const next = (i + 1) % b.lotScreen.length;
-            polygons.push([b.lotScreen[i], b.lotScreen[next], b.roof[next], b.roof[i]]);
+            const g0 = b.lotScreen[i];
+            const g1 = b.lotScreen[next];
+            const r0 = b.roof[i];
+            const r1 = b.roof[next];
+
+            const dx1 = g1.x - g0.x;
+            const dy1 = g1.y - g0.y;
+            const dx2 = r0.x - g0.x;
+            const dy2 = r0.y - g0.y;
+            
+            const crossProduct = (dx1 * dy2) - (dy1 * dx2);
+
+            if (crossProduct < -0.1) { 
+                polygons.push([g0, g1, r1, r0]);
+            }
         }
         return polygons;
     }
 
-    /**
-     * Compute a simple per-side shading based on side orientation relative to the lightDir (screen-space).
-     * Returns array of shade multipliers in [0,1] aligned with sides[].
-     *
-     * This method does not alter drawing; style.ts can read BuildingModel.sideShades to apply per-side fills.
-     */
-    private computeSideShades(b: BuildingModel, camera: Vector): number[] {
+    private computeSideShades(b: BuildingModel): number[] {
         const shades: number[] = [];
         if (!b.sides || b.sides.length === 0) return shades;
 
-        // use screen-space normal approximation: rotate edge vector by 90deg
         for (const s of b.sides) {
-            // s is [g0, g1, r1, r0], use ground edge g1-g0 as primary side direction
             const g0 = s[0], g1 = s[1];
-            let edge = g1.clone().sub(g0);
-            if (edge.length() === 0) {
-                shades.push(this.ambientShade); // degenerate, fallback
+            const dx = g1.x - g0.x;
+            const dy = g1.y - g0.y;
+            const length = Math.sqrt(dx * dx + dy * dy);
+            
+            if (length === 0) {
+                shades.push(this.ambientShade);
                 continue;
             }
-            edge = edge.clone().normalize();
 
-            // approximate 2D outward normal (rotate by +90deg)
-            const normal = new Vector(-edge.y, edge.x).normalize();
+            const nx = -dy / length;
+            const ny = dx / length;
 
-            // brightness based on dot(normal, lightDir)
-            const dot = Math.max(-1, Math.min(1, normal.dot(this.lightDir)));
-            // map dot (-1..1) to shade (ambient..ambient+specularBoost)
+            const dot = Math.max(-1, Math.min(1, nx * this.lightDir.x + ny * this.lightDir.y));
             const brightness = this.ambientShade + (0.5 * (dot + 1)) * this.specularBoost;
-            // clamp to [0,1]
-            const shade = Math.max(0, Math.min(1, brightness));
-            shades.push(shade);
+            shades.push(Math.max(0, Math.min(1, brightness)));
         }
         return shades;
     }
 }
 
-/**
- * Finds building lots and optionally pseudo3D buildings
- */
 export default class Buildings {
     private polygonFinder: PolygonFinder;
     private allStreamlines: Vector[][] = [];
@@ -212,24 +189,26 @@ export default class Buildings {
     private preGenerateCallback: () => any = () => {};
     private postGenerateCallback: () => any = () => {};
     private _models: BuildingModels = new BuildingModels([]);
-    private _blocks: Vector[][] = [];
 
     private buildingParams: PolygonParams = {
-        maxLength: 20,
-        minArea: 200,
-        shrinkSpacing: 4,
-        chanceNoDivide: 0.05,
+        maxLength: 30,
+        minArea: 350,
+        shrinkSpacing: 8,
+        chanceNoDivide: 0.25,
     };
 
-    constructor(private tensorField: TensorField,
-                folder: dat.GUI,
-                private redraw: () => void,
-                private dstep: number,
-                private _animate: boolean) {
-        folder.add({'AddBuildings': () => this.generate(this._animate)}, 'AddBuildings');
-        folder.add(this.buildingParams, 'minArea');
-        folder.add(this.buildingParams, 'shrinkSpacing');
-        folder.add(this.buildingParams, 'chanceNoDivide');
+    constructor(
+        private tensorField: TensorField,
+        folder: dat.GUI,
+        private redraw: () => void,
+        private dstep: number,
+        private _animate: boolean
+    ) {
+        folder.add({'AddBuildings': () => this.generate(this._animate)}, 'AddBuildings').name('Generate Eco-Structures');
+        folder.add(this.buildingParams, 'minArea').name('Min Lot Area');
+        folder.add(this.buildingParams, 'shrinkSpacing').name('Garden Spacing');
+        folder.add(this.buildingParams, 'chanceNoDivide').name('Open Space Ratio');
+
         this.polygonFinder = new PolygonFinder([], this.buildingParams, this.tensorField);
     }
 
@@ -241,16 +220,15 @@ export default class Buildings {
         return this.polygonFinder.polygons.map(p => p.map(v => this.domainController.worldToScreen(v.clone())));
     }
 
-    /**
-     * Only used when creating the 3D model to 'fake' the roads
-     */
     getBlocks(): Promise<Vector[][]> {
         const g = new Graph(this.allStreamlines, this.dstep, true);
         const blockParams = Object.assign({}, this.buildingParams);
-        blockParams.shrinkSpacing = blockParams.shrinkSpacing/2;
+        blockParams.shrinkSpacing = blockParams.shrinkSpacing / 2;
         const polygonFinder = new PolygonFinder(g.nodes, blockParams, this.tensorField);
         polygonFinder.findPolygons();
-        return polygonFinder.shrink(false).then(() => polygonFinder.polygons.map(p => p.map(v => this.domainController.worldToScreen(v.clone()))));
+        return polygonFinder.shrink(false).then(() =>
+            polygonFinder.polygons.map(p => p.map(v => this.domainController.worldToScreen(v.clone())))
+        );
     }
 
     get models(): BuildingModel[] {
@@ -258,28 +236,12 @@ export default class Buildings {
         return this._models.buildingModels;
     }
 
-    /**
-     * Expose tuning setters so Main (or GUI) can tweak behaviour at runtime.
-     */
-    public setCameraHeightFactor(f: number) {
-        this._models.setCameraHeightFactor?.(f);
-    }
-
-    public setHeightScale(s: number) {
-        this._models.setHeightScale?.(s);
-    }
-
-    public setOrthoHeightFactor(f: number) {
-        this._models.setOrthoHeightFactor?.(f);
-    }
-
-    public setLightDirection(v: Vector) {
-        this._models.setLightDirection?.(v);
-    }
-
-    public setShadingParams(ambient: number, specular: number) {
-        this._models.setShadingParams?.(ambient, specular);
-    }
+    public setCameraHeightFactor(f: number) { this._models.setCameraHeightFactor?.(f); }
+    public setHeightScale(s: number) { this._models.setHeightScale?.(s); }
+    public setOrthoHeightFactor(f: number) { this._models.setOrthoHeightFactor?.(f); }
+    public setHeightRange(min: number, max: number) { this._models.setHeightRange?.(min, max); }
+    public setLightDirection(v: Vector) { this._models.setLightDirection?.(v); }
+    public setShadingParams(ambient: number, specular: number) { this._models.setShadingParams?.(ambient, specular); }
 
     setAllStreamlines(s: Vector[][]): void {
         this.allStreamlines = s;
@@ -294,10 +256,8 @@ export default class Buildings {
         return this.polygonFinder.update();
     }
 
-    /**
-     * Finds blocks, shrinks and divides them to create building lots
-     */
     async generate(animate: boolean): Promise<void> {
+        log.info('Generating resilient eco-community clusters...');
         this.preGenerateCallback();
         this._models = new BuildingModels([]);
         const g = new Graph(this.allStreamlines, this.dstep, true);
@@ -310,6 +270,7 @@ export default class Buildings {
         this._models = new BuildingModels(this.polygonFinder.polygons);
 
         this.postGenerateCallback();
+        log.info('Eco-community generation completed.');
     }
 
     setPreGenerateCallback(callback: () => any): void {
