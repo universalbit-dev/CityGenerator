@@ -19,9 +19,6 @@ export interface RoughOptions {
     zigzagOffset?: number;
 }
 
-/**
- * Thin wrapper around HTML canvas, abstracts drawing functions so we can use the RoughJS canvas or the default one
- */
 export default abstract class CanvasWrapper {
     protected svgNode: any;
     protected _width: number = 0;   
@@ -152,11 +149,15 @@ export class DefaultCanvasWrapper extends CanvasWrapper {
         const MAX_CANVAS_DIMENSION = 8192;
         let backingWidth = Math.max(1, Math.round(cssWidth * dpr));
         let backingHeight = Math.max(1, Math.round(cssHeight * dpr));
+        let scaleX = dpr;
+        let scaleY = dpr;
 
         if (backingWidth > MAX_CANVAS_DIMENSION || backingHeight > MAX_CANVAS_DIMENSION) {
             const ratio = Math.min(MAX_CANVAS_DIMENSION / backingWidth, MAX_CANVAS_DIMENSION / backingHeight);
             backingWidth = Math.round(backingWidth * ratio);
             backingHeight = Math.round(backingHeight * ratio);
+            scaleX = dpr * ratio;
+            scaleY = dpr * ratio;
         }
 
         this.canvas.width = backingWidth;
@@ -164,7 +165,7 @@ export class DefaultCanvasWrapper extends CanvasWrapper {
         this.canvas.style.width = `${rectWidth * this.canvasScale}px`;
         this.canvas.style.height = `${rectHeight * this.canvasScale}px`;
 
-        this.ctx.setTransform(this.pixelRatio, 0, 0, this.pixelRatio, 0, 0);
+        this.ctx.setTransform(scaleX, 0, 0, scaleY, 0, 0);
         this.needsUpdate = true;
     }
 
