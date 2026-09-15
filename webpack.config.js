@@ -16,7 +16,7 @@ module.exports = {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'dist'),
         clean: true,
-        publicPath: 'auto', // Automatically handles root (localhost) and subpaths (GitHub Pages) correctly
+        publicPath: process.env.NODE_ENV === 'production' ? '/CityGenerator/' : '/',
     },
 
     resolve: {
