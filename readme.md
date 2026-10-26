@@ -165,10 +165,9 @@ npm run build
 ##### Thanks!
 ---
 
+##### Blockchain Integration: Information about integrating blockchain environments.
+-- [Integration Guide](https://github.com/universalbit-dev/universalbit-dev/tree/main/blockchain/bitcoin)
 
-##### Blockchain Integration: Information about integrating with DigiByte and other blockchain environments.
--- [DigiByte Integration Guide](https://www.digibyte.org/docs/integrationguide.pdf) --
--- [Documentation and examples](https://github.com/RenzoDD/digibyte-js?tab=readme-ov-file#documentation--examples-) --
 ## Quick Start for ESP32 NodeMCU – Fully Supported & Tested
 
 1. **Download or clone** the [esptool_microminer](https://github.com/universalbit-dev/esptool_microminer) repository.
