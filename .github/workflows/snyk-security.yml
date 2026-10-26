@@ -21,10 +21,10 @@ jobs:
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        uses: actions/checkout@v4
       
       - name: Set up Node.js 22
-        uses: actions/setup-node@1d0ff469b7ec1b3cb91fa0249f1161273924614d # v4.0.2
+        uses: actions/setup-node@v4
         with:
           node-version: '22'
       
@@ -38,7 +38,7 @@ jobs:
           fi
       
       - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/node@a1a0846059d0473a2139b4f62bfd0ec5ac6317bc # Snyk Node action
+        uses: snyk/actions/node@master
         continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
@@ -47,7 +47,7 @@ jobs:
       
       - name: Run Snyk Monitor (track project)
         if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
-        uses: snyk/actions/node@a1a0846059d0473a2139b4f62bfd0ec5ac6317bc
+        uses: snyk/actions/node@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
