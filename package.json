@@ -84,7 +84,7 @@
     "elliptic": "^6.6.1",
     "esbuild": "^0.25.13",
     "serialize-javascript": "^7.0.5",
-    "minimatch": "^9.0.4",
+    "minimatch": "^11.0.9",
     "braces": "^3.0.3",
     "semver": "^7.6.0",
     "path-to-regexp": "^6.2.1",
